@@ -56,6 +56,8 @@
     font-size: clamp(1rem, 2vw, 1.4rem);
     width: 100%;
     box-sizing: border-box;
+    min-height: 20rem;
+    overflow-y: auto;
 }
 
 .orcamento-group {
@@ -122,7 +124,25 @@
     background-color: #7dadfa;
 }
 
-/* Media Queries para responsividade */
+.orcamento-nao-encontrado {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100vh;
+    background-color: #F9FAFB;
+    padding: 2rem;
+    box-sizing: border-box;
+}
+
+.orcamento-nao-encontrado p {
+    color: #6B7280;
+    font-size: clamp(1rem, 2vw, 1.4rem);
+    text-align: center;
+    margin: 0;
+}
+
 @media screen and (max-width: 768px) {
     .detalhes-orcamento {
         padding: 1rem;
