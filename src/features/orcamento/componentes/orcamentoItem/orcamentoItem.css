@@ -1,0 +1,61 @@
+.orcamento-item {
+    display: flex;
+    flex-direction: row;
+    padding: 0.7rem;
+    box-shadow: 0 4px 6px #B8D3FF;
+    background-color: #F9FAFB;
+    border-radius: 0.5rem;
+    width: 80%;
+    height: 6rem;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.orcamento-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px #A0C0FF;
+}
+
+.texto-orc-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.texto-orc-item > h1 {
+    font-size: 1.5rem;
+    font-weight: 500;
+} 
+
+.texto-orc-item > p {
+    color: #6B7280;
+} 
+
+.botoes-orc-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.botao-deletar-orc-item {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.botao-dowload-orc-item {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.botao-deletar-orc-item > img {
+    width: 2rem;
+    height: 2rem;
+}
+
+.botao-dowload-orc-item > img {
+    width: 2rem;
+    height: 2rem;
+}

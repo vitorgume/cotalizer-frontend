@@ -7,7 +7,8 @@ import ModalDelete from '../../componentes/modalDelete/modalDelete';
 import Loading from '../../componentes/loading/Loading';
 import { consultarPorId, deletar } from '../../orcamento.service';
 import type Orcamento from '../../../../models/orcamento';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { formatarData } from '../../../../utils/formataData';
 
 export default function DetalhesOrcamento() {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -20,7 +21,7 @@ export default function DetalhesOrcamento() {
         try {
             if(orcamento) {
                 await deletar(orcamento.id);
-                navigate("/");
+                navigate("/")
             }
         } catch (error) {
             console.error('Erro ao carregar orçamento:', error);
@@ -35,8 +36,13 @@ export default function DetalhesOrcamento() {
         setShowDeleteModal(false);
     };
 
+    const { id } = useParams<{ id: string }>();
+
     useEffect(() => {
-        const idOrc = "684b23b1ef70de14663605a1";
+        if (!id) {
+            setLoading(false);
+            return;
+        }
 
         async function carregarOrcamento(idOrcamento: string) {
             try {
@@ -49,8 +55,8 @@ export default function DetalhesOrcamento() {
             }
         }
 
-        carregarOrcamento(idOrc);
-    }, []);
+        carregarOrcamento(id);
+    }, [id]);
 
     return (
         <>
@@ -59,7 +65,7 @@ export default function DetalhesOrcamento() {
                     <header className='header-detalhes-orc'>
                         <div className='titulo-header'>
                             <h1>{orcamento.titulo}</h1>
-                            <p>{orcamento.dataCriacao}</p>
+                            <p>{formatarData(orcamento.dataCriacao)}</p>
                         </div>
                         <button onClick={handleOpenDeleteModal}><img src={DeleteImage} alt="Imagem de delete" /></button>
                     </header>
@@ -87,7 +93,7 @@ export default function DetalhesOrcamento() {
                         isOpen={showDeleteModal}
                         onClose={handleCloseDeleteModal}
                         onConfirm={handleDelete}
-                        title="Orçamento para Maria"
+                        title={orcamento.titulo}
                     />
                 </div>
                 :

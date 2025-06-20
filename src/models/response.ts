@@ -1,4 +1,4 @@
 export default interface Response<D> {
-    dado: D | null;
+    dado: D | null ; 
     erro: string;
 } 

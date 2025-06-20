@@ -1,0 +1,9 @@
+.input-padrao {
+    background-color: #F9FAFB;
+    padding: 0.7rem;
+    width: 60%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+    font-size: 1rem;
+    color: #6B7280;
+    border-radius: 0.5rem;
+}
