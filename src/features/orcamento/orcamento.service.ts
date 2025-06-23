@@ -40,3 +40,15 @@ export function listarPorRepresentante(idRep: string): Promise<Response<Page<Orc
         }
     })
 }
+
+export function criarOrcamento(novoOrcamento: Orcamento): Promise<Response<Orcamento>> {
+    return axios.post<Response<Orcamento>>(`http://localhost:8080/orcamentos`, novoOrcamento)
+        .then(response => response.data)
+        .catch(err => {
+            console.error("Erro ao criar orcamento:", err);
+            return {
+                dado: {} as Orcamento,
+                erro: err
+            }
+        });
+}
