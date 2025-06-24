@@ -1,7 +1,7 @@
 import axios from "axios";
-import type Orcamento from "../../models/orcamento";
 import type Response from "../../models/response";
 import type Page from "../../models/page";
+import type Orcamento from "../../models/orcamento";
 
 export function consultarPorId(idOrcamento: string): Promise<Response<Orcamento>> {
     return axios.get<Response<Orcamento>>(
@@ -42,10 +42,22 @@ export function listarPorRepresentante(idRep: string): Promise<Response<Page<Orc
 }
 
 export function criarOrcamento(novoOrcamento: Orcamento): Promise<Response<Orcamento>> {
-    return axios.post<Response<Orcamento>>(`http://localhost:8080/orcamentos`, novoOrcamento)
+    return axios.post<Response<Orcamento>>(`http://localhost:8080/arquivos`, novoOrcamento)
         .then(response => response.data)
         .catch(err => {
             console.error("Erro ao criar orcamento:", err);
+            return {
+                dado: {} as Orcamento,
+                erro: err
+            }
+        });
+}
+
+export function interpretarOrcamento(novoOrcamento: Orcamento): Promise<Response<Orcamento>> {
+    return axios.post<Response<Orcamento>>(`http://localhost:8080/orcamentos`, novoOrcamento)
+        .then(response => response.data)
+        .catch(err => {
+            console.error("Erro ao interpretar orcamento:", err);
             return {
                 dado: {} as Orcamento,
                 erro: err

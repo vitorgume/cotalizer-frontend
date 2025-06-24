@@ -68,3 +68,35 @@
 .botao-visualizar:active {
     background-color: #75a4f1;
 }
+
+.preview-pdf {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+}
+
+.botoes-pdf-orc {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.orcamento-estruturado {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+    width: 100%;
+}
+
+.textarea-padrao {
+    width: 100%;
+    min-height: 20rem;
+    background-color: #F9FAFB;  
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+    padding: 0.7rem;
+    resize: none;
+    font-size: 1rem;
+}

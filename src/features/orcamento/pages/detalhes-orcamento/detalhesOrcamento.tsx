@@ -6,9 +6,9 @@ import DowloadImage from '../../../../assets/flecha 1.png';
 import ModalDelete from '../../componentes/modalDelete/modalDelete';
 import Loading from '../../componentes/loading/Loading';
 import { consultarPorId, deletar } from '../../orcamento.service';
-import type Orcamento from '../../../../models/orcamento';
 import { useNavigate, useParams } from 'react-router-dom';
 import { formatarData } from '../../../../utils/formataData';
+import type Orcamento from '../../../../models/orcamento';
 
 export default function DetalhesOrcamento() {
     const [showDeleteModal, setShowDeleteModal] = useState(false);

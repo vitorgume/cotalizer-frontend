@@ -2,41 +2,68 @@ import { useState } from 'react';
 import DowloadImage from '../../../../assets/flecha 1.png';
 import InputPadrao from '../../componentes/inputPadrao/inputPadrao';
 import './cadastroOrcamento.css';
-import type Orcamento from '../../../../models/orcamento';
-import { criarOrcamento } from '../../orcamento.service';
-import { removerFilePrefix } from '../../../../utils/fileUtils';
+import { criarOrcamento, interpretarOrcamento } from '../../orcamento.service';
 import Loading from '../../componentes/loading/Loading';
+import type Orcamento from '../../../../models/orcamento';
+import FormDinamico from '../../componentes/formDinamico/formDinamico';
 
 export default function CadastroOrcamento() {
     const [titulo, setTitulo] = useState<string | ''>('');
     const [conteudo, setConteudo] = useState<string | ''>('');
     const [orcamentoCriado, setOrcamentoCriado] = useState<Orcamento | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
+    const [estruturaOrcamento, setEstruturaOrcamento] = useState<any | null>(null);
+    const [urlPdf, setUrlPdf] = useState<string>('');
 
 
     function handlerChange(e: any) {
         setConteudo(e.target.value);
     }
 
-    async function gerarOrcamento() {
+    async function handleInterpretar() {
+
+        const novoOrcamento: Orcamento = {
+            id: '',
+            conteudoOriginal: conteudo,
+            dataCriacao: '',
+            titulo: titulo,
+            urlArquivo: '',
+            usuarioId: '684b08848082583d9c6a9111'
+        }
+
         try {
             setLoading(true);
-
-            const novoOrcamento: Orcamento = {
-                id: '',
-                conteudoOriginal: conteudo,
-                dataCriacao: '',
-                titulo: titulo,
-                urlArquivo: '',
-                usuarioId: '684b08848082583d9c6a9111'
-            }
-
-            const orcamentoSalvo = await criarOrcamento(novoOrcamento);
-            setOrcamentoCriado(orcamentoSalvo.dado);
+            const resposta = await interpretarOrcamento(novoOrcamento);
+            setOrcamentoCriado(resposta.dado);
+            setEstruturaOrcamento(resposta.dado?.orcamentoFormatado);
         } catch (error) {
-            console.error('Erro ao carregar orçamento:', error);
+            console.error('Erro ao interpretar orçamento:', error);
         } finally {
             setLoading(false);
+        }
+    }
+
+    async function gerarOrcamento() {
+
+        if (orcamentoCriado) {
+            try {
+                setLoading(true);
+                const orcamentoSalvo = await criarOrcamento(orcamentoCriado);
+
+                console.log(orcamentoSalvo);
+
+                if (orcamentoSalvo.dado) {
+                    setUrlPdf(orcamentoSalvo.dado.urlArquivo);
+                }
+
+                setOrcamentoCriado(orcamentoSalvo.dado);
+            } catch (error) {
+                console.error('Erro ao carregar orçamento:', error);
+            } finally {
+                setLoading(false);
+            }
+        } else {
+            console.log("Orçamento não foi criado");
         }
     }
 
@@ -53,46 +80,60 @@ export default function CadastroOrcamento() {
                 onChange={setTitulo}
             />
 
-            <textarea
-                name=""
-                id=""
-                placeholder='Duas tesouras, cinco lápis...'
-                value={conteudo}
-                onChange={handlerChange}
-            ></textarea>
+            {loading ? (
+                <Loading message="Processando..." />
+            ) : (
+                <div className='orcamento-estruturado'>
 
-            <button className='botao-gerar' onClick={gerarOrcamento} >Gerar</button>
+                    {!estruturaOrcamento && !urlPdf && (
+                        <>
+                            <textarea
+                                placeholder='Ex: Fazer orçamento pra Maria. 2 janelas de alumínio, 3 portas de madeira...'
+                                value={conteudo}
+                                onChange={(e) => setConteudo(e.target.value)}
+                                className='textarea-padrao'
+                            ></textarea>
 
-            <h2>Vizualize seu orçamento</h2>
+                            <button className='botao-gerar' onClick={handleInterpretar}>
+                                Interpretar orçamento
+                            </button>
+                        </>
+                    )}
 
-            {loading && (
-                <Loading message="Gerando seu orçamento..." />
-            )}
+                    {estruturaOrcamento && !urlPdf && (
+                        <FormDinamico
+                            orcamentoEstrutura={estruturaOrcamento}
+                            setOrcamentoEstrutura={setEstruturaOrcamento}
+                            gerarPdf={gerarOrcamento}
+                        />
+                    )}
 
-            {orcamentoCriado?.urlArquivo && (
-                <div className="preview-pdf">
-                    <h3>Visualização do PDF:</h3>
+                    {urlPdf && (
+                        <div className="preview-pdf">
+                            <h3>Visualização do PDF:</h3>
+                            <iframe
+                                src={urlPdf}
+                                width="100%"
+                                height="600px"
+                                style={{ border: '1px solid #ccc', borderRadius: '8px' }}
+                                title="Visualização do Orçamento"
+                            ></iframe>
 
-                    <iframe
-                        src={orcamentoCriado.urlArquivo}
-                        width="100%"
-                        height="600px"
-                        style={{ border: '1px solid #ccc', borderRadius: '8px' }}
-                        title="Visualização do Orçamento"
-                    ></iframe>
-
-                    <a
-                        href={orcamentoCriado.urlArquivo}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="botao-visualizar"
-                    >
-                        Abrir em nova aba
-                    </a>
+                            <div className='botoes-pdf-orc'>
+                                <a
+                                    href={urlPdf}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="botao-visualizar"
+                                >
+                                    Abrir em nova aba
+                                </a>
+                                < button className='botao-dowload-pdf'><img src={DowloadImage} alt="Dowload de imagem" /></button>
+                            </div>
+                        </div>
+                    )}
                 </div>
             )}
-
-            <button className='botao-dowload-pdf'><img src={DowloadImage} alt="Dowload de imagem" /></button>
-        </div>
+        </div >
     );
 }

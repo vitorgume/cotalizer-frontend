@@ -1,0 +1,27 @@
+.formulario-dinamico {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+    background-color: #e2e2e3;
+    padding: 1rem;
+    border-radius: 1rem;
+    align-items: center;
+}
+
+.itens-orcamento {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    gap: 2.5rem;
+}
+
+.item-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem
+}
+
+.item-container > hr {
+    border: solid 1px;
+}
