@@ -1,0 +1,10 @@
+.div-texto-resumo {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    font-size: 1.2rem
+}
+
+.valor-texto-resumo {
+    color: #3B82F6;
+}

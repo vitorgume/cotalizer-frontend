@@ -4,6 +4,7 @@ import DetalhesOrcamento from './features/orcamento/pages/detalhes-orcamento/det
 import { ToastContainer } from 'react-toastify';
 import ListagemOrcamentos from './features/orcamento/pages/listagem-ocamentos/listagemOrcamentos';
 import CadastroOrcamento from './features/orcamento/pages/cadastro-orcamento/cadastroOrcamento';
+import Menu from './features/geral/pages/menu/menu';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
             <Route path='/orcamento/:id' element={<DetalhesOrcamento/>} />
             <Route path='/orcamentos' element={<ListagemOrcamentos/>} />
             <Route path='/orcamento/cadastro' element={<CadastroOrcamento/>} />
+            <Route path='/menu' element={<Menu/>} />
         </Routes>
     </Router>
   )

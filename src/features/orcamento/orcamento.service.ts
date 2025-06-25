@@ -23,7 +23,7 @@ export function deletar(idOrcamento: string): void {
     ).catch(err => console.error("Erro ao deletar orcamento:", err))
 }
 
-export function listarPorRepresentante(idRep: string): Promise<Response<Page<Orcamento>>> {
+export function listarPorUsuario(idRep: string): Promise<Response<Page<Orcamento>>> {
     return axios.get<Response<Page<Orcamento>>>(`http://localhost:8080/orcamentos/usuario/${idRep}?page=0&size=10`)
     .then(response => response.data)
     .catch(err => {

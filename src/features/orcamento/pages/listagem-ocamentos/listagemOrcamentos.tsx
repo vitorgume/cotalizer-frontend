@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo } from "react";
 import InputPadrao from "../../componentes/inputPadrao/inputPadrao";
-import { deletar, listarPorRepresentante } from '../../orcamento.service';
+import { deletar, listarPorUsuario } from '../../orcamento.service';
 import OrcamentoItem from "../../componentes/orcamentoItem/orcamentoItem";
 import type Orcamento from "../../../../models/orcamento";
 import ModalDelete from "../../componentes/modalDelete/modalDelete";
@@ -29,9 +29,12 @@ export default function ListagemOrcamentos() {
     const handleDelete = async () => {
         try {
             if (orcamentoSelecionado) {
-                await deletar(orcamentoSelecionado.id);
-                setOrcamentos(orcamentos.filter(orc => orc.id !== orcamentoSelecionado.id));
-                handleCloseDeleteModal();
+                if (orcamentoSelecionado.id) {
+                    await deletar(orcamentoSelecionado.id);
+                    setOrcamentos(orcamentos.filter(orc => orc.id !== orcamentoSelecionado.id));
+                    handleCloseDeleteModal();
+                }
+
             }
         } catch (error) {
             console.error('Erro ao deletar orçamento:', error);
@@ -42,7 +45,7 @@ export default function ListagemOrcamentos() {
         setOrcamentoSelecionado(orcamento);
         setShowDeleteModal(true);
     };
-    
+
     const handleCloseDeleteModal = () => {
         setShowDeleteModal(false);
         setOrcamentoSelecionado(null);
@@ -51,7 +54,7 @@ export default function ListagemOrcamentos() {
     useEffect(() => {
         async function carregarOrcamentos(idRepre: string) {
             try {
-                const orcamentos = await listarPorRepresentante(idRepre);
+                const orcamentos = await listarPorUsuario(idRepre);
                 if (orcamentos.dado) {
                     setOrcamentos(orcamentos.dado.content);
                 }
@@ -72,6 +75,7 @@ export default function ListagemOrcamentos() {
                 placeholder="O que procura ?"
                 value={termoBusca}
                 onChange={setTermoBusca}
+                ativo={false}
             />
 
             {orcamentos.length > 0 ? (
@@ -82,6 +86,7 @@ export default function ListagemOrcamentos() {
                                 key={orc.id}
                                 handleOpenDeleteModal={() => handleOpenDeleteModal(orc)}
                                 orcamento={orc}
+                                deleteButton={true}
                             />
                         ))
                     ) : (

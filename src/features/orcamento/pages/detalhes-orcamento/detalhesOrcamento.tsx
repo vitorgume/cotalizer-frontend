@@ -9,6 +9,7 @@ import { consultarPorId, deletar } from '../../orcamento.service';
 import { useNavigate, useParams } from 'react-router-dom';
 import { formatarData } from '../../../../utils/formataData';
 import type Orcamento from '../../../../models/orcamento';
+import { extrairNomeArquivo } from '../../../../utils/urlUtils';
 
 export default function DetalhesOrcamento() {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -19,9 +20,11 @@ export default function DetalhesOrcamento() {
 
     const handleDelete = async () => {
         try {
-            if(orcamento) {
-                await deletar(orcamento.id);
-                navigate("/")
+            if (orcamento) {
+                if (orcamento.id) {
+                    await deletar(orcamento.id);
+                    navigate("/")
+                }
             }
         } catch (error) {
             console.error('Erro ao carregar orçamento:', error);
@@ -79,13 +82,27 @@ export default function DetalhesOrcamento() {
                     <div className='orcamento-group'>
                         <h2>Vizualize seu orçamento</h2>
 
-                        <div className='pdf-group'>
-                            <img src={PdfExemplo} alt="Pdf exemplo" />
-                        </div>
+                        <iframe
+                            src={orcamento.urlArquivo}
+                            width="100%"
+                            height="600px"
+                            style={{ border: '1px solid #ccc', borderRadius: '8px' }}
+                            title="Visualização do Orçamento"
+                        ></iframe>
 
                         <div className='botoes-orcamento-group'>
-                            <button className='botao-dowload-pdf'><img src={DowloadImage} alt="Dowload de imagem" /></button>
-                            {/* <button className='botao-ver-mais-pdf'>Ver mais</button> */}
+                            <a href={`http://localhost:8080/arquivos/download/${extrairNomeArquivo(orcamento.urlArquivo)}`} download target="_blank" rel="noopener noreferrer" className='botao-dowload-pdf'>
+                                <img src={DowloadImage} alt="Download de imagem" />
+                            </a>
+
+                            <a
+                                href={orcamento.urlArquivo}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="botao-visualizar"
+                            >
+                                Abrir em nova aba
+                            </a>
                         </div>
                     </div>
 

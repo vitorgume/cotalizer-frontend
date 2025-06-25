@@ -4,15 +4,17 @@ import DowloadImage from '../../../../assets/flecha 1.png';
 import './orcamentoItem.css';
 import { formatarData } from "../../../../utils/formataData";
 import { useNavigate } from 'react-router-dom';
+import { extrairNomeArquivo } from "../../../../utils/urlUtils";
 
 export interface OrcamentoItemProps {
     orcamento: Orcamento,
     handleOpenDeleteModal: () => void;
+    deleteButton: boolean;
 }
 
-export default function OrcamentoItem({ orcamento, handleOpenDeleteModal }: OrcamentoItemProps) {
+export default function OrcamentoItem({ orcamento, handleOpenDeleteModal, deleteButton }: OrcamentoItemProps) {
     const navigate = useNavigate();
-    
+
     const handleNavigateToDetails = () => {
         navigate(`/orcamento/${orcamento.id}`);
     };
@@ -24,18 +26,21 @@ export default function OrcamentoItem({ orcamento, handleOpenDeleteModal }: Orca
                 <p>{formatarData(orcamento.dataCriacao)}</p>
             </div>
             <div className="botoes-orc-item">
-                <button className="botao-dowload-orc-item" onClick={(e) => e.stopPropagation()}>
-                    <img src={DowloadImage} alt="Dowload de imagem" />
-                </button>
-                <button 
-                    className="botao-deletar-orc-item" 
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        handleOpenDeleteModal();
-                    }}
-                >
-                    <img src={DeleteImage} alt="Imagem de delete" />
-                </button>
+                <a href={`http://localhost:8080/arquivos/download/${extrairNomeArquivo(orcamento.urlArquivo)}`} download target="_blank" rel="noopener noreferrer" className='botao-dowload-pdf'>
+                    <img src={DowloadImage} alt="Download de imagem" />
+                </a>
+
+                {deleteButton &&
+                    <button
+                        className="botao-deletar-orc-item"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            handleOpenDeleteModal();
+                        }}
+                    >
+                        <img src={DeleteImage} alt="Imagem de delete" />
+                    </button>
+                }
             </div>
         </div>
     );

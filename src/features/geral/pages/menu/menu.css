@@ -1,0 +1,80 @@
+.menu-container {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 2rem 1rem 2rem;
+    gap: 3rem;
+    align-items: center;
+}
+
+.header-menu {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 90%;
+}
+
+.header-menu > h1 {
+    font-weight: lighter;
+}
+
+.header-menu > img {
+    width: 3rem;
+}
+
+.card-info-geral {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #F9FAFB;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    width: 80%;
+}
+
+.div-dir-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.valor-total-info-geral {
+    color: #3B82F6;
+    font-size: 1.5rem;
+}
+
+.btn-novo-orcamento {
+    background-color: #3B82F6;
+    color: white;
+    border-radius: 0.5rem;
+    height: 2.5rem;
+    width: 40%;
+    font-size: 1.2rem;
+}
+
+.btn-novo-orcamento:hover {
+    background-color: #5090f6;
+    cursor: pointer;
+}
+
+.btn-novo-orcamento:active {
+    background-color: #3B82F6;
+}
+
+.lista-orcamentos-container {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    align-items: center;
+    gap: 2rem;
+}
+
+.header-lista-orcamentos {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 90%;
+}
