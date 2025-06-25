@@ -2,7 +2,7 @@ import { useState } from 'react';
 import DowloadImage from '../../../../assets/flecha 1.png';
 import InputPadrao from '../../componentes/inputPadrao/inputPadrao';
 import './cadastroOrcamento.css';
-import { criarOrcamento, interpretarOrcamento } from '../../orcamento.service';
+import { atualizarOrcamento, criarOrcamento, interpretarOrcamento } from '../../orcamento.service';
 import Loading from '../../componentes/loading/Loading';
 import type Orcamento from '../../../../models/orcamento';
 import FormDinamico from '../../componentes/formDinamico/formDinamico';
@@ -15,15 +15,9 @@ export default function CadastroOrcamento() {
     const [estruturaOrcamento, setEstruturaOrcamento] = useState<any | null>(null);
     const [urlPdf, setUrlPdf] = useState<string>('');
 
-
-    function handlerChange(e: any) {
-        setConteudo(e.target.value);
-    }
-
     async function handleInterpretar() {
 
         const novoOrcamento: Orcamento = {
-            id: '',
             conteudoOriginal: conteudo,
             dataCriacao: '',
             titulo: titulo,
@@ -67,6 +61,23 @@ export default function CadastroOrcamento() {
         }
     }
 
+
+    async function editarOrcamento(orcamentoFormatado: any) {
+        if (orcamentoCriado) {
+            setOrcamentoCriado(orcamentoCriado.orcamentoFormatado = orcamentoFormatado);
+            try {
+                const response = await atualizarOrcamento(orcamentoCriado);
+                setOrcamentoCriado(response.dado);
+                return true;
+            } catch(err) {
+                console.log("Erro ao editar orçamento");
+                return false;
+            }
+        }
+
+        return false;
+    }
+
     return (
         <div className='cadastro-orcamento-cointainer'>
             <div className='container-titulo'>
@@ -78,6 +89,7 @@ export default function CadastroOrcamento() {
                 placeholder='Titulo'
                 value={titulo}
                 onChange={setTitulo}
+                ativo={orcamentoCriado !== null}
             />
 
             {loading ? (
@@ -105,6 +117,7 @@ export default function CadastroOrcamento() {
                             orcamentoEstrutura={estruturaOrcamento}
                             setOrcamentoEstrutura={setEstruturaOrcamento}
                             gerarPdf={gerarOrcamento}
+                            editarOrcamento={editarOrcamento}
                         />
                     )}
 

@@ -64,3 +64,8 @@ export function interpretarOrcamento(novoOrcamento: Orcamento): Promise<Response
             }
         });
 }
+
+export function atualizarOrcamento(orcamento: Orcamento): Promise<Response<Orcamento>> {
+    return axios.put<Response<Orcamento>>(`http://localhost:8080/orcamentos/${orcamento.id}`, orcamento)
+        .then(response => response.data);
+}

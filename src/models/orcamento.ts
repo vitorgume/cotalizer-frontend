@@ -1,5 +1,5 @@
 export default interface Orcamento {
-    id: string;
+    id?: string | undefined;
     conteudoOriginal: string;
     orcamentoFormatado?: any | undefined;
     dataCriacao: string;

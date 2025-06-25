@@ -4,9 +4,10 @@ interface InpuPadraoProps {
     placeholder: string;
     value?: string;
     onChange?: (value: string) => void;
+    ativo: boolean;
 }
 
-export default function InputPadrao({placeholder, value = '', onChange}: InpuPadraoProps) {
+export default function InputPadrao({placeholder, value = '', onChange, ativo}: InpuPadraoProps) {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (onChange) {
             onChange(e.target.value);
@@ -20,6 +21,7 @@ export default function InputPadrao({placeholder, value = '', onChange}: InpuPad
             placeholder={placeholder}
             value={value}
             onChange={handleChange}
+            disabled={ativo}
         />
     );
 }
