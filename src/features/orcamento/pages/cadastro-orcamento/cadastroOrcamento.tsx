@@ -89,7 +89,7 @@ export default function CadastroOrcamento() {
                 placeholder='Titulo'
                 value={titulo}
                 onChange={setTitulo}
-                ativo={orcamentoCriado !== null}
+                inativo={orcamentoCriado !== null}
             />
 
             {loading ? (

@@ -1,0 +1,40 @@
+.cadastro-usuario-container {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 2rem 1rem 2rem;
+    gap: 5rem;
+}
+
+.header-cadastro-usuario {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.container-header-centralizado {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.div-header-cadastro-usuario {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.container-header-centralizado > h2 {
+    margin-left: 1.3rem;
+}
+
+.form-cadastro-usuario {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+}
+
+.botao-cadastrar-usuario {
+    margin-top: 10%;
+}

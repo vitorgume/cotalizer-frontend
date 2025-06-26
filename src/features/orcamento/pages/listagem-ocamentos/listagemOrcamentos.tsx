@@ -75,7 +75,7 @@ export default function ListagemOrcamentos() {
                 placeholder="O que procura ?"
                 value={termoBusca}
                 onChange={setTermoBusca}
-                ativo={false}
+                inativo={false}
             />
 
             {orcamentos.length > 0 ? (

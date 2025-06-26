@@ -1,5 +1,5 @@
 import './menu.css';
-import Logo from '../../../../assets/ChatGPT_Image_6_de_jun._de_2025__14_33_15-removebg-preview 2.png';
+    import Logo from '../../../../assets/ChatGPT_Image_6_de_jun._de_2025__14_33_15-removebg-preview 2.png';
 import OrcamentoItem from '../../../orcamento/componentes/orcamentoItem/orcamentoItem';
 import TextoResumo from '../../components/textoResumo/textoResumo';
 import { useEffect, useState } from 'react';
@@ -7,7 +7,7 @@ import type Usuario from '../../../../models/usuario';
 import type Orcamento from '../../../../models/orcamento';
 import { Link, useNavigate } from 'react-router-dom';
 import Loading from '../../../orcamento/componentes/loading/Loading';
-import { consultarUsuarioPeloId } from '../../geral.service';
+import { consultarUsuarioPeloId } from '../../usuario.service';
 import { listarPorUsuario } from '../../../orcamento/orcamento.service';
 
 export default function Menu() {

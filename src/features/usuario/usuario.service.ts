@@ -13,3 +13,15 @@ export function consultarUsuarioPeloId(idUsuario: string): Promise<Response<Usua
         }
     })
 }
+
+export function cadastrarUsuario(usuario: Usuario): Promise<Response<Usuario>> {
+    return axios.post<Response<Usuario>>(`http://localhost:8080/usuarios`, usuario)
+    .then(response => response.data)
+    .catch(err => {
+        console.error("Erro ao cadastrar usuario:", err);
+        return {
+            dado: {} as Usuario,
+            erro: err
+        }
+    })
+}
