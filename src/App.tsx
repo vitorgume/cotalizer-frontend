@@ -6,6 +6,7 @@ import ListagemOrcamentos from './features/orcamento/pages/listagem-ocamentos/li
 import CadastroOrcamento from './features/orcamento/pages/cadastro-orcamento/cadastroOrcamento';
 import Menu from './features/usuario/pages/menu/menu';
 import CadastroUsuario from './features/usuario/pages/cadastro-usuario/cadastroUsuario';
+import LoginUsuario from './features/usuario/pages/login-usuario/loginUsuario';
 
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
             <Route path='/orcamento/cadastro' element={<CadastroOrcamento/>} />
             <Route path='/menu' element={<Menu/>} />
             <Route path='/usuario/cadastro' element={<CadastroUsuario/>} />
+            <Route path='/usuario/login' element={<LoginUsuario/>} />
         </Routes>
     </Router>
   )
