@@ -6,6 +6,7 @@ import { atualizarOrcamento, criarOrcamento, interpretarOrcamento } from '../../
 import Loading from '../../componentes/loading/Loading';
 import type Orcamento from '../../../../models/orcamento';
 import FormDinamico from '../../componentes/formDinamico/formDinamico';
+import { extrairNomeArquivo } from '../../../../utils/urlUtils';
 
 export default function CadastroOrcamento() {
     const [titulo, setTitulo] = useState<string | ''>('');
@@ -16,24 +17,27 @@ export default function CadastroOrcamento() {
     const [urlPdf, setUrlPdf] = useState<string>('');
 
     async function handleInterpretar() {
+        const idUsuario = localStorage.getItem('id-usuario');
 
-        const novoOrcamento: Orcamento = {
-            conteudoOriginal: conteudo,
-            dataCriacao: '',
-            titulo: titulo,
-            urlArquivo: '',
-            usuarioId: '684b08848082583d9c6a9111'
-        }
+        if (idUsuario) {
+            const novoOrcamento: Orcamento = {
+                conteudoOriginal: conteudo,
+                dataCriacao: '',
+                titulo: titulo,
+                urlArquivo: '',
+                usuarioId: idUsuario
+            }
 
-        try {
-            setLoading(true);
-            const resposta = await interpretarOrcamento(novoOrcamento);
-            setOrcamentoCriado(resposta.dado);
-            setEstruturaOrcamento(resposta.dado?.orcamentoFormatado);
-        } catch (error) {
-            console.error('Erro ao interpretar orçamento:', error);
-        } finally {
-            setLoading(false);
+            try {
+                setLoading(true);
+                const resposta = await interpretarOrcamento(novoOrcamento);
+                setOrcamentoCriado(resposta.dado);
+                setEstruturaOrcamento(resposta.dado?.orcamentoFormatado);
+            } catch (error) {
+                console.error('Erro ao interpretar orçamento:', error);
+            } finally {
+                setLoading(false);
+            }
         }
     }
 
@@ -69,7 +73,7 @@ export default function CadastroOrcamento() {
                 const response = await atualizarOrcamento(orcamentoCriado);
                 setOrcamentoCriado(response.dado);
                 return true;
-            } catch(err) {
+            } catch (err) {
                 console.log("Erro ao editar orçamento");
                 return false;
             }
@@ -134,7 +138,7 @@ export default function CadastroOrcamento() {
 
                             <div className='botoes-pdf-orc'>
                                 <a
-                                    href={urlPdf}
+                                    href={`http://localhost:8080/arquivos/download/${extrairNomeArquivo(urlPdf)}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="botao-visualizar"

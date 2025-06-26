@@ -13,6 +13,7 @@ export default function CadastroUsuario() {
     const [telefone, setTelefone] = useState<string | ''>('');
     const [cpfCnpj, setCpfCnpj] = useState<string | ''>('');
     const [loading, setLoading] = useState<boolean>(false);
+    const [senha, setSenha] = useState<string | ''>('');
 
     const navigate = useNavigate();
 
@@ -38,7 +39,8 @@ export default function CadastroUsuario() {
                 email: email,
                 telefone: telefone,
                 cpf: cpfCnpj,
-                cnpj: ''
+                cnpj: '',
+                senha: senha
             }
         } else if (validacaoCpfCnpj === 'CNPJ') {
             novoUsuario = {
@@ -46,7 +48,8 @@ export default function CadastroUsuario() {
                 email: email,
                 telefone: telefone,
                 cpf: '',
-                cnpj: cpfCnpj
+                cnpj: cpfCnpj,
+                senha: senha
             }
         }
 
@@ -57,7 +60,7 @@ export default function CadastroUsuario() {
             console.error("Erro ao cadastrar usuário.");
         } finally {
             setLoading(false);
-            navigate('/login');
+            navigate('/usuario/login');
         }
 
     }
@@ -104,7 +107,14 @@ export default function CadastroUsuario() {
                             inativo={false}
                         />
 
-                        <button className='botao-gerar botao-cadastrar-usuario'>Se cadastre</button>
+                        <InputPadrao
+                            placeholder='Senha'
+                            value={senha}
+                            onChange={setSenha}
+                            inativo={false}
+                        />
+
+                        <button className='botao-gerar botao-cadastrar-usuario'>Cadastre-se</button>
                     </form>
                 </div>
             }

@@ -5,4 +5,5 @@ export default interface Usuario {
     telefone: string;
     cpf: string;
     cnpj: string;
+    senha: string;
 }

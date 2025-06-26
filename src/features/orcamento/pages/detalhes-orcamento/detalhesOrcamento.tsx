@@ -23,7 +23,7 @@ export default function DetalhesOrcamento() {
             if (orcamento) {
                 if (orcamento.id) {
                     await deletar(orcamento.id);
-                    navigate("/")
+                    navigate("/menu");
                 }
             }
         } catch (error) {

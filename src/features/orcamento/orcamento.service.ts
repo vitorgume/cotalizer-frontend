@@ -1,11 +1,11 @@
-import axios from "axios";
 import type Response from "../../models/response";
 import type Page from "../../models/page";
 import type Orcamento from "../../models/orcamento";
+import api from '../../utils/axios';
 
 export function consultarPorId(idOrcamento: string): Promise<Response<Orcamento>> {
-    return axios.get<Response<Orcamento>>(
-        `http://localhost:8080/orcamentos/${idOrcamento}`
+    return api.get<Response<Orcamento>>(
+        `/orcamentos/${idOrcamento}`
     )
     .then(response => response.data)
     .catch(err => {
@@ -18,13 +18,13 @@ export function consultarPorId(idOrcamento: string): Promise<Response<Orcamento>
 }
 
 export function deletar(idOrcamento: string): void {
-    axios.delete(
-        `http://localhost:8080/orcamentos/${idOrcamento}`
+    api.delete(
+        `/orcamentos/${idOrcamento}`
     ).catch(err => console.error("Erro ao deletar orcamento:", err))
 }
 
 export function listarPorUsuario(idRep: string): Promise<Response<Page<Orcamento>>> {
-    return axios.get<Response<Page<Orcamento>>>(`http://localhost:8080/orcamentos/usuario/${idRep}?page=0&size=10`)
+    return api.get<Response<Page<Orcamento>>>(`/orcamentos/usuario/${idRep}?page=0&size=10`)
     .then(response => response.data)
     .catch(err => {
         console.error("Erro ao carregar orcamentos:", err);
@@ -42,7 +42,7 @@ export function listarPorUsuario(idRep: string): Promise<Response<Page<Orcamento
 }
 
 export function criarOrcamento(novoOrcamento: Orcamento): Promise<Response<Orcamento>> {
-    return axios.post<Response<Orcamento>>(`http://localhost:8080/arquivos`, novoOrcamento)
+    return api.post<Response<Orcamento>>(`/arquivos`, novoOrcamento)
         .then(response => response.data)
         .catch(err => {
             console.error("Erro ao criar orcamento:", err);
@@ -54,7 +54,7 @@ export function criarOrcamento(novoOrcamento: Orcamento): Promise<Response<Orcam
 }
 
 export function interpretarOrcamento(novoOrcamento: Orcamento): Promise<Response<Orcamento>> {
-    return axios.post<Response<Orcamento>>(`http://localhost:8080/orcamentos`, novoOrcamento)
+    return api.post<Response<Orcamento>>(`/orcamentos`, novoOrcamento)
         .then(response => response.data)
         .catch(err => {
             console.error("Erro ao interpretar orcamento:", err);
@@ -66,6 +66,6 @@ export function interpretarOrcamento(novoOrcamento: Orcamento): Promise<Response
 }
 
 export function atualizarOrcamento(orcamento: Orcamento): Promise<Response<Orcamento>> {
-    return axios.put<Response<Orcamento>>(`http://localhost:8080/orcamentos/${orcamento.id}`, orcamento)
+    return api.put<Response<Orcamento>>(`/orcamentos/${orcamento.id}`, orcamento)
         .then(response => response.data);
 }

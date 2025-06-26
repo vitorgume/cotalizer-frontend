@@ -52,9 +52,9 @@ export default function ListagemOrcamentos() {
     };
 
     useEffect(() => {
-        async function carregarOrcamentos(idRepre: string) {
+        async function carregarOrcamentos(idUsuario: string) {
             try {
-                const orcamentos = await listarPorUsuario(idRepre);
+                const orcamentos = await listarPorUsuario(idUsuario);
                 if (orcamentos.dado) {
                     setOrcamentos(orcamentos.dado.content);
                 }
@@ -63,8 +63,11 @@ export default function ListagemOrcamentos() {
             }
         }
 
-        const idRep = "684b08848082583d9c6a9111";
-        carregarOrcamentos(idRep);
+        const idUsu = localStorage.getItem('id-usuario');
+
+        if(idUsu)
+            carregarOrcamentos(idUsu);
+        
     }, []);
 
     return (

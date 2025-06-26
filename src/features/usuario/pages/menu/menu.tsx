@@ -34,7 +34,7 @@ export default function Menu() {
 
     useEffect(() => {
 
-        const usuarioId = '684b08848082583d9c6a9111';
+        const usuarioId = localStorage.getItem('id-usuario');
 
         async function carregarUsuario(idUsuario: string) {
             const response = await consultarUsuarioPeloId(idUsuario);

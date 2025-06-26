@@ -1,10 +1,10 @@
-import axios from "axios";
 import type Response from "../../models/response";
 import type Usuario from "../../models/usuario";
 import type Login from "../../models/login";
+import api from '../../utils/axios';
 
 export function consultarUsuarioPeloId(idUsuario: string): Promise<Response<Usuario>> {
-    return axios.get<Response<Usuario>>(`http://localhost:8080/usuarios/${idUsuario}`)
+    return api.get<Response<Usuario>>(`/usuarios/${idUsuario}`)
     .then(response => response.data)
     .catch(err => {
         console.error("Erro ao carregar usuario:", err);
@@ -16,7 +16,7 @@ export function consultarUsuarioPeloId(idUsuario: string): Promise<Response<Usua
 }
 
 export function cadastrarUsuario(usuario: Usuario): Promise<Response<Usuario>> {
-    return axios.post<Response<Usuario>>(`http://localhost:8080/usuarios`, usuario)
+    return api.post<Response<Usuario>>(`/usuarios/cadastro`, usuario)
     .then(response => response.data)
     .catch(err => {
         console.error("Erro ao cadastrar usuario:", err);
@@ -28,7 +28,7 @@ export function cadastrarUsuario(usuario: Usuario): Promise<Response<Usuario>> {
 }
 
 export function logarUsuario(email: string, senha: string): Promise<Response<Login>> {
-    return axios.post<Response<Login>>(`http://localhost:8080/logar`, {email, senha})
+    return api.post<Response<Login>>(`/login`, {email, senha})
     .then(response => response.data)
     .catch(err => {
         console.error("Erro ao logar usuario:", err);
