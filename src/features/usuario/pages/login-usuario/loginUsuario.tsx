@@ -5,6 +5,7 @@ import './loginUsuario.css';
 import { logarUsuario } from '../../usuario.service';
 import Loading from '../../../orcamento/componentes/loading/Loading';
 import { useNavigate } from 'react-router-dom';
+import GoogleLoginButton from '../../components/botaoGoogleLogin/botaoLoginGoogle';
 
 export default function LoginUsuario() {
     const [email, setEmail] = useState<string | ''>('');
@@ -56,6 +57,7 @@ export default function LoginUsuario() {
 
                         <button className='botao-gerar botao-entrar'>Entrar</button>
                     </form>
+                    <GoogleLoginButton />
                 </div>
             }
         </div>
