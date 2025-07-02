@@ -6,7 +6,10 @@ import ListagemOrcamentos from './features/orcamento/pages/listagem-ocamentos/li
 import CadastroOrcamento from './features/orcamento/pages/cadastro-orcamento/cadastroOrcamento';
 import Menu from './features/usuario/pages/menu/menu';
 import CadastroUsuario from './features/usuario/pages/cadastro-usuario/cadastroUsuario';
-import LoginUsuario from './features/usuario/pages/login-usuario/loginUsuario';
+import LoginUsuario from './features/usuario/pages/login/login-usuario/loginUsuario';
+import LoginSucesso from './features/usuario/pages/login/loginSucesso/loginSucesso';
+import CodigoValidacaoEmail from './features/usuario/pages/login/codigo-validacao-email/codigoValidacaoEmail';
+import CadastroCnpjCpf from './features/usuario/pages/login/cadastro-cnpj-cpf/cadastroCnpjCpf';
 
 
 function App() {
@@ -20,6 +23,9 @@ function App() {
             <Route path='/menu' element={<Menu/>} />
             <Route path='/usuario/cadastro' element={<CadastroUsuario/>} />
             <Route path='/usuario/login' element={<LoginUsuario/>} />
+            <Route path='/login/sucesso' element={<LoginSucesso/>} />
+            <Route path='/validacao/email/:email' element={<CodigoValidacaoEmail />} />
+            <Route path='/usuario/cadastro/cpf-cnpj/:id' element={<CadastroCnpjCpf />} />
         </Routes>
     </Router>
   )

@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import InputPadrao from '../../../orcamento/componentes/inputPadrao/inputPadrao';
-import HeaderForms from '../../components/headerForms/headerForms';
+import InputPadrao from '../../../../orcamento/componentes/inputPadrao/inputPadrao';
+import HeaderForms from '../../../components/headerForms/headerForms';
 import './loginUsuario.css';
-import { logarUsuario } from '../../usuario.service';
-import Loading from '../../../orcamento/componentes/loading/Loading';
+import { logarUsuario } from '../../../usuario.service';
+import Loading from '../../../../orcamento/componentes/loading/Loading';
 import { useNavigate } from 'react-router-dom';
-import GoogleLoginButton from '../../components/botaoGoogleLogin/botaoLoginGoogle';
+import GoogleLoginButton from '../../../components/botaoGoogleLogin/botaoLoginGoogle';
 
 export default function LoginUsuario() {
     const [email, setEmail] = useState<string | ''>('');
@@ -27,7 +27,7 @@ export default function LoginUsuario() {
             console.error("Erro ao autenticar usuario.");
         } finally {
             setLoading(false);
-            navigate('/menu');
+            navigate(`/menu`);
         }
     }
 

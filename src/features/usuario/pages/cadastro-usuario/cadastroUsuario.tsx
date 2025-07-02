@@ -6,6 +6,7 @@ import { cadastrarUsuario } from '../../usuario.service';
 import { useNavigate } from 'react-router-dom';
 import Loading from '../../../orcamento/componentes/loading/Loading';
 import HeaderForms from '../../components/headerForms/headerForms';
+import { identificarCpfOuCnpj } from '../../../../utils/identificarCpfCnpj';
 
 export default function CadastroUsuario() {
     const [nome, setNome] = useState<string | ''>('');
@@ -17,17 +18,7 @@ export default function CadastroUsuario() {
 
     const navigate = useNavigate();
 
-    function identificarCpfOuCnpj(valor: string): 'CPF' | 'CNPJ' | 'Inválido' {
-        const somenteNumeros = valor.replace(/\D/g, '');
-
-        if (somenteNumeros.length === 11) {
-            return 'CPF';
-        } else if (somenteNumeros.length === 14) {
-            return 'CNPJ';
-        } else {
-            return 'Inválido';
-        }
-    }
+    
 
     async function cadastrar() {
         let novoUsuario: Usuario = {} as Usuario;
@@ -60,7 +51,7 @@ export default function CadastroUsuario() {
             console.error("Erro ao cadastrar usuário.");
         } finally {
             setLoading(false);
-            navigate('/usuario/login');
+            navigate(`/validacao/email/${email}`);
         }
 
     }
@@ -118,8 +109,6 @@ export default function CadastroUsuario() {
                     </form>
                 </div>
             }
-
-
         </div>
     );
 }
