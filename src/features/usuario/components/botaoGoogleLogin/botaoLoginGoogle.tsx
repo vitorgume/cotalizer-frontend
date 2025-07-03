@@ -2,9 +2,11 @@ import './botaoGoogleLogin.css';
 import GoogleIcon from '../../../../assets/google-icon.svg';
 import { useNavigate } from 'react-router-dom';
 
-export default function GoogleLoginButton() {
+interface GoogleLoginButtonProps {
+  label: string
+}
 
-  const navigate = useNavigate();
+export default function GoogleLoginButton({label} : GoogleLoginButtonProps) {
 
   const handleLogin = () => {
     window.location.href = 'http://localhost:8080/oauth2/authorization/google';
@@ -13,7 +15,7 @@ export default function GoogleLoginButton() {
   return (
     <button className="google-login-button" onClick={handleLogin}>
       <img src={GoogleIcon} alt="Google" className="google-icon" />
-      Entrar com Google
+      {label}
     </button>
   );
 };

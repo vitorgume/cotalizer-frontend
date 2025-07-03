@@ -57,7 +57,9 @@ export default function LoginUsuario() {
 
                         <button className='botao-gerar botao-entrar'>Entrar</button>
                     </form>
-                    <GoogleLoginButton />
+                    <GoogleLoginButton 
+                        label='Entrar com o Google'
+                    />
                 </div>
             }
         </div>

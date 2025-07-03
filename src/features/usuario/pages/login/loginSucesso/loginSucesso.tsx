@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import './loginSucesso.css';
 import { useNavigate } from 'react-router-dom';
 import { getId } from '../../../../../utils/idTokenUtil';
+import Loading from '../../../../orcamento/componentes/loading/Loading';
 
 export default function LoginSucesso() {
     const navigate = useNavigate();
@@ -12,7 +13,7 @@ export default function LoginSucesso() {
 
         if (token) {
             localStorage.setItem('token', token);
-    
+
             const idUsuario = getId(token);
             if (idUsuario) {
                 localStorage.setItem('id-usuario', idUsuario);
@@ -23,9 +24,13 @@ export default function LoginSucesso() {
             const tokenExistente = localStorage.getItem('token');
             if (!tokenExistente) {
                 navigate('/usuario/login');
+            } else {
+                const idUsuario = getId(tokenExistente);
+                
+                navigate(`/usuario/cadastro/cpf-cnpj/${idUsuario}`);
             }
         }
     }, [navigate]);
 
-    return <p>Redirecionando...</p>;
+    return <Loading message="Redirecionando..." />;
 }

@@ -1,5 +1,5 @@
 import './menu.css';
-    import Logo from '../../../../assets/ChatGPT_Image_6_de_jun._de_2025__14_33_15-removebg-preview 2.png';
+import Logo from '../../../../assets/ChatGPT_Image_6_de_jun._de_2025__14_33_15-removebg-preview 2.png';
 import OrcamentoItem from '../../../orcamento/componentes/orcamentoItem/orcamentoItem';
 import TextoResumo from '../../components/textoResumo/textoResumo';
 import { useEffect, useState } from 'react';
@@ -9,6 +9,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Loading from '../../../orcamento/componentes/loading/Loading';
 import { consultarUsuarioPeloId } from '../../usuario.service';
 import { listarPorUsuario } from '../../../orcamento/orcamento.service';
+import { getId } from '../../../../utils/idTokenUtil';
 
 export default function Menu() {
     const [usuario, setUsuario] = useState<Usuario | null>(null);
@@ -29,32 +30,52 @@ export default function Menu() {
             .slice(0, 5);
     }
 
-
-
-
     useEffect(() => {
-
         const usuarioId = localStorage.getItem('id-usuario');
+        const token = localStorage.getItem('token');
 
-        async function carregarUsuario(idUsuario: string) {
-            const response = await consultarUsuarioPeloId(idUsuario);
-            setUsuario(response.dado);
+        if (!usuarioId || !token) {
+            navigate('/menu');
+            return;
         }
 
-        async function carregarOrcamentos(idUsuario: string) {
-            const response = await listarPorUsuario(idUsuario);
+        if (!token) {
+            const params = new URLSearchParams(window.location.search);
+            const token = params.get('token');
 
-            if (response) {
-                if (response.dado)
-                    setOrcamentos(response.dado.content);
+            if (token) {
+                localStorage.setItem('token', token);
+
+                const idUsuario = getId(token);
+                if (idUsuario) {
+                    localStorage.setItem('id-usuario', idUsuario);
+                }
             }
         }
 
-        if (usuarioId) {
-            carregarUsuario(usuarioId);
-            carregarOrcamentos(usuarioId);
-            setLoading(false);
+        async function carregarDados() {
+            try {
+
+                if (usuarioId) {
+                    const usuarioResponse = await consultarUsuarioPeloId(usuarioId);
+                    const orcamentosResponse = await listarPorUsuario(usuarioId);
+
+                    if (!usuarioResponse.dado || !orcamentosResponse?.dado) {
+                        throw new Error("Falha ao carregar dados do usuário.");
+                    }
+
+                    setUsuario(usuarioResponse.dado);
+                    setOrcamentos(orcamentosResponse.dado.content);
+                }
+            } catch (err) {
+                console.error("Erro ao carregar dados:", err);
+                navigate('/menu');
+            } finally {
+                setLoading(false);
+            }
         }
+
+        carregarDados();
     }, []);
 
     return (
@@ -100,7 +121,7 @@ export default function Menu() {
                                 <OrcamentoItem
                                     key={orc.id}
                                     orcamento={orc}
-                                    handleOpenDeleteModal={() => {}}
+                                    handleOpenDeleteModal={() => { }}
                                     deleteButton={false}
                                 />
                             ))

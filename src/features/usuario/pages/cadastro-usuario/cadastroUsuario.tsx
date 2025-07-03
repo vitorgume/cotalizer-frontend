@@ -3,10 +3,11 @@ import InputPadrao from '../../../orcamento/componentes/inputPadrao/inputPadrao'
 import './cadastroUsuario.css';
 import type Usuario from '../../../../models/usuario';
 import { cadastrarUsuario } from '../../usuario.service';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Loading from '../../../orcamento/componentes/loading/Loading';
 import HeaderForms from '../../components/headerForms/headerForms';
 import { identificarCpfOuCnpj } from '../../../../utils/identificarCpfCnpj';
+import GoogleLoginButton from '../../components/botaoGoogleLogin/botaoLoginGoogle';
 
 export default function CadastroUsuario() {
     const [nome, setNome] = useState<string | ''>('');
@@ -18,7 +19,7 @@ export default function CadastroUsuario() {
 
     const navigate = useNavigate();
 
-    
+
 
     async function cadastrar() {
         let novoUsuario: Usuario = {} as Usuario;
@@ -59,11 +60,11 @@ export default function CadastroUsuario() {
     return (
         <div>
 
-            {loading ? 
+            {loading ?
                 <Loading message="Cadastrando..." />
-            :
+                :
                 <div className='cadastro-usuario-container'>
-                    
+
                     <HeaderForms
                         titulo='Cadastre-se'
 
@@ -107,6 +108,21 @@ export default function CadastroUsuario() {
 
                         <button className='botao-gerar botao-cadastrar-usuario'>Cadastre-se</button>
                     </form>
+
+                    <hr />
+
+                    <div className='login-info-container'>
+                        <div className='text-login-info'>
+                            <p>Já possui uma conta?</p>
+                            <Link to='/usuario/login'>Faça login</Link>
+                        </div>
+
+                        <GoogleLoginButton
+                            label='Continue com o Google'
+                        />
+                    </div>
+
+
                 </div>
             }
         </div>
