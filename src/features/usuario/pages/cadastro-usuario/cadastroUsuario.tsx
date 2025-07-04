@@ -76,6 +76,7 @@ export default function CadastroUsuario() {
                             value={nome}
                             onChange={setNome}
                             inativo={false}
+                            senha={false}
                         />
 
                         <InputPadrao
@@ -83,6 +84,7 @@ export default function CadastroUsuario() {
                             value={email}
                             onChange={setEmail}
                             inativo={false}
+                            senha={false}
                         />
 
                         <InputPadrao
@@ -90,6 +92,7 @@ export default function CadastroUsuario() {
                             value={telefone}
                             onChange={setTelefone}
                             inativo={false}
+                            senha={false}
                         />
 
                         <InputPadrao
@@ -97,6 +100,7 @@ export default function CadastroUsuario() {
                             value={cpfCnpj}
                             onChange={setCpfCnpj}
                             inativo={false}
+                            senha={false}
                         />
 
                         <InputPadrao
@@ -104,6 +108,7 @@ export default function CadastroUsuario() {
                             value={senha}
                             onChange={setSenha}
                             inativo={false}
+                            senha={true}
                         />
 
                         <button className='botao-gerar botao-cadastrar-usuario'>Cadastre-se</button>

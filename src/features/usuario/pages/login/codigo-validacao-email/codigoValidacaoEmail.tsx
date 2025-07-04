@@ -51,6 +51,7 @@ export default function CodigoValidacaoEmail() {
                     value={codigo}
                     onChange={setCodigo}
                     inativo={false}
+                    senha={false}
                 />
 
                 <a href='#' onClick={reenviarCodigo}>Enviar novamente código</a>

@@ -79,6 +79,7 @@ export default function ListagemOrcamentos() {
                 value={termoBusca}
                 onChange={setTermoBusca}
                 inativo={false}
+                senha={false}
             />
 
             {orcamentos.length > 0 ? (

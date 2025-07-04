@@ -96,6 +96,7 @@ export default function FormDinamico({ orcamentoEstrutura, setOrcamentoEstrutura
                 value={orcamentoEstrutura.cliente}
                 onChange={(valor) => setOrcamentoEstrutura({ ...orcamentoEstrutura, cliente: valor })}
                 inativo={!editado}
+                senha={false}
             />
 
             <h3>Data de entrega</h3>
@@ -104,6 +105,7 @@ export default function FormDinamico({ orcamentoEstrutura, setOrcamentoEstrutura
                 value={orcamentoEstrutura.dataEntrega}
                 onChange={(valor) => setOrcamentoEstrutura({ ...orcamentoEstrutura, dataEntrega: valor })}
                 inativo={!editado}
+                senha={false}
             />
 
             <h3>Desconto</h3>
@@ -118,6 +120,7 @@ export default function FormDinamico({ orcamentoEstrutura, setOrcamentoEstrutura
                     });
                 }}
                 inativo={!editado}
+                senha={false}
             />
 
             <h3>Observações</h3>
@@ -126,6 +129,7 @@ export default function FormDinamico({ orcamentoEstrutura, setOrcamentoEstrutura
                 value={orcamentoEstrutura.observacoes}
                 onChange={(valor) => setOrcamentoEstrutura({ ...orcamentoEstrutura, observacoes: valor })}
                 inativo={!editado}
+                senha={false}
             />
 
             <div className="itens-header">
@@ -157,6 +161,7 @@ export default function FormDinamico({ orcamentoEstrutura, setOrcamentoEstrutura
                                     value={item.descricao}
                                     onChange={(valor) => atualizarItem(index, 'descricao', valor)}
                                     inativo={!editado}
+                                    senha={false}
                                 />
                             </div>
 
@@ -167,6 +172,7 @@ export default function FormDinamico({ orcamentoEstrutura, setOrcamentoEstrutura
                                     value={item.quantidade}
                                     onChange={(valor) => atualizarItem(index, 'quantidade', valor)}
                                     inativo={!editado}
+                                    senha={false}
                                 />
                             </div>
 
@@ -177,6 +183,7 @@ export default function FormDinamico({ orcamentoEstrutura, setOrcamentoEstrutura
                                     value={item.valorUnitario}
                                     onChange={(valor) => atualizarItem(index, 'valorUnitario', valor)}
                                     inativo={!editado}
+                                    senha={false}
                                 />
                             </div>
                         </div>

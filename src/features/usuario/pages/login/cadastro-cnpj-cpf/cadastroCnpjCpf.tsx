@@ -40,6 +40,7 @@ export default function CadastroCnpjCpf() {
                     value={cpfCnpj}
                     onChange={setcpfCnpj}
                     inativo={false}
+                    senha={false}
                 />
 
                 <button className='botao-gerar' onClick={cadastraCpfCnpj}>Continuar</button>

@@ -4,7 +4,7 @@ import HeaderForms from '../../../components/headerForms/headerForms';
 import './loginUsuario.css';
 import { logarUsuario } from '../../../usuario.service';
 import Loading from '../../../../orcamento/componentes/loading/Loading';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import GoogleLoginButton from '../../../components/botaoGoogleLogin/botaoLoginGoogle';
 
 export default function LoginUsuario() {
@@ -35,7 +35,7 @@ export default function LoginUsuario() {
         <div>
             {loading ?
                 <Loading message="Autenticando..." />
-            : <div className='login-usuario-container'>
+                : <div className='login-usuario-container'>
                     <HeaderForms
                         titulo='Bem vindo de volta'
                     />
@@ -46,6 +46,7 @@ export default function LoginUsuario() {
                             value={email}
                             onChange={setEmail}
                             inativo={false}
+                            senha={false}
                         />
 
                         <InputPadrao
@@ -53,11 +54,18 @@ export default function LoginUsuario() {
                             value={senha}
                             onChange={setSenha}
                             inativo={false}
+                            senha={true}
                         />
+                        <Link
+                            style={{alignSelf: 'flex-start', color: '#3B82F6'}}
+                            to={'usuario/esqueceu-senha'}
+                        >
+                            <p>Esqueceu a senha ?</p>
+                        </Link>
 
                         <button className='botao-gerar botao-entrar'>Entrar</button>
                     </form>
-                    <GoogleLoginButton 
+                    <GoogleLoginButton
                         label='Entrar com o Google'
                     />
                 </div>
