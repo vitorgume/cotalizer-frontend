@@ -136,17 +136,23 @@ export default function CadastroOrcamento() {
                                 title="Visualização do Orçamento"
                             ></iframe>
 
-                            <div className='botoes-pdf-orc'>
-                                <a
-                                    href={`http://localhost:8080/arquivos/download/${extrairNomeArquivo(urlPdf)}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="botao-visualizar"
-                                >
-                                    Abrir em nova aba
-                                </a>
-                                < button className='botao-dowload-pdf'><img src={DowloadImage} alt="Dowload de imagem" /></button>
-                            </div>
+                            {orcamentoCriado &&
+                                <div className='botoes-pdf-orc'>
+                                    <a
+                                        href={orcamentoCriado?.urlArquivo}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="botao-visualizar"
+                                    >
+                                        Abrir em nova aba
+                                    </a>
+
+                                    <a href={`http://localhost:8080/arquivos/download/${extrairNomeArquivo(orcamentoCriado.urlArquivo)}`} download target="_blank" rel="noopener noreferrer" className='botao-dowload-pdf'>
+                                        <img src={DowloadImage} alt="Download de imagem" />
+                                    </a>
+
+                                </div>
+                            }
                         </div>
                     )}
                 </div>
