@@ -33,7 +33,7 @@ export default function CadastroCnpjCpf() {
         <div className='cadastro-cpfcnpj-page'>
             <div className='cadastro-cpfcnpj-container'>
 
-                <p className='titulo-validacao-email'>Digite seu CPF/CNPJ ?</p>
+                <p className='titulo-validacao-email'>Digite seu CPF/CNPJ</p>
 
                 <InputPadrao
                     placeholder='CPF/CNPJ'

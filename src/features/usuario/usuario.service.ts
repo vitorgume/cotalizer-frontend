@@ -75,3 +75,15 @@ export function alterarCpfCnpj(idUsuario: string, novosDados: Usuario): Promise<
         }
     })
 }
+
+export function editarSenha(idUsuario: string, senha: string, token: string): Promise<Response<Usuario>>{
+    return api.put<Response<Usuario>>(`/usuarios/${idUsuario}/senha`, {senha: senha, codigo: token})
+    .then(response => response.data)
+    .catch(err => {
+        console.error("Erro ao editar senha:", err);
+        return {
+            dado: {} as Usuario,
+            erro: err
+        }
+    })
+}

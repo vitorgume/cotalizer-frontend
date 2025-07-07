@@ -10,6 +10,7 @@ import LoginUsuario from './features/usuario/pages/login/login-usuario/loginUsua
 import LoginSucesso from './features/usuario/pages/login/loginSucesso/loginSucesso';
 import CodigoValidacaoEmail from './features/usuario/pages/login/codigo-validacao-email/codigoValidacaoEmail';
 import CadastroCnpjCpf from './features/usuario/pages/login/cadastro-cnpj-cpf/cadastroCnpjCpf';
+import AlterarSenha from './features/usuario/pages/alterarSenha/alterarSenha';
 
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
             <Route path='/login/sucesso' element={<LoginSucesso/>} />
             <Route path='/validacao/email/:email' element={<CodigoValidacaoEmail />} />
             <Route path='/usuario/cadastro/cpf-cnpj/:id' element={<CadastroCnpjCpf />} />
+            <Route path='/usuario/alterar/senha' element={<AlterarSenha />} />
         </Routes>
     </Router>
   )
