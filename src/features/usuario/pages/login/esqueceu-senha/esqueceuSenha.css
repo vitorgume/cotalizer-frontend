@@ -1,0 +1,40 @@
+.page-esqueceu-senha {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container-esqueceu-senha {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.form-esqueceu-senha {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    align-items: center;
+    gap: 3rem;
+    background-color: #F9FAFB;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+    padding: 2rem;
+    font-size: 1.3rem;
+    border-radius: 0.5rem;
+}
+
+.solicitacao-senha-finalizado {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #F9FAFB;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+    width: 50%;
+    height: 50%;
+    font-size: 1.5rem;
+    border-radius: 0.5rem;
+}

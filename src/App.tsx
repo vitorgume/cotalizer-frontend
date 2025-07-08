@@ -11,6 +11,7 @@ import LoginSucesso from './features/usuario/pages/login/loginSucesso/loginSuces
 import CodigoValidacaoEmail from './features/usuario/pages/login/codigo-validacao-email/codigoValidacaoEmail';
 import CadastroCnpjCpf from './features/usuario/pages/login/cadastro-cnpj-cpf/cadastroCnpjCpf';
 import AlterarSenha from './features/usuario/pages/alterarSenha/alterarSenha';
+import EsqueceuSenha from './features/usuario/pages/login/esqueceu-senha/esqueceuSenha';
 
 
 function App() {
@@ -27,7 +28,8 @@ function App() {
             <Route path='/login/sucesso' element={<LoginSucesso/>} />
             <Route path='/validacao/email/:email' element={<CodigoValidacaoEmail />} />
             <Route path='/usuario/cadastro/cpf-cnpj/:id' element={<CadastroCnpjCpf />} />
-            <Route path='/usuario/alterar/senha' element={<AlterarSenha />} />
+            <Route path='/usuario/alterar/senha/:token' element={<AlterarSenha />} />
+            <Route path='/usuario/esqueceu-senha' element={<EsqueceuSenha />} />
         </Routes>
     </Router>
   )

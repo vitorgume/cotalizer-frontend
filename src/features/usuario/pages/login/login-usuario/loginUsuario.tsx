@@ -58,7 +58,7 @@ export default function LoginUsuario() {
                         />
                         <Link
                             style={{alignSelf: 'flex-start', color: '#3B82F6'}}
-                            to={'usuario/esqueceu-senha'}
+                            to={'http://localhost:5173/usuario/esqueceu-senha'}
                         >
                             <p>Esqueceu a senha ?</p>
                         </Link>

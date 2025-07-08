@@ -2,58 +2,76 @@ import { useEffect, useState } from 'react';
 import InputPadrao from '../../../orcamento/componentes/inputPadrao/inputPadrao';
 import './alterarSenha.css';
 import Loading from '../../../orcamento/componentes/loading/Loading';
+import { editarSenha } from '../../usuario.service';
+import { useParams } from 'react-router-dom';
 
 export default function AlterarSenha() {
   const [novaSenha, setNovaSenha] = useState<string | ''>('');
-  const [token, setToken] = useState<string | null>(null);
+  const [tokenSalvo, setTokenSalvo] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [finalizado, setFinalizado] = useState<boolean>(false);
+
+  const { token } = useParams<{ token: string }>();
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const tokenUrl = params.get('token');
-    setToken(tokenUrl);
+
+    console.log(token);
+
+    if (token)
+      setTokenSalvo(token);
+
   }, []);
 
   function alterarSenha() {
-    if (token) {
+    if (tokenSalvo) {
 
-      const idUsuario = localStorage.getItem('id-usuario');
 
-      if (idUsuario) {
-        try {
-          editarSenha(idUsuario, novaSenha, token);
-          setLoading(true);
-        } finally {
-          setLoading(false);
-        }
+
+      try {
+        editarSenha(novaSenha, tokenSalvo);
+        setLoading(true);
+      } finally {
+        setLoading(false);
+        setFinalizado(true);
       }
+
     }
 
   }
 
   return (
     <div>
-      {loading ?
-        (
-          <Loading message="Salvando..." />
+      {finalizado ?
+        <div className='solicitacao-senha-finalizado'>
+          <p>Senha alterada com sucesso !</p>
+        </div>
+        : (
+          <div>
+            {loading ?
+              (
+                <Loading message="Salvando..." />
 
-        ) :
-        (
-          <div className='cadastro-nova-senha-page'>
-            <div className='cadastro-nova-senha-container'>
+              ) :
+              (
+                <div className='cadastro-nova-senha-page'>
+                  <div className='cadastro-nova-senha-container'>
 
-              <p className='titulo-validacao-email'>Digite sua nova senha</p>
+                    <p className='titulo-validacao-email'>Digite sua nova senha</p>
 
-              <InputPadrao
-                placeholder='Senha'
-                value={novaSenha}
-                onChange={setNovaSenha}
-                inativo={false}
-                senha={false}
-              />
+                    <InputPadrao
+                      placeholder='Senha'
+                      value={novaSenha}
+                      onChange={setNovaSenha}
+                      inativo={false}
+                      senha={false}
+                    />
 
-              <button className='botao-gerar' onClick={alterarSenha}>Continuar</button>
-            </div>
+                    <button className='botao-gerar' onClick={alterarSenha}>Continuar</button>
+                  </div>
+                </div>
+              )
+
+            }
           </div>
         )
       }
