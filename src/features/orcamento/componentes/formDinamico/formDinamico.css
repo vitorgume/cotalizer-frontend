@@ -232,6 +232,15 @@
     flex-wrap: wrap;
 }
 
+.textarea-podruto {
+    width: 100%;
+    min-height: 2rem;
+    background-color: #F9FAFB;  
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+    padding: 0.7rem;
+    font-size: 1rem;
+}
+
 /* Media Queries - Responsividade */
 
 /* Tablets - até 1024px */
