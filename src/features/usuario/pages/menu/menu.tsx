@@ -96,10 +96,19 @@ export default function Menu() {
                             />
                             <TextoResumo
                                 titulo='Aprovados:'
-                                valor='0'
+                                valor={String(orcamentos.filter(orc => orc.status === 'APROVADO').length)}
+                            />
+
+                            <TextoResumo
+                                titulo='Reprovados:'
+                                valor={String(orcamentos.filter(orc => orc.status === 'REPROVADO').length)}
                             />
                         </div>
-                        <p className='valor-total-info-geral'>R$ {calcularValorTotal(orcamentos)}</p>
+                        <div className='div-valores'>
+                            <p className='valor-total-info-geral'>R$ {calcularValorTotal(orcamentos)}</p>
+                            <p className='valor-total-info-aprovado'>R$ {calcularValorTotal(orcamentos.filter(orc => orc.status === 'APROVADO'))}</p>
+                            <p className='valor-total-info-reprovado'>R$ {calcularValorTotal(orcamentos.filter(orc => orc.status === 'REPROVADO'))}</p>
+                        </div>
                     </div>
 
                     <button className='btn-novo-orcamento' onClick={() => { navigate('/orcamento/cadastro') }}>Novo Orçamento</button>

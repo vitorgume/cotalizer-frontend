@@ -34,14 +34,14 @@
 
 .botoes-orc-item {
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    flex-direction: row;
+    justify-content: center;
+    gap: 1rem;
 }
 
-.botao-deletar-orc-item {
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
+.botoes-orc-item > img {
+    width: 2.5rem;
+    height: 3.0rem;
 }
 
 .botao-dowload-orc-item {
@@ -50,12 +50,8 @@
     cursor: pointer;
 }
 
-.botao-deletar-orc-item > img {
-    width: 2rem;
-    height: 2rem;
-}
 
 .botao-dowload-orc-item > img {
-    width: 2rem;
-    height: 2rem;
+    width: 2.4rem;
+    height: 2.7rem;
 }

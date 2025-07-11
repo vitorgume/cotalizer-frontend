@@ -6,7 +6,6 @@ import { atualizarOrcamento, criarOrcamento, interpretarOrcamento } from '../../
 import Loading from '../../componentes/loading/Loading';
 import type Orcamento from '../../../../models/orcamento';
 import FormDinamico from '../../componentes/formDinamico/formDinamico';
-import { extrairNomeArquivo } from '../../../../utils/urlUtils';
 
 export default function CadastroOrcamento() {
     const [titulo, setTitulo] = useState<string | ''>('');
@@ -25,7 +24,8 @@ export default function CadastroOrcamento() {
                 dataCriacao: '',
                 titulo: titulo,
                 urlArquivo: '',
-                usuarioId: idUsuario
+                usuarioId: idUsuario,
+                status: 'PENDENTE'
             }
 
             try {

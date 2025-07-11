@@ -1,20 +1,22 @@
 import './detalhesOrcamento.css';
 import { useEffect, useState } from 'react';
 import DeleteImage from '../../../../assets/delete_7022659 1.png';
-import PdfExemplo from '../../../../assets/Documento A4 Orçamento Simples Azul 1.png';
 import DowloadImage from '../../../../assets/flecha 1.png';
 import ModalDelete from '../../componentes/modalDelete/modalDelete';
 import Loading from '../../componentes/loading/Loading';
-import { consultarPorId, deletar } from '../../orcamento.service';
+import { atualizarOrcamento, consultarPorId, deletar } from '../../orcamento.service';
 import { useNavigate, useParams } from 'react-router-dom';
 import { formatarData } from '../../../../utils/formataData';
 import type Orcamento from '../../../../models/orcamento';
 import { extrairNomeArquivo } from '../../../../utils/urlUtils';
+import { notificarSucesso } from '../../../../utils/notificacaoUtils';
 
 export default function DetalhesOrcamento() {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [orcamento, setOrcamento] = useState<Orcamento | null>(null);
     const [loading, setLoading] = useState(true);
+    const [statusOrcamento, setStatusOrcamento] = useState<'aprovado' | 'reprovado' | null>(null);
+
 
     const navigate = useNavigate();
 
@@ -41,6 +43,26 @@ export default function DetalhesOrcamento() {
 
     const { id } = useParams<{ id: string }>();
 
+    const handleAprovar = () => {
+        if (orcamento) {
+            setStatusOrcamento('aprovado');
+            orcamento.status = 'APROVADO';
+            atualizarOrcamento(orcamento);
+            notificarSucesso("Aprovado com sucesso")
+        }
+    };
+
+    const handleReprovar = () => {
+        if(orcamento) {
+            setStatusOrcamento('reprovado');
+            orcamento.status = 'REPROVADO';
+            atualizarOrcamento(orcamento);
+            notificarSucesso("Reprovado com sucesso")
+        }
+        
+    };
+
+
     useEffect(() => {
         if (!id) {
             setLoading(false);
@@ -50,6 +72,13 @@ export default function DetalhesOrcamento() {
         async function carregarOrcamento(idOrcamento: string) {
             try {
                 const orcamento = await consultarPorId(idOrcamento);
+                
+                if(orcamento.dado?.status === 'APROVADO') {
+                    setStatusOrcamento('aprovado');
+                } else if (orcamento.dado?.status === 'REPROVADO') {
+                    setStatusOrcamento('reprovado');
+                }
+
                 setOrcamento(orcamento.dado);
             } catch (error) {
                 console.error('Erro ao carregar orçamento:', error);
@@ -70,7 +99,28 @@ export default function DetalhesOrcamento() {
                             <h1>{orcamento.titulo}</h1>
                             <p>{formatarData(orcamento.dataCriacao)}</p>
                         </div>
-                        <button onClick={handleOpenDeleteModal}><img src={DeleteImage} alt="Imagem de delete" /></button>
+
+                        <div className='botoes-header'>
+                            <button
+                                className={`botao-reprovacao ${statusOrcamento === 'reprovado' ? 'ativo' : ''}`}
+                                onClick={handleReprovar}
+                            >
+                                {statusOrcamento === 'reprovado' ? 'Reprovado' : 'Reprovar'}
+                            </button>
+
+                            <button
+                                className={`botao-aprovacao ${statusOrcamento === 'aprovado' ? 'ativo' : ''}`}
+                                onClick={handleAprovar}
+                            >
+                                {statusOrcamento === 'aprovado' ? 'Aprovado' : 'Aprovar'}
+                            </button>
+
+                            <button className='botao-excluir' onClick={handleOpenDeleteModal}>
+                                <img src={DeleteImage} alt="Imagem de delete" />
+                            </button>
+                        </div>
+
+
                     </header>
 
                     <div className='info-orcamento-texto'>

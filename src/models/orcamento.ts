@@ -6,4 +6,5 @@ export default interface Orcamento {
     titulo: string;
     urlArquivo: string;
     usuarioId: string;
+    status: string;
 }
