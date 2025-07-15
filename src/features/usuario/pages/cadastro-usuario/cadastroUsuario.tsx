@@ -32,7 +32,8 @@ export default function CadastroUsuario() {
                 telefone: telefone,
                 cpf: cpfCnpj,
                 cnpj: '',
-                senha: senha
+                senha: senha,
+                plano: ''
             }
         } else if (validacaoCpfCnpj === 'CNPJ') {
             novoUsuario = {
@@ -41,7 +42,8 @@ export default function CadastroUsuario() {
                 telefone: telefone,
                 cpf: '',
                 cnpj: cpfCnpj,
-                senha: senha
+                senha: senha,
+                plano: ''
             }
         }
 

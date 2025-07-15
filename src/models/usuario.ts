@@ -6,4 +6,5 @@ export default interface Usuario {
     cpf: string;
     cnpj: string;
     senha: string;
+    plano: string;
 }

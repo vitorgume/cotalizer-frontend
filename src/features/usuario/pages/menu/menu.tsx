@@ -1,5 +1,5 @@
 import './menu.css';
-import Logo from '../../../../assets/ChatGPT_Image_6_de_jun._de_2025__14_33_15-removebg-preview 2.png';
+import IconPerfil from '../../../../assets/icon-perfil.png';
 import OrcamentoItem from '../../../orcamento/componentes/orcamentoItem/orcamentoItem';
 import TextoResumo from '../../components/textoResumo/textoResumo';
 import { useEffect, useState } from 'react';
@@ -28,6 +28,10 @@ export default function Menu() {
             .slice()
             .sort((a, b) => new Date(b.dataCriacao).getTime() - new Date(a.dataCriacao).getTime())
             .slice(0, 5);
+    }
+
+    function botaoPerfil() {
+        navigate('/usuario/perfil');
     }
 
     useEffect(() => {
@@ -84,7 +88,7 @@ export default function Menu() {
                 <div className='menu-container'>
                     <header className='header-menu'>
                         {usuario ? <h1>Olá, {usuario.nome} !</h1> : <h1>Olá, visitante !</h1>}
-                        <img src={Logo} alt="Logo" />
+                        <button onClick={botaoPerfil}><img src={IconPerfil} alt="Logo" /></button>
                     </header>
 
                     <div className='card-info-geral'>

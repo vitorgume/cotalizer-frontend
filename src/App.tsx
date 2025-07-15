@@ -12,6 +12,7 @@ import CodigoValidacaoEmail from './features/usuario/pages/login/codigo-validaca
 import CadastroCnpjCpf from './features/usuario/pages/login/cadastro-cnpj-cpf/cadastroCnpjCpf';
 import AlterarSenha from './features/usuario/pages/alterarSenha/alterarSenha';
 import EsqueceuSenha from './features/usuario/pages/login/esqueceu-senha/esqueceuSenha';
+import Perfil from './features/usuario/pages/perfil/perfil';
 
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
             <Route path='/usuario/cadastro/cpf-cnpj/:id' element={<CadastroCnpjCpf />} />
             <Route path='/usuario/alterar/senha/:token' element={<AlterarSenha />} />
             <Route path='/usuario/esqueceu-senha' element={<EsqueceuSenha />} />
+            <Route path='/usuario/perfil' element={<Perfil />} />
         </Routes>
     </Router>
   )

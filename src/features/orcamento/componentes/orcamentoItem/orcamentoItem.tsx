@@ -30,11 +30,11 @@ export default function OrcamentoItem({ orcamento, handleOpenDeleteModal, delete
             <div className="botoes-orc-item">
 
                 {orcamento.status == 'APROVADO' &&
-                    <img src={AprovacaoImage} alt="Imagem de Aprovação" />
+                    <img className="imagem-status-orc" src={AprovacaoImage} alt="Imagem de Aprovação" />
                 }
 
                 {orcamento.status == 'REPROVADO' &&
-                    <img src={ReprovacaoImage} alt="Imagem de Reprovação" />
+                    <img className="imagem-status-orc" src={ReprovacaoImage} alt="Imagem de Reprovação" />
                 }
 
                 <a href={`http://localhost:8080/arquivos/download/${extrairNomeArquivo(orcamento.urlArquivo)}`} download target="_blank" rel="noopener noreferrer" className='botao-dowload-orc-item'>

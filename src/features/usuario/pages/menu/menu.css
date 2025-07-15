@@ -18,8 +18,13 @@
     font-weight: lighter;
 }
 
-.header-menu > img {
+.header-menu > button {
     width: 3rem;
+    background-color: transparent;
+}
+
+.header-menu > button:hover {
+    cursor: pointer;
 }
 
 .card-info-geral {

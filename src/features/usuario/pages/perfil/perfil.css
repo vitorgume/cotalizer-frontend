@@ -1,0 +1,103 @@
+.page-perfil {
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    gap: 2rem;
+}
+
+.page-perfil > h1 {
+    font-weight: 100;
+}
+
+.sec-dados {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    width: 100%;
+}
+
+.sec-dados > h3 {
+    font-weight: 100;
+}
+
+.div-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    width: 100%;
+}
+
+.sec-assinatura {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.header-sec-assinatura {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.header-sec-assinatura > h3 {
+    font-weight: 100;
+}
+
+.header-sec-assinatura > p {
+    font-weight: bold;
+    color: #3B82F6;
+    font-size: 1.3rem;
+}
+
+.metricas-sec-assinatura {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 1.5rem;
+    justify-content: center;
+    align-items: center;
+}
+
+.metricas-sec-assinatura > p {
+    align-self: flex-start;
+}
+
+.text-assinatura-plus {
+    background: linear-gradient(to right, #0049BF, #002259);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+.botao-cancelar-assinatura {
+    color: white;
+    background-color: #FFC0BA;
+    padding: 0.5rem;
+    width: 30%;
+    border-radius: 0.5rem;
+}
+
+.botao-cancelar-assinatura:hover {
+    background-color: #fe8479;
+    cursor: pointer;
+}
+
+.botao-cancelar-assinatura:active {
+    background-color: #ea3928;
+}
+
+.div-botoes-assinatura {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+}
