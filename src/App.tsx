@@ -13,6 +13,7 @@ import CadastroCnpjCpf from './features/usuario/pages/login/cadastro-cnpj-cpf/ca
 import AlterarSenha from './features/usuario/pages/alterarSenha/alterarSenha';
 import EsqueceuSenha from './features/usuario/pages/login/esqueceu-senha/esqueceuSenha';
 import Perfil from './features/usuario/pages/perfil/perfil';
+import CheckoutCartao from './features/usuario/pages/forms-cartao/formsCartao';
 
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
             <Route path='/usuario/alterar/senha/:token' element={<AlterarSenha />} />
             <Route path='/usuario/esqueceu-senha' element={<EsqueceuSenha />} />
             <Route path='/usuario/perfil' element={<Perfil />} />
+            <Route path='/usuario/forms-cartao' element={<CheckoutCartao />} />
         </Routes>
     </Router>
   )
