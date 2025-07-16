@@ -16,12 +16,14 @@ interface DadosPagamento {
   };
 }
 
-export async function processarPagamento(dados: DadosPagamento) {
-  try {
-    const response = await axios.post('/process_payment', dados);
-    return response.data;
-  } catch (error) {
-    console.error("Erro ao processar pagamento:", error);
-    throw error;
-  }
+export async function criarAssinatura(dados: {
+  token: string;
+  email: string;
+  identification: {
+    type: string;
+    number: string;
+  };
+}) {
+  const response = await axios.post("/assinaturas", dados);
+  return response.data;
 }

@@ -1,7 +1,7 @@
 import { loadMercadoPago } from "@mercadopago/sdk-js";
 import './formsCartao.css';
 import { useEffect } from 'react';
-import { processarPagamento } from '../../pagamento.service';
+import { criarAssinatura } from '../../pagamento.service';
 
 declare global {
     interface Window {
@@ -68,40 +68,30 @@ export default function CheckoutCartao() {
                         event.preventDefault();
 
                         const {
-                            paymentMethodId: payment_method_id,
-                            issuerId: issuer_id,
                             cardholderEmail: email,
-                            amount,
                             token,
-                            installments,
                             identificationNumber,
                             identificationType,
                         } = cardForm.getCardFormData();
 
                         try {
-                            const resultado = await processarPagamento({
+                            const resultado = await criarAssinatura({
                                 token,
-                                issuer_id,
-                                payment_method_id,
-                                transaction_amount: Number(amount),
-                                installments: Number(installments),
-                                description: "Plano Plus - Assinatura",
-                                payer: {
-                                    email,
-                                    identification: {
-                                        type: identificationType,
-                                        number: identificationNumber,
-                                    },
-                                },
+                                email,
+                                identification: {
+                                    type: identificationType,
+                                    number: identificationNumber,
+                                }
                             });
 
-                            if (resultado.status === "approved") {
-                                alert("Pagamento aprovado! 🎉");
+                            if (resultado.status === "authorized") {
+                                alert("Assinatura criada com sucesso! ");
                             } else {
-                                alert(`Pagamento ${resultado.status}.`);
+                                alert(`Assinatura com status: ${resultado.status}`);
                             }
                         } catch (error) {
-                            alert("Erro ao processar pagamento.");
+                            console.error(error);
+                            alert("Erro ao criar assinatura.");
                         }
                     },
                     onFetching: (resource: any) => {
@@ -120,7 +110,6 @@ export default function CheckoutCartao() {
                     }
                 },
             });
-
         }
 
         carregarMercadoPago();
