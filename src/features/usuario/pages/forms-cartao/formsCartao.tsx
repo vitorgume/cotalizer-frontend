@@ -81,6 +81,8 @@ export default function CheckoutCartao() {
                             paymentMethodId
                         } = cardForm.getCardFormData();
 
+                        console.log(cardForm.getCardFormData());
+
                         if (idUsuario) {
                             try {
                                 const resultado = await criarAssinatura({
