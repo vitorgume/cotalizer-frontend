@@ -9,13 +9,19 @@ declare global {
     }
 }
 
+
+
 export default function CheckoutCartao() {
 
     useEffect(() => {
+        const idUsuario = localStorage.getItem("id-usuario");
+
         async function carregarMercadoPago() {
             await loadMercadoPago();
 
-            const mp = new window.MercadoPago("YOUR_PUBLIC_KEY");
+            const publicKey = import.meta.env.VITE_MERCADO_PAGO_PUBLIC_KEY;
+
+            const mp = new window.MercadoPago(publicKey);
 
             const cardForm = mp.cardForm({
                 amount: "39.9",
@@ -68,30 +74,35 @@ export default function CheckoutCartao() {
                         event.preventDefault();
 
                         const {
-                            cardholderEmail: email,
                             token,
-                            identificationNumber,
+                            cardholderEmail: email,
                             identificationType,
+                            identificationNumber,
+                            paymentMethodId
                         } = cardForm.getCardFormData();
 
-                        try {
-                            const resultado = await criarAssinatura({
-                                token,
-                                email,
-                                identification: {
-                                    type: identificationType,
-                                    number: identificationNumber,
-                                }
-                            });
+                        if (idUsuario) {
+                            try {
+                                const resultado = await criarAssinatura({
+                                    cardTokenId: token,
+                                    paymentMethodId,
+                                    email,
+                                    identification: {
+                                        type: identificationType,
+                                        number: identificationNumber,
+                                    },
+                                    idUsuario: idUsuario
+                                });
 
-                            if (resultado.status === "authorized") {
-                                alert("Assinatura criada com sucesso! ");
-                            } else {
-                                alert(`Assinatura com status: ${resultado.status}`);
+                                if (resultado?.dado?.status === "authorized") {
+                                    alert("Assinatura criada com sucesso!");
+                                } else {
+                                    alert(`Assinatura com status: ${resultado?.dado?.status}`);
+                                }
+                            } catch (error) {
+                                console.error(error);
+                                alert("Erro ao criar assinatura.");
                             }
-                        } catch (error) {
-                            console.error(error);
-                            alert("Erro ao criar assinatura.");
                         }
                     },
                     onFetching: (resource: any) => {

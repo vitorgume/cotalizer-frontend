@@ -16,7 +16,7 @@ export default function Perfil() {
     const navigate = useNavigate();
 
     function obterPlanoPlus() {
-        window.location.href = 'https://www.mercadopago.com.br/subscriptions/checkout?preapproval_plan_id=2c93808497f5fac301980f15e3ed0985';
+        navigate('/usuario/forms-cartao');
     }
 
 
