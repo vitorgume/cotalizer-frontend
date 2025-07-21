@@ -76,35 +76,30 @@ export default function CheckoutCartao() {
                         const {
                             token,
                             cardholderEmail: email,
+                            cardholderName,
                             identificationType,
-                            identificationNumber,
-                            paymentMethodId
+                            identificationNumber
                         } = cardForm.getCardFormData();
 
-                        console.log(cardForm.getCardFormData());
+                        if (!idUsuario) {
+                            alert("Usuário não identificado.");
+                            return;
+                        }
 
-                        if (idUsuario) {
-                            try {
-                                const resultado = await criarAssinatura({
+                        try {
+                            await criarAssinatura({
                                     cardTokenId: token,
-                                    paymentMethodId,
+                                    cardholderName,
                                     email,
                                     identification: {
                                         type: identificationType,
-                                        number: identificationNumber,
+                                        number: identificationNumber
                                     },
-                                    idUsuario: idUsuario
-                                });
-
-                                if (resultado?.dado?.status === "authorized") {
-                                    alert("Assinatura criada com sucesso!");
-                                } else {
-                                    alert(`Assinatura com status: ${resultado?.dado?.status}`);
-                                }
-                            } catch (error) {
-                                console.error(error);
-                                alert("Erro ao criar assinatura.");
-                            }
+                                    idUsuario
+                                })
+                        } catch (erro) {
+                            console.error(erro);
+                            alert("Erro ao enviar dados para a API.");
                         }
                     },
                     onFetching: (resource: any) => {

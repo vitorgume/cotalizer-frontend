@@ -1,10 +1,10 @@
 export default interface Assinatura {
-    id: string;
-    cardTokenId: string
+    cardTokenId: string;
+    cardholderName: string;
     email: string;
-    paymentMethodId: string;
-    transactionAmount: number;
-    reason: string;
-    status: string;
-    idUsuario: string
+    identification: {
+        type: string;
+        number: string;
+    };
+    idUsuario: string;  
 }
