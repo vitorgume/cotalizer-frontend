@@ -1,7 +1,7 @@
 export default interface Assinatura {
-    cardTokenId: string;
+    tokenCardId: string;
     cardholderName: string;
-    email: string;
+    emailUsuario: string;
     identification: {
         type: string;
         number: string;
