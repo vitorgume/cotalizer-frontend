@@ -1,0 +1,48 @@
+.checkout-form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f6f9fc;
+}
+
+.checkout-form {
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 420px;
+}
+
+.checkout-form h2 {
+  margin-bottom: 1.5rem;
+  font-size: 1.25rem;
+  color: #32325d;
+  text-align: center;
+}
+
+.card-element {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-bottom: 1.5rem;
+  background-color: #fafafa;
+}
+
+button {
+  height: 40px;
+  background: #556cd6;
+  color: white;
+  width: 100%;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+button:hover {
+  background: #4455c4;
+}

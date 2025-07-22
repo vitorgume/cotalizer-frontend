@@ -13,29 +13,34 @@ import CadastroCnpjCpf from './features/usuario/pages/login/cadastro-cnpj-cpf/ca
 import AlterarSenha from './features/usuario/pages/alterarSenha/alterarSenha';
 import EsqueceuSenha from './features/usuario/pages/login/esqueceu-senha/esqueceuSenha';
 import Perfil from './features/usuario/pages/perfil/perfil';
-import CheckoutCartao from './features/usuario/pages/forms-cartao/formsCartao';
+import AssinaturaForms from './features/usuario/pages/assinatura/assinaturaForms';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
 
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
 function App() {
   return (
-    <Router>
-      <ToastContainer position="top-right" autoClose={3000} />
+    <Elements stripe={stripePromise}>
+      <Router>
+        <ToastContainer position="top-right" autoClose={3000} />
         <Routes>
-            <Route path='/orcamento/:id' element={<DetalhesOrcamento/>} />
-            <Route path='/orcamentos' element={<ListagemOrcamentos/>} />
-            <Route path='/orcamento/cadastro' element={<CadastroOrcamento/>} />
-            <Route path='/menu' element={<Menu/>} />
-            <Route path='/usuario/cadastro' element={<CadastroUsuario/>} />
-            <Route path='/usuario/login' element={<LoginUsuario/>} />
-            <Route path='/login/sucesso' element={<LoginSucesso/>} />
-            <Route path='/validacao/email/:email' element={<CodigoValidacaoEmail />} />
-            <Route path='/usuario/cadastro/cpf-cnpj/:id' element={<CadastroCnpjCpf />} />
-            <Route path='/usuario/alterar/senha/:token' element={<AlterarSenha />} />
-            <Route path='/usuario/esqueceu-senha' element={<EsqueceuSenha />} />
-            <Route path='/usuario/perfil' element={<Perfil />} />
-            <Route path='/usuario/forms-cartao' element={<CheckoutCartao />} />
+          <Route path='/orcamento/:id' element={<DetalhesOrcamento />} />
+          <Route path='/orcamentos' element={<ListagemOrcamentos />} />
+          <Route path='/orcamento/cadastro' element={<CadastroOrcamento />} />
+          <Route path='/menu' element={<Menu />} />
+          <Route path='/usuario/cadastro' element={<CadastroUsuario />} />
+          <Route path='/usuario/login' element={<LoginUsuario />} />
+          <Route path='/login/sucesso' element={<LoginSucesso />} />
+          <Route path='/validacao/email/:email' element={<CodigoValidacaoEmail />} />
+          <Route path='/usuario/cadastro/cpf-cnpj/:id' element={<CadastroCnpjCpf />} />
+          <Route path='/usuario/alterar/senha/:token' element={<AlterarSenha />} />
+          <Route path='/usuario/esqueceu-senha' element={<EsqueceuSenha />} />
+          <Route path='/usuario/perfil' element={<Perfil />} />
+          <Route path='/usuario/forms-cartao' element={<AssinaturaForms />} />
         </Routes>
-    </Router>
+      </Router>
+    </Elements>
   )
 }
 
