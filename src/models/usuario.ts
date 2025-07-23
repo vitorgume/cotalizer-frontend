@@ -7,4 +7,6 @@ export default interface Usuario {
     cnpj: string;
     senha: string;
     plano: string;
+    idCustomer: string;
+    idAssinatura: string;
 }

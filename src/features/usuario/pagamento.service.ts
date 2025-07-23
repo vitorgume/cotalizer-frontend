@@ -13,3 +13,8 @@ export function criarAssinatura(dados: Assinatura): Promise<Response<Assinatura>
       }
     })
 }
+
+export function cancelarAssinatura(idUsuario: string) {
+  return api.delete(`http://localhost:8081/assinaturas/${idUsuario}`)
+    .catch(err => console.error('Erro ao deletar usuario', err));
+}

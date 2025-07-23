@@ -7,6 +7,7 @@ import { consultarUsuarioPeloId } from '../../usuario.service';
 import { listarPorUsuario } from '../../../orcamento/orcamento.service';
 import type Orcamento from '../../../../models/orcamento';
 import { useNavigate } from 'react-router-dom';
+import { cancelarAssinatura } from '../../pagamento.service';
 
 export default function Perfil() {
 
@@ -14,11 +15,6 @@ export default function Perfil() {
     const [orcamentos, setOrcamentos] = useState<Orcamento[] | []>([])
 
     const navigate = useNavigate();
-
-    function obterPlanoPlus() {
-        navigate('/usuario/forms-cartao');
-    }
-
 
     useEffect(() => {
         async function carregarUsuario(id: string) {
@@ -45,6 +41,19 @@ export default function Perfil() {
         }
     }, [])
 
+    async function cancelar() {
+
+        const idUsuario = localStorage.getItem('id-usuario');
+
+        if(idUsuario) {
+            await cancelarAssinatura(idUsuario);
+        }
+    }
+
+    function obterPlanoPlus() {
+        navigate('/usuario/forms-cartao');
+    }
+    
     return (
         <div className='page-perfil'>
             <h1>Sua conta</h1>
@@ -133,7 +142,7 @@ export default function Perfil() {
                         (
                             <div className='div-botoes-assinatura'>
                                 <button className='botao-gerar'>Plano personalizado</button>
-                                <button className='botao-cancelar-assinatura'>Cancelar assinatura</button>
+                                <button onClick={cancelar} className='botao-cancelar-assinatura'>Cancelar assinatura</button>
                             </div>
                         )
                     }
