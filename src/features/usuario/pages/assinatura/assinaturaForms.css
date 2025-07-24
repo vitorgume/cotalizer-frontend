@@ -100,14 +100,14 @@
   flex-direction: column;
 }
 
-label {
+.label-assinatura {
   font-weight: 600;
   margin-bottom: 8px;
   font-size: 14px;
   color: #000000;
 }
 
-input[type="email"] {
+.input-assinatura[type="email"] {
   width: 100%;
   padding: 14px 16px;
   border: 2px solid #e2e8f0;
@@ -118,14 +118,14 @@ input[type="email"] {
   color: #000000;
 }
 
-input[type="email"]:focus {
+.input-assinatura[type="email"]:focus {
   outline: none;
   border-color: #3B82F6;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
   transform: translateY(-1px);
 }
 
-input[type="text"] {
+.input-assinatura[type="text"] {
   width: 100%;
   padding: 14px 16px;
   border: 2px solid #e2e8f0;
@@ -136,7 +136,7 @@ input[type="text"] {
   color: #000000;
 }
 
-input[type="text"]:focus {
+.input-assinatura[type="text"]:focus {
   outline: none;
   border-color: #3B82F6;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
@@ -148,10 +148,14 @@ input[type="text"]:focus {
   border-radius: 8px;
   padding: 14px;
   background: #fff;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .card-element {
   font-size: 16px;
+  width: 100% !important;
+  box-sizing: border-box;
 }
 
 /* Botão */
@@ -196,18 +200,10 @@ input[type="text"]:focus {
   left: 100%;
 }
 
-.secure-badge {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 16px;
-  color: #64748b;
-  font-size: 12px;
-}
-
-.secure-badge::before {
-  content: '🔒';
+.form-group > input,
+.form-group > .card-element-wrapper {
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* Responsivo */

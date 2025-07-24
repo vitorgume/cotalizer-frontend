@@ -8,6 +8,7 @@ import { listarPorUsuario } from '../../../orcamento/orcamento.service';
 import type Orcamento from '../../../../models/orcamento';
 import { useNavigate } from 'react-router-dom';
 import { cancelarAssinatura } from '../../pagamento.service';
+import { notificarSucesso } from '../../../../utils/notificacaoUtils';
 
 export default function Perfil() {
 
@@ -48,6 +49,8 @@ export default function Perfil() {
         if(idUsuario) {
             await cancelarAssinatura(idUsuario);
         }
+
+        notificarSucesso('Assinatura cancelada com sucesso !')
     }
 
     function obterPlanoPlus() {
@@ -141,7 +144,7 @@ export default function Perfil() {
                         :
                         (
                             <div className='div-botoes-assinatura'>
-                                <button className='botao-gerar'>Plano personalizado</button>
+                                <button onClick={() => window.location.href="https://wa.me/554391899898"} className='botao-gerar'>Plano personalizado</button>
                                 <button onClick={cancelar} className='botao-cancelar-assinatura'>Cancelar assinatura</button>
                             </div>
                         )

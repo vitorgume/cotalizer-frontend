@@ -2,6 +2,9 @@ import './assinaturaForms.css';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { criarAssinatura } from '../../pagamento.service';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import SucessoPagamento from '../../components/sucessoPagamento/sucessoPagamento';
+import Loading from '../../../orcamento/componentes/loading/Loading';
 
 export default function AssinaturaForms() {
     const stripe = useStripe();
@@ -13,8 +16,11 @@ export default function AssinaturaForms() {
     const [previewExp, setPreviewExp] = useState('MM/AA');
     const [previewCard, setPreviewCard] = useState('•••• •••• •••• ••••');
     const [bandeira, setBandeira] = useState('');
+    const [sucessoAssinatura, setSucessoAssinatura] = useState<boolean>(false)
+    const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent) => {
+        setLoading(true);
         e.preventDefault();
         const cardElement = elements?.getElement(CardElement);
         if (!stripe || !cardElement) return;
@@ -40,6 +46,9 @@ export default function AssinaturaForms() {
                 customerEmail: email,
                 idUsuario,
             });
+
+            setSucessoAssinatura(true);
+            setLoading(false);
         }
     };
 
@@ -57,80 +66,88 @@ export default function AssinaturaForms() {
         setPreviewExp(exp || 'MM/AA');
     };
 
-    return (
-        <div className='body-forms-cartao'>
-            <div className="container">
-                <div className="header">
-                    <h1>Dados do Cartão</h1>
-                    <p>Insira as informações do seu cartão de forma segura</p>
-                </div>
+    return sucessoAssinatura ? (
+        <SucessoPagamento />
+    ) : (
+        loading
+            ? <Loading message='Processando' />
+            :
+            <div className='body-forms-cartao'>
+                <div className="container">
+                    <div className="header">
+                        <h1>Dados do Cartão</h1>
+                        <p>Insira as informações do seu cartão de forma segura</p>
+                    </div>
 
-                <div className="card-preview">
-                    <div className="card-number">{previewCard}</div>
-                    <div className="card-info">
-                        <div className="card-holder">
-                            <div style={{ fontSize: 10, opacity: 0.7, marginBottom: 4 }}>PORTADOR</div>
-                            <div>{previewNome}</div>
+                    <div className="card-preview">
+                        <div className="card-number">{previewCard}</div>
+                        <div className="card-info">
+                            <div className="card-holder">
+                                <div style={{ fontSize: 10, opacity: 0.7, marginBottom: 4 }}>PORTADOR</div>
+                                <div>{previewNome}</div>
+                            </div>
+                            <div className="card-expiry">
+                                <div style={{ fontSize: 10, opacity: 0.7, marginBottom: 4 }}>VÁLIDO ATÉ</div>
+                                <div>{previewExp}</div>
+                            </div>
                         </div>
-                        <div className="card-expiry">
-                            <div style={{ fontSize: 10, opacity: 0.7, marginBottom: 4 }}>VÁLIDO ATÉ</div>
-                            <div>{previewExp}</div>
-                        </div>
-                    </div>
-                    {bandeira && <div style={{ marginTop: '8px' }}>Bandeira: {bandeira.toUpperCase()}</div>}
-                </div>
-
-                <form onSubmit={handleSubmit} className="checkout-form">
-                    <div className="form-group">
-                        <label htmlFor="email">E-mail</label>
-                        <input
-                            type="email"
-                            id="email"
-                            placeholder="seuemail@exemplo.com"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                        />
+                        {bandeira && <div style={{ marginTop: '8px' }}>Bandeira: {bandeira.toUpperCase()}</div>}
                     </div>
 
-                    <div className="form-group">
-                        <label htmlFor="nome">Nome do Portador</label>
-                        <input
-                            type="text"
-                            id="nome"
-                            placeholder="João Silva"
-                            value={nome}
-                            onChange={(e) => {
-                                setNome(e.target.value);
-                                setPreviewNome(e.target.value.toUpperCase());
-                            }}
-                            required
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <label>Cartão de Crédito</label>
-                        <div className="card-element-wrapper">
-                            <CardElement
-                                className="card-element"
-                                onChange={handleCardChange}
-                                options={{
-                                    style: {
-                                        base: {
-                                            fontSize: '16px',
-                                            color: '#32325d',
-                                            '::placeholder': { color: '#a0aec0' },
-                                        },
-                                        invalid: { color: '#e53e3e' },
-                                    },
-                                }}
+                    <form onSubmit={handleSubmit} className="checkout-form">
+                        <div className="form-group">
+                            <label className='label-assinatura' htmlFor="email">E-mail</label>
+                            <input
+                                type="email"
+                                id="email"
+                                placeholder="seuemail@exemplo.com"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                                className='input-assinatura'
                             />
                         </div>
-                    </div>
 
-                    <button type="submit" className="submit-btn">Confirmar Pagamento</button>
-                </form>
+                        <div className="form-group">
+                            <label className='label-assinatura' htmlFor="nome">Nome do Portador</label>
+                            <input
+                                type="text"
+                                id="nome"
+                                placeholder="João Silva"
+                                value={nome}
+                                onChange={(e) => {
+                                    setNome(e.target.value);
+                                    setPreviewNome(e.target.value.toUpperCase());
+                                }}
+                                required
+                                className='input-assinatura'
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label className='label-assinatura' >Cartão de Crédito</label>
+                            <div className="card-element-wrapper">
+                                <CardElement
+                                    className="card-element"
+                                    onChange={handleCardChange}
+                                    options={{
+                                        style: {
+                                            base: {
+                                                fontSize: '16px',
+                                                color: '#32325d',
+                                                '::placeholder': { color: '#a0aec0' },
+                                            },
+                                            invalid: { color: '#e53e3e' },
+                                        },
+                                    }}
+                                />
+                            </div>
+                        </div>
+
+                        <button type="submit" className="submit-btn">Confirmar Pagamento</button>
+                    </form>
+                </div>
             </div>
-        </div>
     );
+
 }
