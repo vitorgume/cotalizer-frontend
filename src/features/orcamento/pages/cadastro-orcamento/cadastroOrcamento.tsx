@@ -84,6 +84,12 @@ export default function CadastroOrcamento() {
 
     return (
         <div className='cadastro-orcamento-cointainer'>
+            <div className='text-cadastro-tradicional'>
+                <p>Faça seu próprio orçamento</p>
+                <a href="http://localhost:5173/orcamento/tradicional/cadastro"><p className='text-clique-aqui'>clique aqui</p></a>
+            </div>
+            
+
             <div className='container-titulo'>
                 <p>Digite seu orçamento</p>
                 <p className='segundo-titulo'>Que a IA faz</p>

@@ -1,0 +1,236 @@
+/* Reset e configurações base */
+* {
+  box-sizing: border-box;
+}
+
+/* Container principal */
+.cadastro-container {
+  display: flex;
+  flex-direction: column;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  gap: 2rem;
+  background-color: #ffffff;
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Header */
+.cadastro-header {
+  text-align: center;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 1rem;
+}
+
+.cadastro-header h1 {
+  font-size: 2.5rem;
+  font-weight: 300;
+  color: #1a202c;
+  margin: 0;
+}
+
+/* Main content */
+.cadastro-main {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+/* Seções */
+section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+section h2 {
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: #2d3748;
+  margin: 0;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 0.5rem;
+}
+
+/* Seção Cliente */
+.secao-cliente {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+/* Input groups */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.input-group label {
+  font-weight: 500;
+  color: #374151;
+  font-size: 0.875rem;
+}
+
+/* Lista de produtos */
+.lista-produtos {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Textarea de observações */
+.textarea-observacoes {
+  width: 100%;
+  min-height: 8rem;
+  padding: 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  background-color: #f9fafb;
+  font-size: 1rem;
+  font-family: inherit;
+  resize: vertical;
+  transition: border-color 0.2s ease;
+}
+
+.textarea-observacoes:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Campos personalizados */
+.campos-personalizados-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.campo-personalizado {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem;
+  background-color: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.input-campo-titulo,
+.input-campo-valor {
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  background-color: #ffffff;
+  transition: border-color 0.2s ease;
+}
+
+.input-campo-titulo:focus,
+.input-campo-valor:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.btn-remover-campo {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.25rem;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.btn-remover-campo:hover {
+  background-color: #fee2e2;
+}
+
+.btn-adicionar-campo {
+  align-self: flex-start;
+  padding: 0.75rem 1.5rem;
+  background: #3b82f6;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.btn-adicionar-campo:hover {
+  background-color: #2563eb;
+}
+
+/* Footer com botões de ação */
+.cadastro-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  padding-top: 2rem;
+  border-top: 2px solid #e2e8f0;
+}
+
+.btn-cancelar,
+.btn-salvar {
+  padding: 0.875rem 2rem;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+}
+
+.btn-cancelar {
+  background-color: #ffffff;
+  color: #6b7280;
+  border-color: #d1d5db;
+}
+
+.btn-cancelar:hover {
+  background-color: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.btn-salvar {
+  background-color: #10b981;
+  color: #ffffff;
+}
+
+.btn-salvar:hover {
+  background-color: #059669;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .cadastro-container {
+    padding: 1rem;
+    gap: 1.5rem;
+  }
+  
+  .cadastro-header h1 {
+    font-size: 2rem;
+  }
+  
+  .secao-cliente {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .campo-personalizado {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+  
+  .cadastro-footer {
+    flex-direction: column;
+  }
+  
+  .btn-cancelar,
+  .btn-salvar {
+    width: 100%;
+  }
+}

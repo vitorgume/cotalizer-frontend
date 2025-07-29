@@ -2,6 +2,7 @@ import type Response from "../../models/response";
 import type Page from "../../models/page";
 import type Orcamento from "../../models/orcamento";
 import api from '../../utils/axios';
+import type { OrcamentoTradicional } from "../../models/orcamentoTradicional";
 
 export function consultarPorId(idOrcamento: string): Promise<Response<Orcamento>> {
     return api.get<Response<Orcamento>>(
@@ -68,4 +69,16 @@ export function interpretarOrcamento(novoOrcamento: Orcamento): Promise<Response
 export function atualizarOrcamento(orcamento: Orcamento): Promise<Response<Orcamento>> {
     return api.put<Response<Orcamento>>(`/orcamentos/${orcamento.id}`, orcamento)
         .then(response => response.data);
+}
+
+export function cadastrarOrcamento(orcamneto: OrcamentoTradicional): Promise<Response<OrcamentoTradicional>> {
+    return api.post<Response<OrcamentoTradicional>>(`/orcamentos/tradicional`, orcamneto)
+        .then(response => response.data)
+        .catch(err => {
+            console.error("Erro ao criar orcamento:", err);
+            return {
+                dado: {} as OrcamentoTradicional,
+                erro: err
+            }
+        });
 }

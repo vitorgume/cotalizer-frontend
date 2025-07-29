@@ -16,6 +16,7 @@ import Perfil from './features/usuario/pages/perfil/perfil';
 import AssinaturaForms from './features/usuario/pages/assinatura/assinaturaForms';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
+import CadastroOrcamentoTradicional from './features/orcamento/pages/cadastro-orcamento-tradicional/cadastroOrcamentoTradicional';
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
@@ -28,6 +29,7 @@ function App() {
           <Route path='/orcamento/:id' element={<DetalhesOrcamento />} />
           <Route path='/orcamentos' element={<ListagemOrcamentos />} />
           <Route path='/orcamento/cadastro' element={<CadastroOrcamento />} />
+          <Route path='/orcamento/tradicional/cadastro' element={<CadastroOrcamentoTradicional />} />
           <Route path='/menu' element={<Menu />} />
           <Route path='/usuario/cadastro' element={<CadastroUsuario />} />
           <Route path='/usuario/login' element={<LoginUsuario />} />

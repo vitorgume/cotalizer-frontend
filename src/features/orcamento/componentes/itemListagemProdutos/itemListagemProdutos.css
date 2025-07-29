@@ -1,0 +1,134 @@
+.item-produto {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
+  background-color: #ffffff;
+}
+
+.item-produto:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+.item-produto.even {
+  background-color: #f8fafc;
+}
+
+.item-produto.odd {
+  background-color: #ffffff;
+}
+
+.item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  flex: 1;
+}
+
+.item-titulo {
+  margin: 0;
+}
+
+.item-titulo h4 {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.item-detalhes {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.item-quantidade,
+.item-preco-unitario,
+.item-preco-total {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.value {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.value.total {
+  font-size: 1rem;
+  color: #059669;
+  font-weight: 700;
+}
+
+.item-acoes {
+  display: flex;
+  align-items: center;
+}
+
+.btn-deletar {
+  background-color: transparent;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  padding: 0.5rem;
+  cursor: pointer;
+  color: #6b7280;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-deletar:hover {
+  background-color: #fee2e2;
+  border-color: #fecaca;
+  color: #dc2626;
+}
+
+.btn-deletar:active {
+  transform: scale(0.95);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .item-produto {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .item-detalhes {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    width: 100%;
+  }
+  
+  .item-quantidade,
+  .item-preco-unitario,
+  .item-preco-total {
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0.5rem;
+    background-color: #f9fafb;
+    border-radius: 4px;
+  }
+  
+  .item-acoes {
+    align-self: flex-end;
+  }
+}
