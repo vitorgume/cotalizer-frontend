@@ -244,7 +244,7 @@ export default function FormDinamico({
                         </div>
                         :
                         <div>
-                            <h3>Total: R$ 0,0</h3>
+                            <h3>Total: R$ {calcularTotal(orcamentoEstrutura.itens, 0).toFixed(2).replace('.', ',')}</h3>
                         </div>
                     }
 

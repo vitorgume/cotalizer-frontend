@@ -54,6 +54,18 @@ export function criarOrcamento(novoOrcamento: Orcamento): Promise<Response<Orcam
         });
 }
 
+export function gerarPdfOrcamentoTradicional(orcamento: OrcamentoTradicional): Promise<Response<OrcamentoTradicional>> {
+    return api.post<Response<OrcamentoTradicional>>('/arquivos/tradicional', orcamento)
+        .then(response => response.data)
+        .catch(err => {
+            console.error("Erro ao criar orcamento:", err);
+            return {
+                dado: {} as OrcamentoTradicional,
+                erro: err
+            }
+        });
+}
+
 export function interpretarOrcamento(novoOrcamento: Orcamento): Promise<Response<Orcamento>> {
     return api.post<Response<Orcamento>>(`/orcamentos`, novoOrcamento)
         .then(response => response.data)
@@ -72,7 +84,7 @@ export function atualizarOrcamento(orcamento: Orcamento): Promise<Response<Orcam
 }
 
 export function cadastrarOrcamento(orcamneto: OrcamentoTradicional): Promise<Response<OrcamentoTradicional>> {
-    return api.post<Response<OrcamentoTradicional>>(`/orcamentos/tradicional`, orcamneto)
+    return api.post<Response<OrcamentoTradicional>>(`/orcamentos/tradicionais`, orcamneto)
         .then(response => response.data)
         .catch(err => {
             console.error("Erro ao criar orcamento:", err);
@@ -81,4 +93,22 @@ export function cadastrarOrcamento(orcamneto: OrcamentoTradicional): Promise<Res
                 erro: err
             }
         });
+}
+
+export function listarTradicionaisPorUsuario(idUsuario: string): Promise<Response<Page<OrcamentoTradicional>>> {
+    return api.get<Response<Page<OrcamentoTradicional>>>(`/orcamentos/tradicionais/usuario/${idUsuario}?page=0&size=10`)
+    .then(response => response.data)
+    .catch(err => {
+        console.error("Erro ao carregar orcamentos:", err);
+        return {
+            dado: {
+                content: [],
+                totalElements: 0,
+                totalPages: 0,
+                number: 0,
+                size: 0
+            },
+            erro: err
+        }
+    })
 }

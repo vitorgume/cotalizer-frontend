@@ -6,6 +6,12 @@ export interface OrcamentoTradicional {
     cliente: string;
     cnpjCpf: string;
     observacoes: string;
-    customFields: CampoPersonalizado[];
+    camposPersonalizados: CampoPersonalizado[];
     produtos: Produto[];
+    tipoOrcamento: string;
+    status: string;
+    dataCriacao: string;
+    idUsuario: string;
+    valorTotal: number;
+    urlArquivo: string;
 }

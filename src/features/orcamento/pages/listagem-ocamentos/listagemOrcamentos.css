@@ -22,3 +22,52 @@
     width: 100%;
     max-width: 600px;
 }
+
+.filtro-tipo {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.filtro-tipo button {
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  background: #fff;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+.filtro-tipo button.active {
+  background: #3b82f6;
+  color: #fff;
+  border-color: #3b82f6;
+}
+.filtro-tipo button:hover {
+  background: #f0f0f0;
+}
+
+.abas-tipo {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.abas-tipo button {
+  flex: 1;
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  background: #fff;
+  cursor: pointer;
+  transition: background 0.2s;
+  border-radius: 4px;
+}
+
+.abas-tipo button.active {
+  background: #3b82f6;
+  color: #fff;
+  border-color: #3b82f6;
+}
+
+.abas-tipo button:hover {
+  background: #f0f0f0;
+}
+

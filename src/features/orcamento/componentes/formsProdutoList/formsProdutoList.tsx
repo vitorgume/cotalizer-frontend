@@ -39,7 +39,7 @@ export function FormsProdutoList({ onAddProduto }: FormsProdutoListProps) {
     try {
       const novoProduto: Produto = {
         id: '',
-        titulo: descricao.trim(),
+        descricao: descricao.trim(),
         quantidade: quantidadeNumerica,
         valor: valorNumerico,
       };

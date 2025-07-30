@@ -8,12 +8,11 @@ import type Orcamento from '../../../../models/orcamento';
 import { Link, useNavigate } from 'react-router-dom';
 import Loading from '../../../orcamento/componentes/loading/Loading';
 import { consultarUsuarioPeloId } from '../../usuario.service';
-import { listarPorUsuario } from '../../../orcamento/orcamento.service';
-import { getId } from '../../../../utils/idTokenUtil';
+import { listarPorUsuario, listarTradicionaisPorUsuario } from '../../../orcamento/orcamento.service';
 
 export default function Menu() {
     const [usuario, setUsuario] = useState<Usuario | null>(null);
-    const [orcamentos, setOrcamentos] = useState<Orcamento[] | []>([]);
+    const [orcamentos, setOrcamentos] = useState<any[] | []>([]);
     const [loading, setLoading] = useState(true);
 
     const navigate = useNavigate();
@@ -23,7 +22,7 @@ export default function Menu() {
         return total.toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
     }
 
-    function obterCincoOrcamentosMaisRecentes(orcamentos: Orcamento[]) {
+    function obterCincoOrcamentosMaisRecentes(orcamentos: any[]) {
         return orcamentos
             .slice()
             .sort((a, b) => new Date(b.dataCriacao).getTime() - new Date(a.dataCriacao).getTime())
@@ -36,43 +35,54 @@ export default function Menu() {
 
     useEffect(() => {
         const usuarioId = localStorage.getItem('id-usuario');
-        const token = localStorage.getItem('token');
-
-        if (!usuarioId || !token) {
+        if (!usuarioId) {
             navigate('/menu');
             return;
         }
-
-        if (!token) {
-            const params = new URLSearchParams(window.location.search);
-            const token = params.get('token');
-
-            if (token) {
-                localStorage.setItem('token', token);
-
-                const idUsuario = getId(token);
-                if (idUsuario) {
-                    localStorage.setItem('id-usuario', idUsuario);
-                }
-            }
-        }
+        setLoading(true);
 
         async function carregarDados() {
             try {
-
                 if (usuarioId) {
                     const usuarioResponse = await consultarUsuarioPeloId(usuarioId);
-                    const orcamentosResponse = await listarPorUsuario(usuarioId);
 
-                    if (!usuarioResponse.dado || !orcamentosResponse?.dado) {
-                        throw new Error("Falha ao carregar dados do usuário.");
+                    // 2) busca IA e tradicional
+                    const [iaRes, tradRes] = await Promise.all([
+                        listarPorUsuario(usuarioId),
+                        listarTradicionaisPorUsuario(usuarioId)
+                    ]);
+
+                    if (!usuarioResponse.dado || !iaRes.dado || !tradRes.dado) {
+                        throw new Error('Falha ao carregar dados');
                     }
 
+                    // 3) normaliza ambos para o mesmo shape de Orcamento
+                    const iaList: Orcamento[] = iaRes.dado.content.map(o => ({
+                        ...o,
+                        tipoOrcamento: 'IA'
+                    }));
+
+                    const tradList: Orcamento[] = tradRes.dado.content.map(t => ({
+                        id: t.id,
+                        conteudoOriginal: '',                       
+                        orcamentoFormatado: { total: t.valorTotal },
+                        dataCriacao: t.dataCriacao,
+                        titulo: t.cliente,                          
+                        urlArquivo: t.urlArquivo,
+                        usuarioId: t.idUsuario,
+                        status: t.status,
+                        tipoOrcamento: 'TRADICIONAL'
+                    }));
+
+                    const todos = [...iaList, ...tradList].sort(
+                        (a, b) => new Date(b.dataCriacao).getTime() - new Date(a.dataCriacao).getTime()
+                    );
+
                     setUsuario(usuarioResponse.dado);
-                    setOrcamentos(orcamentosResponse.dado.content);
+                    setOrcamentos(todos);
                 }
             } catch (err) {
-                console.error("Erro ao carregar dados:", err);
+                console.error('Erro ao carregar dados:', err);
                 navigate('/menu');
             } finally {
                 setLoading(false);
@@ -134,8 +144,6 @@ export default function Menu() {
                                 <OrcamentoItem
                                     key={orc.id}
                                     orcamento={orc}
-                                    handleOpenDeleteModal={() => { }}
-                                    deleteButton={false}
                                 />
                             ))
                         ) : (

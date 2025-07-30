@@ -25,7 +25,8 @@ export default function CadastroOrcamento() {
                 titulo: titulo,
                 urlArquivo: '',
                 usuarioId: idUsuario,
-                status: 'PENDENTE'
+                status: 'PENDENTE',
+                tipoOrcamento: 'IA'
             }
 
             try {

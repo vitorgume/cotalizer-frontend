@@ -7,4 +7,5 @@ export default interface Orcamento {
     urlArquivo: string;
     usuarioId: string;
     status: string;
+    tipoOrcamento: string;
 }

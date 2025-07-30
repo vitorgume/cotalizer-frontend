@@ -1,13 +1,14 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import './CadastroOrcamentoTradicional.css';
 import InputPadrao from '../../componentes/inputPadrao/inputPadrao';
 import { ItemListagemProdutos } from '../../componentes/itemListagemProdutos/itemListagemProdutos';
 import { FormsProdutoList } from '../../componentes/formsProdutoList/formsProdutoList';
-import { cadastrarOrcamento } from '../../orcamento.service';
+import { cadastrarOrcamento, gerarPdfOrcamentoTradicional } from '../../orcamento.service';
 import type { OrcamentoTradicional } from '../../../../models/orcamentoTradicional';
 import type { CampoPersonalizado } from '../../../../models/campoPersonalizado';
 import type { Produto } from '../../../../models/produto';
 import Loading from '../../componentes/loading/Loading';
+import { useNavigate } from 'react-router-dom';
 
 export default function CadastroOrcamentoTradicional() {
     const [cliente, setCliente] = useState('');
@@ -17,22 +18,45 @@ export default function CadastroOrcamentoTradicional() {
     const [produtos, setProdutos] = useState<Produto[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
 
+    const navigate = useNavigate();
+
+    // Calcula o total dos produtos
+    const valorTotal = useMemo(() => {
+        return produtos.reduce((acc, p) => acc + p.valor * p.quantidade, 0);
+    }, [produtos]);
+
     const salvarOrcamento = async () => {
+        const idUsuario = localStorage.getItem('id-usuario');
+        if (!idUsuario) {
+            console.error('ID do usuário não encontrado');
+            return;
+        }
+        
         const orcamento: OrcamentoTradicional = {
             cliente,
             cnpjCpf,
             observacoes,
-            customFields,
-            produtos
+            camposPersonalizados: customFields,
+            produtos,
+            tipoOrcamento: 'TRADICIONAL',
+            status: 'PENDENTE',
+            dataCriacao: '',
+            idUsuario: idUsuario,
+            valorTotal: valorTotal,
+            urlArquivo: ''
         };
 
         try {
             setLoading(true);
-            await cadastrarOrcamento(orcamento);
+            const orcamentoCadastrado = await cadastrarOrcamento(orcamento);
+            if (orcamentoCadastrado.dado) {
+                await gerarPdfOrcamentoTradicional(orcamentoCadastrado.dado);
+            }
         } catch (error) {
             console.error('Erro ao cadastrar orçamento tradicional: ', error);
         } finally {
             setLoading(false);
+            navigate('/menu');
         }
     };
 
@@ -111,7 +135,7 @@ export default function CadastroOrcamentoTradicional() {
                                 {produtos.map((produto, index) => (
                                     <ItemListagemProdutos
                                         key={produto.id}
-                                        titulo={produto.titulo}
+                                        titulo={produto.descricao}
                                         quantidade={produto.quantidade}
                                         preco={produto.valor}
                                         index={index}
@@ -121,6 +145,12 @@ export default function CadastroOrcamentoTradicional() {
                             </div>
 
                             <FormsProdutoList onAddProduto={addProduto} />
+
+                            {produtos.length > 0 && (
+                                <div className="secao-total">
+                                    <h3>Total: R$ {valorTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h3>
+                                </div>
+                            )}
                         </section>
 
                         <section className="secao-observacoes">
