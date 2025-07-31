@@ -1,5 +1,3 @@
-import type Orcamento from "../../../../models/orcamento";
-import DeleteImage from '../../../../assets/delete_7022659 1.png';
 import DowloadImage from '../../../../assets/flecha 1.png';
 import AprovacaoImage from '../../../../assets/positivo-removebg-preview (1).png';
 import ReprovacaoImage from '../../../../assets/negativo-removebg-preview (1).png';
