@@ -112,3 +112,25 @@ export function listarTradicionaisPorUsuario(idUsuario: string): Promise<Respons
         }
     })
 }
+
+export function consultarTradicionalPorId(idOrcamento: string): Promise<Response<OrcamentoTradicional>> {
+    return api.get<Response<OrcamentoTradicional>>(`/orcamentos/tradicionais/${idOrcamento}`)
+    .then(response => response.data)
+    .catch(err => {
+        console.error("Erro ao carregar orcamento:", err);
+        return {
+            dado: {} as OrcamentoTradicional,
+            erro: err
+        }
+    })
+}
+
+export function atualizarOrcamentoTradicional(orcamento: OrcamentoTradicional): Promise<Response<OrcamentoTradicional>> {
+    return api.put<Response<OrcamentoTradicional>>(`/orcamentos/tradicionais/${orcamento.id}`, orcamento)
+        .then(response => response.data);
+}
+
+export function deletarTradicional(idOrcamento: string): Promise<Response<OrcamentoTradicional>> {
+    return api.delete<Response<OrcamentoTradicional>>(`/orcamentos/tradicionais/${idOrcamento}`)
+        .then(response => response.data);
+}

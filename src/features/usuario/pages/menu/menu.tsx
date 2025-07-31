@@ -46,7 +46,6 @@ export default function Menu() {
                 if (usuarioId) {
                     const usuarioResponse = await consultarUsuarioPeloId(usuarioId);
 
-                    // 2) busca IA e tradicional
                     const [iaRes, tradRes] = await Promise.all([
                         listarPorUsuario(usuarioId),
                         listarTradicionaisPorUsuario(usuarioId)
@@ -56,106 +55,108 @@ export default function Menu() {
                         throw new Error('Falha ao carregar dados');
                     }
 
-                    // 3) normaliza ambos para o mesmo shape de Orcamento
                     const iaList: Orcamento[] = iaRes.dado.content.map(o => ({
                         ...o,
                         tipoOrcamento: 'IA'
                     }));
 
-                    const tradList: Orcamento[] = tradRes.dado.content.map(t => ({
-                        id: t.id,
-                        conteudoOriginal: '',                       
-                        orcamentoFormatado: { total: t.valorTotal },
-                        dataCriacao: t.dataCriacao,
-                        titulo: t.cliente,                          
-                        urlArquivo: t.urlArquivo,
-                        usuarioId: t.idUsuario,
-                        status: t.status,
-                        tipoOrcamento: 'TRADICIONAL'
-                    }));
+                    const tradList: Orcamento[] = tradRes.dado.content.map(t => (
+                        {
+                            id: t.id,
+                            conteudoOriginal: '',
+                            orcamentoFormatado: { total: t.valorTotal },
+                            dataCriacao: t.dataCriacao,
+                            titulo: t.cliente,
+                            urlArquivo: t.urlArquivo,
+                            usuarioId: t.idUsuario,
+                            status: t.status,
+                            tipoOrcamento: 'TRADICIONAL'
+                        }
+                    ));
 
-                    const todos = [...iaList, ...tradList].sort(
-                        (a, b) => new Date(b.dataCriacao).getTime() - new Date(a.dataCriacao).getTime()
-                    );
+    const todos = [...iaList, ...tradList].sort(
+        (a, b) => new Date(b.dataCriacao).getTime() - new Date(a.dataCriacao).getTime()
+    );
 
-                    setUsuario(usuarioResponse.dado);
-                    setOrcamentos(todos);
-                }
+    setUsuario(usuarioResponse.dado);
+    setOrcamentos(todos);
+}
             } catch (err) {
-                console.error('Erro ao carregar dados:', err);
-                navigate('/menu');
-            } finally {
-                setLoading(false);
-            }
+    console.error('Erro ao carregar dados:', err);
+    navigate('/menu');
+} finally {
+    setLoading(false);
+}
         }
 
-        carregarDados();
+carregarDados();
     }, []);
 
-    return (
-        <>
-            {!loading ?
-                <div className='menu-container'>
-                    <header className='header-menu'>
-                        {usuario ? <h1>Olá, {usuario.nome} !</h1> : <h1>Olá, visitante !</h1>}
-                        <button onClick={botaoPerfil}><img src={IconPerfil} alt="Logo" /></button>
-                    </header>
+return (
+    <>
+        {!loading ?
+            <div className='menu-container'>
+                <header className='header-menu'>
+                    {usuario ? <h1>Olá, {usuario.nome} !</h1> : <h1>Olá, visitante !</h1>}
+                    <button onClick={botaoPerfil}><img src={IconPerfil} alt="Logo" /></button>
+                </header>
 
-                    <div className='card-info-geral'>
-                        <div className='div-dir-info'>
-                            <h2>Resumo mensal</h2>
-                            <TextoResumo
-                                titulo='Orçamentos:'
-                                valor={String(orcamentos.length)}
-                            />
-                            <TextoResumo
-                                titulo='Aprovados:'
-                                valor={String(orcamentos.filter(orc => orc.status === 'APROVADO').length)}
-                            />
+                <div className='card-info-geral'>
+                    <div className='div-dir-info'>
+                        <h2>Resumo mensal</h2>
+                        <TextoResumo
+                            titulo='Orçamentos:'
+                            valor={String(orcamentos.length)}
+                        />
+                        <TextoResumo
+                            titulo='Aprovados:'
+                            valor={String(orcamentos.filter(orc => orc.status === 'APROVADO').length)}
+                        />
 
-                            <TextoResumo
-                                titulo='Reprovados:'
-                                valor={String(orcamentos.filter(orc => orc.status === 'REPROVADO').length)}
-                            />
-                        </div>
-                        <div className='div-valores'>
-                            <p className='valor-total-info-geral'>R$ {calcularValorTotal(orcamentos)}</p>
-                            <p className='valor-total-info-aprovado'>R$ {calcularValorTotal(orcamentos.filter(orc => orc.status === 'APROVADO'))}</p>
-                            <p className='valor-total-info-reprovado'>R$ {calcularValorTotal(orcamentos.filter(orc => orc.status === 'REPROVADO'))}</p>
-                        </div>
+                        <TextoResumo
+                            titulo='Reprovados:'
+                            valor={String(orcamentos.filter(orc => orc.status === 'REPROVADO').length)}
+                        />
                     </div>
-
-                    <button className='btn-novo-orcamento' onClick={() => { navigate('/orcamento/cadastro') }}>Novo Orçamento</button>
-
-                    <div className='lista-orcamentos-container'>
-                        <div className='header-lista-orcamentos'>
-                            <h2>Mais recentes</h2>
-
-                            <Link
-                                to='/orcamentos'
-                                style={{ textDecoration: 'none', color: '#3B82F6' }}
-                            >
-                                <p>Ver mais</p>
-                            </Link>
-                        </div>
-
-                        {orcamentos.length > 0 ? (
-                            obterCincoOrcamentosMaisRecentes(orcamentos).map(orc => (
-                                <OrcamentoItem
-                                    key={orc.id}
-                                    orcamento={orc}
-                                />
-                            ))
-                        ) : (
-                            <p>Nenhum orçamento encontrado</p>
-                        )}
-
-
+                    <div className='div-valores'>
+                        <p className='valor-total-info-geral'>R$ {calcularValorTotal(orcamentos)}</p>
+                        <p className='valor-total-info-aprovado'>R$ {calcularValorTotal(orcamentos.filter(orc => orc.status === 'APROVADO'))}</p>
+                        <p className='valor-total-info-reprovado'>R$ {calcularValorTotal(orcamentos.filter(orc => orc.status === 'REPROVADO'))}</p>
                     </div>
                 </div>
-                :
-                <Loading message="Carregando..." />
-            }
-        </>
-    )
+
+                <button className='btn-novo-orcamento' onClick={() => { navigate('/orcamento/cadastro') }}>Novo Orçamento</button>
+
+                <div className='lista-orcamentos-container'>
+                    <div className='header-lista-orcamentos'>
+                        <h2>Mais recentes</h2>
+
+                        <Link
+                            to='/orcamentos'
+                            style={{ textDecoration: 'none', color: '#3B82F6' }}
+                        >
+                            <p>Ver mais</p>
+                        </Link>
+                    </div>
+
+                    {orcamentos.length > 0 ? (
+                        obterCincoOrcamentosMaisRecentes(orcamentos).map(orc => (
+                            <OrcamentoItem
+                                key={orc.id}
+                                orcamento={orc}
+                                misturado={true}
+                            />
+                        ))
+                    ) : (
+                        <p>Nenhum orçamento encontrado</p>
+                    )}
+
+
+                </div>
+            </div>
+            :
+            <Loading message="Carregando..." />
+        }
+    </>
+)
 }

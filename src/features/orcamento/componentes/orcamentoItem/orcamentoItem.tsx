@@ -10,19 +10,34 @@ import { extrairNomeArquivo } from "../../../../utils/urlUtils";
 
 export interface OrcamentoItemProps {
     orcamento: any,
+    misturado: boolean
 }
 
-export default function OrcamentoItem({ orcamento }: OrcamentoItemProps) {
+export default function OrcamentoItem({ orcamento, misturado }: OrcamentoItemProps) {
     const navigate = useNavigate();
 
     const handleNavigateToDetails = () => {
-        navigate(`/orcamento/${orcamento.id}`);
+        if (orcamento.tipoOrcamento === 'IA') {
+            navigate(`/orcamento/${orcamento.id}`);
+        }
+        else {
+            navigate(`/orcamento/tradicional/${orcamento.id}`);
+        }
+    };
+
+    const getStatusClass = (status: string) => {
+        switch (status) {
+            case 'TRADICIONAL':
+                return 'status-pendente';
+            case 'IA':
+                return 'status-aprovado';
+        }
     };
 
     return (
         <div className="orcamento-item-container">
 
-            {orcamento.tipoOrcamento === 'IA'
+            {orcamento.tipoOrcamento === 'IA' || misturado
                 ?
                 <div className="orcamento-item" onClick={handleNavigateToDetails}>
                     <div className="texto-orc-item">
@@ -30,6 +45,10 @@ export default function OrcamentoItem({ orcamento }: OrcamentoItemProps) {
                         <p>{formatarData(orcamento.dataCriacao)}</p>
                     </div>
                     <div className="botoes-orc-item">
+
+                        <div className={`status-badge ${getStatusClass(orcamento.tipoOrcamento)}`}>
+                            {orcamento.tipoOrcamento}
+                        </div>
 
                         {orcamento.status == 'APROVADO' &&
                             <img className="imagem-status-orc" src={AprovacaoImage} alt="Imagem de Aprovação" />
@@ -45,12 +64,16 @@ export default function OrcamentoItem({ orcamento }: OrcamentoItemProps) {
                     </div>
                 </div>
                 :
-                <div className="orcamento-item">
+                <div className="orcamento-item" onClick={handleNavigateToDetails}>
                     <div className="texto-orc-item">
                         <h1>{orcamento.cliente}</h1>
                         <p>{formatarData(orcamento.dataCriacao)}</p>
                     </div>
                     <div className="botoes-orc-item">
+
+                        <div className={`status-badge ${getStatusClass(orcamento.tipoOrcamento)}`}>
+                            {orcamento.tipoOrcamento}
+                        </div>
 
                         {orcamento.status == 'APROVADO' &&
                             <img className="imagem-status-orc" src={AprovacaoImage} alt="Imagem de Aprovação" />

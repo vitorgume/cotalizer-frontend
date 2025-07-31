@@ -126,6 +126,7 @@ export default function ListagemOrcamentos() {
                     <OrcamentoItem
                         key={orc.id}
                         orcamento={orc}
+                        misturado={false}
                     />
                 ))
             ) : (
