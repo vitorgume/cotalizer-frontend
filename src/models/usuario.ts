@@ -9,4 +9,5 @@ export default interface Usuario {
     plano: string;
     idCustomer: string;
     idAssinatura: string;
+    url_logo: string;
 }

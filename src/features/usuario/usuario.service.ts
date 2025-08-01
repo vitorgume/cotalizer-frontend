@@ -107,3 +107,15 @@ export function cadastrarLogoUsuario(idUsuario: string, file: File): void {
 
     api.post('/arquivos/logo', formData, {headers: { 'Content-Type': 'multipart/form-data' }});
 }
+
+export function atualizarUsuario(idUsuario: string, novosDados: Usuario): Promise<Response<Usuario>> {
+    return api.put<Response<Usuario>>(`usuarios/${idUsuario}`, novosDados)
+        .then(response => response.data)
+        .catch(err => {
+            console.error("Erro ao solicitar nova senha:", err);
+            return {
+                dado: {} as Usuario,
+                erro: err
+            }
+        })
+}

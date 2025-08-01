@@ -40,7 +40,8 @@ export default function CadastroUsuario() {
                 senha: senha,
                 plano: 'GRATIS',
                 idCustomer: '',
-                idAssinatura: ''
+                idAssinatura: '',
+                url_logo: ''
             }
         } else if (validacaoCpfCnpj === 'CNPJ') {
             novoUsuario = {
@@ -52,7 +53,8 @@ export default function CadastroUsuario() {
                 senha: senha,
                 plano: 'GRATIS',
                 idCustomer: '',
-                idAssinatura: ''
+                idAssinatura: '',
+                url_logo: ''
             }
         }
 
