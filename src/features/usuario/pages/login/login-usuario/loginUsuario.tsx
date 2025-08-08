@@ -6,6 +6,7 @@ import { logarUsuario } from '../../../usuario.service';
 import Loading from '../../../../orcamento/componentes/loading/Loading';
 import { Link, useNavigate } from 'react-router-dom';
 import GoogleLoginButton from '../../../components/botaoGoogleLogin/botaoLoginGoogle';
+import { notificarErro } from '../../../../../utils/notificacaoUtils';
 
 export default function LoginUsuario() {
     const [email, setEmail] = useState<string | ''>('');
@@ -14,20 +15,25 @@ export default function LoginUsuario() {
 
     const navigate = useNavigate();
 
-    async function logar() {
+    async function logar(event: React.FormEvent) {
+        event.preventDefault();            
+        setLoading(true);
+
         try {
             setLoading(true);
             const usuarioLogado = await logarUsuario(email, senha);
 
-            if (usuarioLogado.dado) {
+            if (usuarioLogado.dado?.token) {
                 localStorage.setItem('id-usuario', usuarioLogado.dado.usuarioId);
                 localStorage.setItem('token', usuarioLogado.dado.token);
+                navigate('/menu');
+            } else {
+                notificarErro('Credenciais incorretas. Tente novamente.');
             }
         } catch (error) {
-            console.error("Erro ao autenticar usuario.");
+            notificarErro('Não foi possível conectar. Verifique sua internet.');
         } finally {
             setLoading(false);
-            navigate(`/menu`);
         }
     }
 
@@ -57,7 +63,7 @@ export default function LoginUsuario() {
                             senha={true}
                         />
                         <Link
-                            style={{alignSelf: 'flex-start', color: '#3B82F6'}}
+                            style={{ alignSelf: 'flex-start', color: '#3B82F6' }}
                             to={'http://localhost:5173/usuario/esqueceu-senha'}
                         >
                             <p>Esqueceu a senha ?</p>
