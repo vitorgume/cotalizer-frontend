@@ -3,6 +3,7 @@ import type Usuario from "../../models/usuario";
 import type Login from "../../models/login";
 import api from '../../utils/axios';
 import type { VerificaoEmail } from "../../models/verificaoEmail";
+import type Avaliacao from "../../models/avaliacao";
 
 export function consultarUsuarioPeloId(idUsuario: string): Promise<Response<Usuario>> {
     return api.get<Response<Usuario>>(`/usuarios/${idUsuario}`)
@@ -119,3 +120,16 @@ export function atualizarUsuario(idUsuario: string, novosDados: Usuario): Promis
             }
         })
 }
+
+export function avaliar(avaliacao: Avaliacao): Promise<Response<Avaliacao>> {
+    return api.post<Response<Avaliacao>>('/avaliacoes', avaliacao)
+        .then(response => response.data)
+        .catch(err => {
+            console.error("Erro ao avaliar usuario:", err);
+            return {
+                dado: {} as Avaliacao,
+                erro: err
+            }
+        })
+}
+

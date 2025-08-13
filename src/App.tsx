@@ -18,6 +18,7 @@ import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import CadastroOrcamentoTradicional from './features/orcamento/pages/cadastro-orcamento-tradicional/cadastroOrcamentoTradicional';
 import DetalhesOrcamentoTradicional from './features/orcamento/pages/detalhes-orcamento-tradicional/detalhesOrcamentoTradicional';
+import AvaliacaoForms from './features/usuario/pages/avaliacao/avaliacao';
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
@@ -42,6 +43,8 @@ function App() {
           <Route path='/usuario/perfil' element={<Perfil />} />
           <Route path='/usuario/forms-cartao' element={<AssinaturaForms />} />
           <Route path='/orcamento/tradicional/:id' element={<DetalhesOrcamentoTradicional />} />
+          <Route path='/avaliacao' element={<AvaliacaoForms />} />
+
         </Routes>
       </Router>
     </Elements>
