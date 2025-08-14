@@ -82,7 +82,6 @@ export default function CadastroUsuario() {
         }
     }
 
-    // Função auxiliar para cadastro com logo (você precisará implementar no service)
     const cadastrarUsuarioComLogo = async (formData: FormData) => {
         
         console.log('FormData criado com logo:', formData.get('logo'));

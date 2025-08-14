@@ -20,8 +20,31 @@ export default function Menu() {
 
     const navigate = useNavigate();
 
-    function calcularValorTotal(orcamentos: Orcamento[]) {
-        const total = orcamentos.reduce((total, orcamento) => total + Number(orcamento.orcamentoFormatado.total), 0);
+    function parseValor(v: unknown): number {
+        if (v == null) return 0;
+        if (typeof v === 'number' && Number.isFinite(v)) return v;
+        if (typeof v === 'string') {
+            const s = v
+                .replace(/\s+/g, '')
+                .replace(/[R$]/g, '')
+                .replace(/\./g, '')   // remove separador de milhar
+                .replace(/,/g, '.');  // vírgula -> ponto
+            const n = parseFloat(s);
+            return Number.isNaN(n) ? 0 : n;
+        }
+        return 0;
+    }
+
+    // Pega o total de um orçamento, seja IA ou Tradicional
+    function getTotalOrcamento(o: any): number {
+        // IA costuma estar em o.orcamentoFormatado.total
+        // Tradicional pode vir em o.valorTotal (mas você já mapeou para orcamentoFormatado.total)
+        const bruto = o?.orcamentoFormatado?.total ?? o?.valorTotal ?? o?.total ?? 0;
+        return parseValor(bruto);
+    }
+
+    function calcularValorTotal(orcamentos: any[]) {
+        const total = orcamentos.reduce((acc, o) => acc + getTotalOrcamento(o), 0);
         return total.toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
     }
 

@@ -9,6 +9,7 @@ import type { CampoPersonalizado } from '../../../../models/campoPersonalizado';
 import type { Produto } from '../../../../models/produto';
 import Loading from '../../componentes/loading/Loading';
 import { useNavigate } from 'react-router-dom';
+import { notificarErro } from '../../../../utils/notificacaoUtils';
 
 export default function CadastroOrcamentoTradicional() {
     const [cliente, setCliente] = useState('');
@@ -52,8 +53,13 @@ export default function CadastroOrcamentoTradicional() {
             if (orcamentoCadastrado.dado) {
                 await gerarPdfOrcamentoTradicional(orcamentoCadastrado.dado);
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error('Erro ao cadastrar orçamento tradicional: ', error);
+
+            if(error.message == 'Limite de orçamento atingindo para o plano do usuário.') {
+                notificarErro("Limite de orçamento atingindo para o plano do usuário.");
+            }
+            
         } finally {
             setLoading(false);
             navigate('/menu');

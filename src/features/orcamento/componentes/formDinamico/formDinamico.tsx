@@ -87,7 +87,6 @@ export default function FormDinamico({
     function renderCampo(chave: string, valor: any, path: string[] = []) {
         const fullPath = [...path, chave];
 
-        // TRATAMENTO PERSONALIZADO PARA "itens"
         if (chave === 'itens' && Array.isArray(valor) && valor.every(v => typeof v === 'object')) {
             return (
                 <div key={fullPath.join('.')} className="itens-orcamento">
@@ -153,7 +152,6 @@ export default function FormDinamico({
             );
         }
 
-        // CAMPOS PADRÕES
         if (Array.isArray(valor)) {
             return (
                 <div key={fullPath.join('.')} className="campo-array">
@@ -230,7 +228,7 @@ export default function FormDinamico({
             <div className="total-orcamento">
                 <div className="detalhes-total">
                     <div className="linha-total">
-                        <span>Subtotal: R$ {calcularTotal(orcamentoEstrutura.itens, 0).toFixed(2).replace('.', ',')}</span>
+                        <span>Subtotal: R$ {((calcularTotal(orcamentoEstrutura.itens, 0) - (calcularTotal(orcamentoEstrutura.itens, 0) * orcamentoEstrutura.desconto) / 100)).toFixed(2).replace('.', ',')}</span>
                     </div>
                     {orcamentoEstrutura.desconto > 0 && (
                         <div className="linha-total desconto">

@@ -68,20 +68,14 @@
   height: 50%;
 }
 
-.status-pendente {
-  background-color: #fef3c7;
-  color: #d97706;
-  border: 1px solid #f59e0b;
+.tipo-tradicional {
+  background-color: #cfe2ff;
+  color: #0865fc;
+  border: 1px solid #3B82F6;
 }
 
-.status-aprovado {
-  background-color: #d1fae5;
-  color: #059669;
-  border: 1px solid #10b981;
-}
-
-.status-rejeitado {
-  background-color: #fee2e2;
-  color: #dc2626;
-  border: 1px solid #ef4444;
+.tipo-ia {
+  background-color: #e4dffe;
+  color: #8041fe;
+  border: 1px solid #6439ff;
 }

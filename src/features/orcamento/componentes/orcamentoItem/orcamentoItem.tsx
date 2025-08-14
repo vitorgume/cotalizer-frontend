@@ -26,9 +26,9 @@ export default function OrcamentoItem({ orcamento, misturado }: OrcamentoItemPro
     const getStatusClass = (status: string) => {
         switch (status) {
             case 'TRADICIONAL':
-                return 'status-pendente';
+                return 'tipo-tradicional';
             case 'IA':
-                return 'status-aprovado';
+                return 'tipo-ia';
         }
     };
 

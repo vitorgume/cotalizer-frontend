@@ -163,18 +163,14 @@
     background-color: rgb(237, 237, 237);
 }
 
-/* .botao-reprovacao > img {
-    width: 100%;
-
-} */
-
 .botao-aprovacao {
-    background-color: #3B82F6;
+    background-color: #ffffff;
     width: 8rem;
     height: 2rem;
-    color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
     font-size: 1.2rem;
     border-radius: 0.5rem;
+    border: solid #5e98f4 0.1rem;
 }
 
 .botao-aprovacao:hover {
@@ -182,12 +178,8 @@
 }
 
 .botao-aprovacao:active {
-    background-color: #5e98f4;
+    background-color: #d6e6ff;
 }
-
-/* .botao-aprovacao > img {
-    width: 100%;
-} */
 
 .botao-excluir {
     background-color: transparent;

@@ -12,28 +12,24 @@ export default function UploadLogo({ onLogoChange, logoPreview }: UploadLogoProp
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleFileSelect = (file: File) => {
-        // Validar tipo de arquivo
         const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
         if (!allowedTypes.includes(file.type)) {
             alert('Por favor, selecione apenas arquivos de imagem (JPEG, PNG, GIF, WEBP)');
             return;
         }
 
-        // Validar tamanho (máximo 5MB)
-        const maxSize = 5 * 1024 * 1024; // 5MB
+        const maxSize = 5 * 1024 * 1024; 
         if (file.size > maxSize) {
             alert('O arquivo deve ter no máximo 5MB');
             return;
         }
 
-        // Criar preview
         const reader = new FileReader();
         reader.onload = (e) => {
             setPreview(e.target?.result as string);
         };
         reader.readAsDataURL(file);
 
-        // Chamar callback
         onLogoChange(file);
     };
 
@@ -109,7 +105,6 @@ export default function UploadLogo({ onLogoChange, logoPreview }: UploadLogoProp
                     onClick={handleClick}
                 >
                     <div className="upload-logo-content">
-                        <div className="upload-icon">📸</div>
                         <p className="upload-text">
                             Clique para selecionar ou arraste uma imagem aqui
                         </p>
