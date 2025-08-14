@@ -32,7 +32,7 @@ export default function CadastroOrcamentoTradicional() {
             console.error('ID do usuário não encontrado');
             return;
         }
-        
+
         const orcamento: OrcamentoTradicional = {
             cliente,
             cnpjCpf,
@@ -49,21 +49,23 @@ export default function CadastroOrcamentoTradicional() {
 
         try {
             setLoading(true);
-            const orcamentoCadastrado = await cadastrarOrcamento(orcamento);
-            if (orcamentoCadastrado.dado) {
-                await gerarPdfOrcamentoTradicional(orcamentoCadastrado.dado);
-            }
-        } catch (error: any) {
-            console.error('Erro ao cadastrar orçamento tradicional: ', error);
+            const resp = await cadastrarOrcamento(orcamento);
 
-            if(error.message == 'Limite de orçamento atingindo para o plano do usuário.') {
-                notificarErro("Limite de orçamento atingindo para o plano do usuário.");
+            if (resp?.dado && resp.dado.id) {
+                await gerarPdfOrcamentoTradicional(resp.dado);
             }
-            
+
+            navigate('/menu');
+        } catch (err: any) {
+            if (err.status === 400) {
+                notificarErro(err.message);
+            } else {
+                notificarErro(err?.message ?? 'Erro ao cadastrar orçamento.');
+            }
         } finally {
             setLoading(false);
-            navigate('/menu');
         }
+
     };
 
     const addCustomField = () => {
@@ -101,8 +103,8 @@ export default function CadastroOrcamentoTradicional() {
 
     return (
         <div>
-            {loading 
-                ? <Loading message='Salvando orçamento...' /> 
+            {loading
+                ? <Loading message='Salvando orçamento...' />
                 :
                 <div className="cadastro-container">
                     <header className="cadastro-header">
