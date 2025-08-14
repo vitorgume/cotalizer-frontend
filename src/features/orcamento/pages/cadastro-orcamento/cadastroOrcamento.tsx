@@ -6,6 +6,7 @@ import { atualizarOrcamento, criarOrcamento, interpretarOrcamento } from '../../
 import Loading from '../../componentes/loading/Loading';
 import type Orcamento from '../../../../models/orcamento';
 import FormDinamico from '../../componentes/formDinamico/formDinamico';
+import { notificarErro } from '../../../../utils/notificacaoUtils';
 
 export default function CadastroOrcamento() {
     const [titulo, setTitulo] = useState<string | ''>('');
@@ -56,8 +57,12 @@ export default function CadastroOrcamento() {
                 }
 
                 setOrcamentoCriado(orcamentoSalvo.dado);
-            } catch (error) {
-                console.error('Erro ao carregar orçamento:', error);
+            } catch (err: any) {
+                if (err.status === 400) {
+                    notificarErro(err.message);
+                } else {
+                    notificarErro(err?.message ?? 'Erro ao cadastrar orçamento.');
+                }
             } finally {
                 setLoading(false);
             }
@@ -89,7 +94,7 @@ export default function CadastroOrcamento() {
                 <p>Faça seu próprio orçamento</p>
                 <a href="http://localhost:5173/orcamento/tradicional/cadastro"><p className='text-clique-aqui'>clique aqui</p></a>
             </div>
-            
+
 
             <div className='container-titulo'>
                 <p>Digite seu orçamento</p>

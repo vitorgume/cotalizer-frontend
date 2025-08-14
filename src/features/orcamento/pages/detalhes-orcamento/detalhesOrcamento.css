@@ -184,7 +184,8 @@
 .botao-excluir {
     background-color: transparent;
     height: 50%;
-    border-radius: 1rem
+    border-radius: 1rem;
+    cursor: pointer;
 }
 
 .botao-excluir > img {

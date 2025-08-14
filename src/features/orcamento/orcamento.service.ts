@@ -1,141 +1,187 @@
 import type Response from "../../models/response";
 import type Page from "../../models/page";
 import type Orcamento from "../../models/orcamento";
-import api from '../../utils/axios';
+import api from "../../utils/axios";
 import type { OrcamentoTradicional } from "../../models/orcamentoTradicional";
 import axios from "axios";
 
-export function consultarPorId(idOrcamento: string): Promise<Response<Orcamento>> {
-    return api.get<Response<Orcamento>>(
-        `/orcamentos/${idOrcamento}`
-    )
-        .then(response => response.data)
-        .catch(err => {
-            console.error("Erro ao carregar prontuarios:", err);
-            return {
-                dado: {} as Orcamento,
-                erro: err
-            }
-        })
+type ApiThrownError = Error & { status?: number; payload?: any };
+
+function handleAxiosError(e: unknown, fallbackMsg: string): never {
+  if (axios.isAxiosError(e)) {
+    const status = e.response?.status;
+    const payload = e.response?.data;
+    const msg =
+      (payload as any)?.erro?.mensagens?.[0] ??
+      (payload as any)?.message ??
+      fallbackMsg;
+
+    const err: ApiThrownError = Object.assign(new Error(msg), {
+      status,
+      payload,
+    });
+    throw err;
+  }
+  throw e as any;
 }
 
-export function deletar(idOrcamento: string): void {
-    api.delete(
-        `/orcamentos/${idOrcamento}`
-    ).catch(err => console.error("Erro ao deletar orcamento:", err))
+/** ----------------- IA ----------------- **/
+
+export async function consultarPorId(
+  idOrcamento: string
+): Promise<Response<Orcamento>> {
+  try {
+    const { data } = await api.get<Response<Orcamento>>(
+      `/orcamentos/${idOrcamento}`
+    );
+    return data;
+  } catch (e) {
+    handleAxiosError(e, "Falha ao carregar orçamento.");
+  }
 }
 
-export function listarPorUsuario(idRep: string): Promise<Response<Page<Orcamento>>> {
-    return api.get<Response<Page<Orcamento>>>(`/orcamentos/usuario/${idRep}?page=0&size=10`)
-        .then(response => response.data)
-        .catch(err => {
-            console.error("Erro ao carregar orcamentos:", err);
-            return {
-                dado: {
-                    content: [],
-                    totalElements: 0,
-                    totalPages: 0,
-                    number: 0,
-                    size: 0
-                },
-                erro: err
-            }
-        })
+export async function deletar(idOrcamento: string): Promise<void> {
+  try {
+    await api.delete(`/orcamentos/${idOrcamento}`);
+  } catch (e) {
+    handleAxiosError(e, "Falha ao deletar orçamento.");
+  }
 }
 
-export function criarOrcamento(novoOrcamento: Orcamento): Promise<Response<Orcamento>> {
-    return api.post<Response<Orcamento>>(`/arquivos`, novoOrcamento)
-        .then(response => response.data)
-        .catch(err => {
-            console.error("Erro ao criar orcamento:", err);
-            return {
-                dado: {} as Orcamento,
-                erro: err
-            }
-        });
+export async function listarPorUsuario(
+  idRep: string
+): Promise<Response<Page<Orcamento>>> {
+  try {
+    const { data } = await api.get<Response<Page<Orcamento>>>(
+      `/orcamentos/usuario/${idRep}?page=0&size=10`
+    );
+    return data;
+  } catch (e) {
+    handleAxiosError(e, "Falha ao carregar orçamentos.");
+  }
 }
 
-export function gerarPdfOrcamentoTradicional(orcamento: OrcamentoTradicional): Promise<Response<OrcamentoTradicional>> {
-    return api.post<Response<OrcamentoTradicional>>('/arquivos/tradicional', orcamento)
-        .then(response => response.data)
-        .catch(err => {
-            console.error("Erro ao criar orcamento:", err);
-            return {
-                dado: {} as OrcamentoTradicional,
-                erro: err
-            }
-        });
+export async function criarOrcamento(
+  novoOrcamento: Orcamento
+): Promise<Response<Orcamento>> {
+  try {
+    const { data } = await api.post<Response<Orcamento>>(
+      `/arquivos`,
+      novoOrcamento
+    );
+    return data;
+  } catch (e) {
+    handleAxiosError(e, "Falha ao criar orçamento.");
+  }
 }
 
-export function interpretarOrcamento(novoOrcamento: Orcamento): Promise<Response<Orcamento>> {
-    return api.post<Response<Orcamento>>(`/orcamentos`, novoOrcamento)
-        .then(response => response.data)
-        .catch(err => {
-            console.error("Erro ao interpretar orcamento:", err);
-            return {
-                dado: {} as Orcamento,
-                erro: err
-            }
-        });
+export async function interpretarOrcamento(
+  novoOrcamento: Orcamento
+): Promise<Response<Orcamento>> {
+  try {
+    const { data } = await api.post<Response<Orcamento>>(
+      `/orcamentos`,
+      novoOrcamento
+    );
+    return data;
+  } catch (e) {
+    handleAxiosError(e, "Falha ao interpretar orçamento.");
+  }
 }
 
-export function atualizarOrcamento(orcamento: Orcamento): Promise<Response<Orcamento>> {
-    return api.put<Response<Orcamento>>(`/orcamentos/${orcamento.id}`, orcamento)
-        .then(response => response.data);
+export async function atualizarOrcamento(
+  orcamento: Orcamento
+): Promise<Response<Orcamento>> {
+  try {
+    const { data } = await api.put<Response<Orcamento>>(
+      `/orcamentos/${orcamento.id}`,
+      orcamento
+    );
+    return data;
+  } catch (e) {
+    handleAxiosError(e, "Falha ao atualizar orçamento.");
+  }
 }
 
-export async function cadastrarOrcamento(orcamento: OrcamentoTradicional): Promise<Response<OrcamentoTradicional>> {
-    try {
-        const { data } = await api.post<Response<OrcamentoTradicional>>('/orcamentos/tradicionais', orcamento);
-        return data; 
-    } catch (e) {
-        if (axios.isAxiosError(e)) {
-            const status = e.response?.status;
-            const msg = (e.response?.data as any)?.erro?.mensagens?.[0] ?? 'Falha ao cadastrar orçamento.';
-            const err = new Error(msg) as Error & { status?: number };
-            err.status = status;
-            throw err; 
-        }
-        throw e;
-    }
+/** --------- Tradicional --------- **/
+
+export async function gerarPdfOrcamentoTradicional(
+  orcamento: OrcamentoTradicional
+): Promise<Response<OrcamentoTradicional>> {
+  try {
+    const { data } = await api.post<Response<OrcamentoTradicional>>(
+      "/arquivos/tradicional",
+      orcamento
+    );
+    return data;
+  } catch (e) {
+    handleAxiosError(e, "Falha ao gerar PDF do orçamento.");
+  }
 }
 
-export function listarTradicionaisPorUsuario(idUsuario: string): Promise<Response<Page<OrcamentoTradicional>>> {
-    return api.get<Response<Page<OrcamentoTradicional>>>(`/orcamentos/tradicionais/usuario/${idUsuario}?page=0&size=10`)
-        .then(response => response.data)
-        .catch(err => {
-            console.error("Erro ao carregar orcamentos:", err);
-            return {
-                dado: {
-                    content: [],
-                    totalElements: 0,
-                    totalPages: 0,
-                    number: 0,
-                    size: 0
-                },
-                erro: err
-            }
-        })
+export async function cadastrarOrcamento(
+  orcamento: OrcamentoTradicional
+): Promise<Response<OrcamentoTradicional>> {
+  try {
+    const { data } = await api.post<Response<OrcamentoTradicional>>(
+      "/orcamentos/tradicionais",
+      orcamento
+    );
+    return data;
+  } catch (e) {
+    handleAxiosError(e, "Falha ao cadastrar orçamento.");
+  }
 }
 
-export function consultarTradicionalPorId(idOrcamento: string): Promise<Response<OrcamentoTradicional>> {
-    return api.get<Response<OrcamentoTradicional>>(`/orcamentos/tradicionais/${idOrcamento}`)
-        .then(response => response.data)
-        .catch(err => {
-            console.error("Erro ao carregar orcamento:", err);
-            return {
-                dado: {} as OrcamentoTradicional,
-                erro: err
-            }
-        })
+export async function listarTradicionaisPorUsuario(
+  idUsuario: string
+): Promise<Response<Page<OrcamentoTradicional>>> {
+  try {
+    const { data } = await api.get<Response<Page<OrcamentoTradicional>>>(
+      `/orcamentos/tradicionais/usuario/${idUsuario}?page=0&size=10`
+    );
+    return data;
+  } catch (e) {
+    handleAxiosError(e, "Falha ao carregar orçamentos tradicionais.");
+  }
 }
 
-export function atualizarOrcamentoTradicional(orcamento: OrcamentoTradicional): Promise<Response<OrcamentoTradicional>> {
-    return api.put<Response<OrcamentoTradicional>>(`/orcamentos/tradicionais/${orcamento.id}`, orcamento)
-        .then(response => response.data);
+export async function consultarTradicionalPorId(
+  idOrcamento: string
+): Promise<Response<OrcamentoTradicional>> {
+  try {
+    const { data } = await api.get<Response<OrcamentoTradicional>>(
+      `/orcamentos/tradicionais/${idOrcamento}`
+    );
+    return data;
+  } catch (e) {
+    handleAxiosError(e, "Falha ao carregar orçamento tradicional.");
+  }
 }
 
-export function deletarTradicional(idOrcamento: string): Promise<Response<OrcamentoTradicional>> {
-    return api.delete<Response<OrcamentoTradicional>>(`/orcamentos/tradicionais/${idOrcamento}`)
-        .then(response => response.data);
+export async function atualizarOrcamentoTradicional(
+  orcamento: OrcamentoTradicional
+): Promise<Response<OrcamentoTradicional>> {
+  try {
+    const { data } = await api.put<Response<OrcamentoTradicional>>(
+      `/orcamentos/tradicionais/${orcamento.id}`,
+      orcamento
+    );
+    return data;
+  } catch (e) {
+    handleAxiosError(e, "Falha ao atualizar orçamento tradicional.");
+  }
+}
+
+export async function deletarTradicional(
+  idOrcamento: string
+): Promise<Response<OrcamentoTradicional>> {
+  try {
+    const { data } = await api.delete<Response<OrcamentoTradicional>>(
+      `/orcamentos/tradicionais/${idOrcamento}`
+    );
+    return data;
+  } catch (e) {
+    handleAxiosError(e, "Falha ao deletar orçamento tradicional.");
+  }
 }
