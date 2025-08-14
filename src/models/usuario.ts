@@ -10,4 +10,5 @@ export default interface Usuario {
     idCustomer: string;
     idAssinatura: string;
     url_logo: string;
+    feedback: boolean;
 }

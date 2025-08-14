@@ -43,7 +43,7 @@ function App() {
           <Route path='/usuario/perfil' element={<Perfil />} />
           <Route path='/usuario/forms-cartao' element={<AssinaturaForms />} />
           <Route path='/orcamento/tradicional/:id' element={<DetalhesOrcamentoTradicional />} />
-          <Route path='/avaliacao' element={<AvaliacaoForms />} />
+          <Route path='/avaliacao/:id' element={<AvaliacaoForms />} />
 
         </Routes>
       </Router>

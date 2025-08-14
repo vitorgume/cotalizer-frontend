@@ -94,7 +94,8 @@ export default function Perfil() {
                 plano: usuario.plano,
                 idCustomer: usuario.idCustomer,
                 idAssinatura: usuario.idAssinatura,
-                url_logo: usuario.url_logo
+                url_logo: usuario.url_logo,
+                feedback: usuario.feedback
             });
         }
 

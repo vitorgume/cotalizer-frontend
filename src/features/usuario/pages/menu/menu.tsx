@@ -9,11 +9,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import Loading from '../../../orcamento/componentes/loading/Loading';
 import { consultarUsuarioPeloId } from '../../usuario.service';
 import { listarPorUsuario, listarTradicionaisPorUsuario } from '../../../orcamento/orcamento.service';
+import ModalAvaliar from '../../components/modalAvaliar/modalAvaliar';
 
 export default function Menu() {
     const [usuario, setUsuario] = useState<Usuario | null>(null);
     const [orcamentos, setOrcamentos] = useState<any[] | []>([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
+    const [modalAvaliar, setModalAvaliar] = useState<boolean>(false);
+
 
     const navigate = useNavigate();
 
@@ -40,6 +43,14 @@ export default function Menu() {
             return;
         }
         setLoading(true);
+
+        function abrirModalAvaliar(usuario: Usuario, orcamentos: any[]) {
+            if (usuario) {
+                if (!usuario.feedback && orcamentos.length === 3) {
+                    setModalAvaliar(true);
+                }
+            }
+        }
 
         async function carregarDados() {
             try {
@@ -74,89 +85,98 @@ export default function Menu() {
                         }
                     ));
 
-    const todos = [...iaList, ...tradList].sort(
-        (a, b) => new Date(b.dataCriacao).getTime() - new Date(a.dataCriacao).getTime()
-    );
+                    const todos = [...iaList, ...tradList].sort(
+                        (a, b) => new Date(b.dataCriacao).getTime() - new Date(a.dataCriacao).getTime()
+                    );
 
-    setUsuario(usuarioResponse.dado);
-    setOrcamentos(todos);
-}
+                    abrirModalAvaliar(usuarioResponse.dado, todos);
+
+                    setUsuario(usuarioResponse.dado);
+                    setOrcamentos(todos);
+                }
             } catch (err) {
-    console.error('Erro ao carregar dados:', err);
-    navigate('/menu');
-} finally {
-    setLoading(false);
-}
+                console.error('Erro ao carregar dados:', err);
+                navigate('/menu');
+            } finally {
+                setLoading(false);
+            }
         }
 
-carregarDados();
+        carregarDados();
     }, []);
 
-return (
-    <>
-        {!loading ?
-            <div className='menu-container'>
-                <header className='header-menu'>
-                    {usuario ? <h1>Olá, {usuario.nome} !</h1> : <h1>Olá, visitante !</h1>}
-                    <button onClick={botaoPerfil}><img src={IconPerfil} alt="Logo" /></button>
-                </header>
+    return (
+        <>
+            {!loading ?
+                <div className='menu-container'>
+                    <header className='header-menu'>
+                        {usuario ? <h1>Olá, {usuario.nome} !</h1> : <h1>Olá, visitante !</h1>}
+                        <button onClick={botaoPerfil}><img src={IconPerfil} alt="Logo" /></button>
+                    </header>
 
-                <div className='card-info-geral'>
-                    <div className='div-dir-info'>
-                        <h2>Resumo mensal</h2>
-                        <TextoResumo
-                            titulo='Orçamentos:'
-                            valor={String(orcamentos.length)}
-                        />
-                        <TextoResumo
-                            titulo='Aprovados:'
-                            valor={String(orcamentos.filter(orc => orc.status === 'APROVADO').length)}
-                        />
-
-                        <TextoResumo
-                            titulo='Reprovados:'
-                            valor={String(orcamentos.filter(orc => orc.status === 'REPROVADO').length)}
-                        />
-                    </div>
-                    <div className='div-valores'>
-                        <p className='valor-total-info-geral'>R$ {calcularValorTotal(orcamentos)}</p>
-                        <p className='valor-total-info-aprovado'>R$ {calcularValorTotal(orcamentos.filter(orc => orc.status === 'APROVADO'))}</p>
-                        <p className='valor-total-info-reprovado'>R$ {calcularValorTotal(orcamentos.filter(orc => orc.status === 'REPROVADO'))}</p>
-                    </div>
-                </div>
-
-                <button className='btn-novo-orcamento' onClick={() => { navigate('/orcamento/cadastro') }}>Novo Orçamento</button>
-
-                <div className='lista-orcamentos-container'>
-                    <div className='header-lista-orcamentos'>
-                        <h2>Mais recentes</h2>
-
-                        <Link
-                            to='/orcamentos'
-                            style={{ textDecoration: 'none', color: '#3B82F6' }}
-                        >
-                            <p>Ver mais</p>
-                        </Link>
-                    </div>
-
-                    {orcamentos.length > 0 ? (
-                        obterCincoOrcamentosMaisRecentes(orcamentos).map(orc => (
-                            <OrcamentoItem
-                                key={orc.id}
-                                orcamento={orc}
-                                misturado={true}
+                    <div className='card-info-geral'>
+                        <div className='div-dir-info'>
+                            <h2>Resumo mensal</h2>
+                            <TextoResumo
+                                titulo='Orçamentos:'
+                                valor={String(orcamentos.length)}
                             />
-                        ))
-                    ) : (
-                        <p>Nenhum orçamento encontrado</p>
-                    )}
+                            <TextoResumo
+                                titulo='Aprovados:'
+                                valor={String(orcamentos.filter(orc => orc.status === 'APROVADO').length)}
+                            />
+
+                            <TextoResumo
+                                titulo='Reprovados:'
+                                valor={String(orcamentos.filter(orc => orc.status === 'REPROVADO').length)}
+                            />
+                        </div>
+                        <div className='div-valores'>
+                            <p className='valor-total-info-geral'>R$ {calcularValorTotal(orcamentos)}</p>
+                            <p className='valor-total-info-aprovado'>R$ {calcularValorTotal(orcamentos.filter(orc => orc.status === 'APROVADO'))}</p>
+                            <p className='valor-total-info-reprovado'>R$ {calcularValorTotal(orcamentos.filter(orc => orc.status === 'REPROVADO'))}</p>
+                        </div>
+                    </div>
+
+                    <button className='btn-novo-orcamento' onClick={() => { navigate('/orcamento/cadastro') }}>Novo Orçamento</button>
+
+                    <div className='lista-orcamentos-container'>
+                        <div className='header-lista-orcamentos'>
+                            <h2>Mais recentes</h2>
+
+                            <Link
+                                to='/orcamentos'
+                                style={{ textDecoration: 'none', color: '#3B82F6' }}
+                            >
+                                <p>Ver mais</p>
+                            </Link>
+                        </div>
+
+                        {orcamentos.length > 0 ? (
+                            obterCincoOrcamentosMaisRecentes(orcamentos).map(orc => (
+                                <OrcamentoItem
+                                    key={orc.id}
+                                    orcamento={orc}
+                                    misturado={true}
+                                />
+                            ))
+                        ) : (
+                            <p>Nenhum orçamento encontrado</p>
+                        )}
 
 
+                    </div>
+
+                    {modalAvaliar &&
+                        <ModalAvaliar
+                            fechar={() => setModalAvaliar(false)}
+
+                        />
+                    }
                 </div>
-            </div>
-            :
-            <Loading message="Carregando..." />
-        }
-    </>
-)
+                :
+                <Loading message="Carregando..." />
+            }
+        </>
+    )
 }

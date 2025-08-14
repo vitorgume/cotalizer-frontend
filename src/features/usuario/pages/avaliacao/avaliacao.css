@@ -1,6 +1,6 @@
 .avaliacao-page {
     width: 100%;
-    height: 100vh;
+    height: auto;
     padding: 1rem;
 }
 
@@ -92,7 +92,7 @@
 
 .avaliacao-sucesso {
     width: 100%;
-    height: 100%;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -101,6 +101,6 @@
 }
 
 .avaliacao-sucesso > h2 {
-    
+    font-weight: 400;
 }
 

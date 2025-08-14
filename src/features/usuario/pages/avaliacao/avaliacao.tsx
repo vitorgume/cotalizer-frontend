@@ -12,11 +12,10 @@ export default function AvaliacaoForms() {
     const [motivo, setMotivo] = useState<string>('');
     const [sugestao, setSugestao] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
-    const [sucesso, setSucesso] = useState<boolean>(true);
+    const [sucesso, setSucesso] = useState<boolean>(false);
     const [erroNota, setErroNota] = useState<string | null>(null);
 
-    // const { id } = useParams<{ id: string }>();
-    const id = '688cfe0eb8c5c4b505f38871'
+    const { id } = useParams<{ id: string }>();
 
     const navigate = useNavigate();
 
@@ -27,6 +26,14 @@ export default function AvaliacaoForms() {
         if (!id) return;
         if (nota === null) {
             setErroNota('Selecione uma nota de 0 a 10.');
+
+            requestAnimationFrame(() => {
+                const first = document.querySelector<HTMLInputElement>('input[name="nota"]');
+                first?.focus();
+                first?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            });
+
+
             return;
         }
 
@@ -40,7 +47,7 @@ export default function AvaliacaoForms() {
         try {
             setLoading(true);
             setErroNota(null);
-            await avaliar(novaAvaliacao);     // aguarda a API
+            await avaliar(novaAvaliacao);
             setSucesso(true);
         } catch (err) {
             console.error('Erro ao avaliar: ', err);
@@ -73,7 +80,7 @@ export default function AvaliacaoForms() {
                         <div aria-describedby={erroNota ? 'erro-nota' : undefined} aria-invalid={!!erroNota}>
                             <Notas value={nota} onChange={(v) => { setNota(v); setErroNota(null); }} required />
                         </div>
-                        {erroNota && <p id="erro-nota" className="msg-erro">{erroNota}</p>}
+                        {erroNota && <p id="erro-nota" className="msg-erro" role="alert">{erroNota}</p>}
 
                         {nota !== null && nota >= 9 && (
                             <div className='avaliacao-google-container'>
@@ -114,8 +121,9 @@ export default function AvaliacaoForms() {
                     </section>
 
                     <div className='botoes-form-avaliacao'>
-                        <button className='botao-cancelar' type='button'>Cancelar</button>
-                        <button className='botao-gerar' type='submit' disabled={loading || nota === null}>
+                        <button className='botao-cancelar' type='button' onClick={() => navigate('/menu')}>Cancelar</button>
+
+                        <button className='botao-gerar' type='submit' disabled={loading}>
                             Enviar
                         </button>
                     </div>

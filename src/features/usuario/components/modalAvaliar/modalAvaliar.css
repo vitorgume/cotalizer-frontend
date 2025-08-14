@@ -1,0 +1,48 @@
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 1000;
+    overflow-y: auto;
+    height: 100%;
+}
+
+.modal-avaliar-content {
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+    height: 60%;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+    align-items: center;
+    gap: 1rem;
+    padding: 2.5rem;
+}   
+
+.text-modal-avaliar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 1.6rem;
+}
+
+.botao-sair {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    align-self: flex-end;
+}
+
+.botao-sair > img {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.botao-responder {
+    margin-top: 5rem;
+}
