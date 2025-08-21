@@ -12,6 +12,7 @@ import type Usuario from '../../../../models/usuario'
 import type Orcamento from '../../../../models/orcamento'
 import './perfil.css'
 import type { OrcamentoTradicional } from '../../../../models/orcamentoTradicional'
+import AssinaturaForms from '../assinatura/assinaturaForms'
 
 export default function Perfil() {
     const [usuario, setUsuario] = useState<Usuario | null>(null);
@@ -27,6 +28,8 @@ export default function Perfil() {
     });
     const [logoFile, setLogoFile] = useState<File | null>(null);
     const [originalEmail, setOriginalEmail] = useState<string>('');
+    const [abrirAssinatura, setAbrirAssinatura] = useState(false);
+
 
     const navigate = useNavigate();
 
@@ -53,12 +56,18 @@ export default function Perfil() {
             }
 
             const respoOrcsTrad = await listarTradicionaisPorUsuario(id);
-            if(respoOrcsTrad.dado?.content) {
+            if (respoOrcsTrad.dado?.content) {
                 setOrcamentoTradicional(respoOrcsTrad.dado.content);
             }
         }
         init();
     }, [])
+
+    async function recarregarUsuario() {
+        const id = localStorage.getItem('id-usuario')!;
+        const resp = await consultarUsuarioPeloId(id);
+        if (resp.dado) setUsuario(resp.dado);
+    }
 
     function onEdit() {
         setIsEditing(true);
@@ -142,8 +151,6 @@ export default function Perfil() {
             notificarSucesso('Assinatura cancelada com sucesso!');
         }
     }
-
-    const obterPlanoPlus = () => navigate('/usuario/forms-cartao');
 
     return (
         <div className="page-perfil">
@@ -239,7 +246,7 @@ export default function Perfil() {
                     </div>
 
                     {usuario.plano === 'GRATIS'
-                        ? <button onClick={obterPlanoPlus} className="botao-gerar">Obter Plus</button>
+                        ? <button onClick={() => setAbrirAssinatura(true)} className="botao-gerar">Obter Plus</button>
                         : (
                             <div className="div-botoes-assinatura">
                                 <button
@@ -256,6 +263,18 @@ export default function Perfil() {
                     }
                 </section>
             )}
+
+            {usuario && (
+                <AssinaturaForms
+                    open={abrirAssinatura}
+                    onClose={() => setAbrirAssinatura(false)}
+                    idUsuario={usuario.id!}
+                    emailInicial={usuario.email}
+                    nomeInicial={usuario.nome}
+                    onAssinou={recarregarUsuario} 
+                />
+            )}
+
         </div>
     );
 }

@@ -1,153 +1,179 @@
 import './assinaturaForms.css';
-import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { criarAssinatura } from '../../pagamento.service';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import SucessoPagamento from '../../components/sucessoPagamento/sucessoPagamento';
 import Loading from '../../../orcamento/componentes/loading/Loading';
+import { notificarErro, notificarSucesso } from '../../../../utils/notificacaoUtils';
+import {
+  CardNumberElement,
+  CardExpiryElement,
+  CardCvcElement,
+  useStripe,
+  useElements
+} from '@stripe/react-stripe-js';
 
-export default function AssinaturaForms() {
+type Props = {
+    open: boolean;
+    onClose: () => void;
+    idUsuario: string;
+    emailInicial?: string;
+    nomeInicial?: string;
+    onAssinou?: () => Promise<void> | void; // para o pai recarregar usuário/atualizar UI
+};
+
+export default function AssinaturaForms({ open, onClose, idUsuario, emailInicial = '', nomeInicial = '', onAssinou }: Props) {
     const stripe = useStripe();
     const elements = useElements();
 
-    const [email, setEmail] = useState('');
-    const [nome, setNome] = useState('');
-    const [previewNome, setPreviewNome] = useState('SEU NOME');
-    const [previewExp, setPreviewExp] = useState('MM/AA');
-    const [previewCard, setPreviewCard] = useState('•••• •••• •••• ••••');
-    const [bandeira, setBandeira] = useState('');
-    const [sucessoAssinatura, setSucessoAssinatura] = useState<boolean>(false)
+    const [email, setEmail] = useState(emailInicial);
+    const [nome, setNome] = useState(nomeInicial);
     const [loading, setLoading] = useState(false);
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        setLoading(true);
+    const [okNumber, setOkNumber] = useState(false);
+    const [okExpiry, setOkExpiry] = useState(false);
+    const [okCvc, setOkCvc] = useState(false);
+
+    if (!open) return null;
+
+    const stripeReady = !!stripe && !!elements;
+    const podeEnviar = stripeReady && okNumber && okExpiry && okCvc && !loading;
+
+    async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
-        const cardElement = elements?.getElement(CardElement);
-        if (!stripe || !cardElement) return;
+        if (!stripe || !elements) return;
 
-        const { error, paymentMethod } = await stripe.createPaymentMethod({
-            type: 'card',
-            card: cardElement,
-            billing_details: {
-                name: nome,
-                email: email,
-            },
-        });
+        const numberEl = elements.getElement(CardNumberElement);
+        if (!numberEl) return;
 
-        if (error) {
-            console.error(error);
-            return;
-        }
+        try {
+            setLoading(true);
 
-        const idUsuario = localStorage.getItem('id-usuario');
-        if (idUsuario) {
-            await criarAssinatura({
-                paymentMethodId: paymentMethod.id,
-                customerEmail: email,
-                idUsuario,
+            const { error, paymentMethod } = await stripe.createPaymentMethod({
+                type: 'card',
+                card: numberEl, // em split elements, passe o CardNumberElement
+                billing_details: { name: nome, email }
             });
 
-            setSucessoAssinatura(true);
+            if (error) {
+                notificarErro(error.message ?? 'Cartão inválido.');
+                return;
+            }
+
+            await criarAssinatura({
+                paymentMethodId: paymentMethod!.id,
+                customerEmail: email,
+                idUsuario
+            });
+
+            notificarSucesso('Assinatura criada com sucesso!');
+            if (onAssinou) await onAssinou();
+            onClose();
+        } catch (err: any) {
+            notificarErro(err?.message ?? 'Falha ao processar assinatura.');
+        } finally {
             setLoading(false);
         }
-    };
+    }
 
-    const handleCardChange = (event: any) => {
-        if (event.complete) {
-            const brand = event.brand;
-            setBandeira(brand);
-        }
+    return (
+        <>
+            {/* backdrop clicável acima do sheet */}
+            <div className="assinatura-sheet-backdrop" onClick={onClose} />
+            <div className="assinatura-sheet" role="dialog" aria-modal="true" aria-label="Assinatura Plus">
+                <div className="sheet-handle" aria-hidden="true" />
+                <div className="assinatura-sheet__header">
+                    <h2>Obter Plus</h2>
+                    <button className="assinatura-modal__close" onClick={onClose} aria-label="Fechar">×</button>
+                </div>
 
-        const number = event.value?.cardNumber?.replace(/\s+/g, '').replace(/[^0-9]/gi, '') ?? '';
-        const formattedNumber = number.match(/.{1,4}/g)?.join(' ') || '•••• •••• •••• ••••';
-        setPreviewCard(formattedNumber);
-
-        const exp = event.value?.expiry || '';
-        setPreviewExp(exp || 'MM/AA');
-    };
-
-    return sucessoAssinatura ? (
-        <SucessoPagamento />
-    ) : (
-        loading
-            ? <Loading message='Processando' />
-            :
-            <div className='body-forms-cartao'>
-                <div className="container">
-                    <div className="header">
-                        <h1>Dados do Cartão</h1>
-                        <p>Insira as informações do seu cartão de forma segura</p>
-                    </div>
-
-                    <div className="card-preview">
-                        <div className="card-number">{previewCard}</div>
-                        <div className="card-info">
-                            <div className="card-holder">
-                                <div style={{ fontSize: 10, opacity: 0.7, marginBottom: 4 }}>PORTADOR</div>
-                                <div>{previewNome}</div>
-                            </div>
-                            <div className="card-expiry">
-                                <div style={{ fontSize: 10, opacity: 0.7, marginBottom: 4 }}>VÁLIDO ATÉ</div>
-                                <div>{previewExp}</div>
-                            </div>
-                        </div>
-                        {bandeira && <div style={{ marginTop: '8px' }}>Bandeira: {bandeira.toUpperCase()}</div>}
-                    </div>
-
-                    <form onSubmit={handleSubmit} className="checkout-form">
-                        <div className="form-group">
-                            <label className='label-assinatura' htmlFor="email">E-mail</label>
+                {loading ? (
+                    <div style={{ padding: '1rem' }}><Loading message="Processando" /></div>
+                ) : (
+                    <form className="assinatura-sheet__form" onSubmit={handleSubmit}>
+                        <div className="form-row">
+                            <label className="label-assinatura">E-mail</label>
                             <input
                                 type="email"
-                                id="email"
-                                placeholder="seuemail@exemplo.com"
+                                className="input-assinatura"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 required
-                                className='input-assinatura'
+                                placeholder="seuemail@exemplo.com"
                             />
                         </div>
 
-                        <div className="form-group">
-                            <label className='label-assinatura' htmlFor="nome">Nome do Portador</label>
+                        <div className="form-row">
+                            <label className="label-assinatura">Nome do Portador</label>
                             <input
                                 type="text"
-                                id="nome"
-                                placeholder="João Silva"
+                                className="input-assinatura"
                                 value={nome}
-                                onChange={(e) => {
-                                    setNome(e.target.value);
-                                    setPreviewNome(e.target.value.toUpperCase());
-                                }}
+                                onChange={(e) => setNome(e.target.value)}
                                 required
-                                className='input-assinatura'
+                                placeholder="João Silva"
                             />
                         </div>
 
-                        <div className="form-group">
-                            <label className='label-assinatura' >Cartão de Crédito</label>
+                        {/* Campos separados do Stripe */}
+                        <div className="form-row">
+                            <label className="label-assinatura">Número do cartão</label>
                             <div className="card-element-wrapper">
-                                <CardElement
+                                <CardNumberElement
                                     className="card-element"
-                                    onChange={handleCardChange}
+                                    onChange={(e) => setOkNumber(!!e.complete)}
                                     options={{
+                                        placeholder: '0000 0000 0000 0000',
                                         style: {
-                                            base: {
-                                                fontSize: '16px',
-                                                color: '#32325d',
-                                                '::placeholder': { color: '#a0aec0' },
-                                            },
-                                            invalid: { color: '#e53e3e' },
-                                        },
+                                            base: { fontSize: '16px', color: '#111827', '::placeholder': { color: '#9CA3AF' } },
+                                            invalid: { color: '#e53e3e' }
+                                        }
                                     }}
                                 />
                             </div>
                         </div>
 
-                        <button type="submit" className="submit-btn">Confirmar Pagamento</button>
-                    </form>
-                </div>
-            </div>
-    );
+                        <div className="form-row two-cols">
+                            <div className="col">
+                                <label className="label-assinatura">Validade (MM/AA)</label>
+                                <div className="card-element-wrapper">
+                                    <CardExpiryElement
+                                        className="card-element"
+                                        onChange={(e) => setOkExpiry(!!e.complete)}
+                                        options={{
+                                            style: {
+                                                base: { fontSize: '16px', color: '#111827', '::placeholder': { color: '#9CA3AF' } },
+                                                invalid: { color: '#e53e3e' }
+                                            }
+                                        }}
+                                    />
+                                </div>
+                            </div>
+                            <div className="col">
+                                <label className="label-assinatura">CVV</label>
+                                <div className="card-element-wrapper">
+                                    <CardCvcElement
+                                        className="card-element"
+                                        onChange={(e) => setOkCvc(!!e.complete)}
+                                        options={{
+                                            placeholder: '123',
+                                            style: {
+                                                base: { fontSize: '16px', color: '#111827', '::placeholder': { color: '#9CA3AF' } },
+                                                invalid: { color: '#e53e3e' }
+                                            }
+                                        }}
+                                    />
+                                </div>
+                            </div>
+                        </div>
 
+                        <div className="assinatura-sheet__actions">
+                            <button type="button" className="botao-cancelar" onClick={onClose}>Cancelar</button>
+                            <button type="submit" className="botao-gerar" disabled={!podeEnviar}>
+                                Confirmar pagamento
+                            </button>
+                        </div>
+                    </form>
+                )}
+            </div>
+        </>
+    );
 }

@@ -13,7 +13,6 @@ import CadastroCnpjCpf from './features/usuario/pages/login/cadastro-cnpj-cpf/ca
 import AlterarSenha from './features/usuario/pages/alterarSenha/alterarSenha';
 import EsqueceuSenha from './features/usuario/pages/login/esqueceu-senha/esqueceuSenha';
 import Perfil from './features/usuario/pages/perfil/perfil';
-import AssinaturaForms from './features/usuario/pages/assinatura/assinaturaForms';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import CadastroOrcamentoTradicional from './features/orcamento/pages/cadastro-orcamento-tradicional/cadastroOrcamentoTradicional';
@@ -24,7 +23,7 @@ const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
 function App() {
   return (
-    <Elements stripe={stripePromise}>
+    <Elements stripe={stripePromise} options={{ locale: 'pt-BR' }}>
       <Router>
         <ToastContainer position="top-right" autoClose={3000} />
         <Routes>
@@ -41,7 +40,6 @@ function App() {
           <Route path='/usuario/alterar/senha/:token' element={<AlterarSenha />} />
           <Route path='/usuario/esqueceu-senha' element={<EsqueceuSenha />} />
           <Route path='/usuario/perfil' element={<Perfil />} />
-          <Route path='/usuario/forms-cartao' element={<AssinaturaForms />} />
           <Route path='/orcamento/tradicional/:id' element={<DetalhesOrcamentoTradicional />} />
           <Route path='/avaliacao/:id' element={<AvaliacaoForms />} />
 
