@@ -5,7 +5,6 @@ import UploadLogo from '../../components/uploadLogo/uploadLogo'
 import MetricaQuantidadeOrcamento from '../../components/metricaQuantidadeOrcamento/metricaQuantidadeOrcamento'
 import { consultarUsuarioPeloId, atualizarUsuario } from '../../usuario.service'
 import { listarPorUsuario, listarTradicionaisPorUsuario } from '../../../orcamento/orcamento.service'
-import { cancelarAssinatura } from '../../pagamento.service'
 import { cadastrarLogoUsuario } from '../../usuario.service'
 import { notificarSucesso } from '../../../../utils/notificacaoUtils'
 import type Usuario from '../../../../models/usuario'
@@ -135,16 +134,6 @@ export default function Perfil() {
         setLogoFile(file);
     }
 
-    async function cancelar() {
-        const idUsuario = localStorage.getItem('id-usuario');
-        if (idUsuario) {
-            await cancelarAssinatura(idUsuario);
-            notificarSucesso('Assinatura cancelada com sucesso!');
-        }
-    }
-
-    const obterPlanoPlus = () => navigate('/usuario/forms-cartao');
-
     return (
         <div className="page-perfil">
             <h1>Sua conta</h1>
@@ -237,23 +226,6 @@ export default function Perfil() {
                             limite={usuario.plano === 'GRATIS' ? 5 : 100}
                         />
                     </div>
-
-                    {usuario.plano === 'GRATIS'
-                        ? <button onClick={obterPlanoPlus} className="botao-gerar">Obter Plus</button>
-                        : (
-                            <div className="div-botoes-assinatura">
-                                <button
-                                    onClick={() => window.location.href = "https://wa.me/554391899898"}
-                                    className="botao-gerar"
-                                >
-                                    Plano personalizado
-                                </button>
-                                <button onClick={cancelar} className="botao-cancelar-assinatura">
-                                    Cancelar assinatura
-                                </button>
-                            </div>
-                        )
-                    }
                 </section>
             )}
         </div>
