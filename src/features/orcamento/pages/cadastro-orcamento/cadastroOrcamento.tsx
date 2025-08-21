@@ -6,7 +6,7 @@ import { atualizarOrcamento, criarOrcamento, interpretarOrcamento } from '../../
 import Loading from '../../componentes/loading/Loading';
 import type Orcamento from '../../../../models/orcamento';
 import FormDinamico from '../../componentes/formDinamico/formDinamico';
-import { extrairNomeArquivo } from '../../../../utils/urlUtils';
+import { notificarErro } from '../../../../utils/notificacaoUtils';
 
 export default function CadastroOrcamento() {
     const [titulo, setTitulo] = useState<string | ''>('');
@@ -25,7 +25,9 @@ export default function CadastroOrcamento() {
                 dataCriacao: '',
                 titulo: titulo,
                 urlArquivo: '',
-                usuarioId: idUsuario
+                usuarioId: idUsuario,
+                status: 'PENDENTE',
+                tipoOrcamento: 'IA'
             }
 
             try {
@@ -55,8 +57,12 @@ export default function CadastroOrcamento() {
                 }
 
                 setOrcamentoCriado(orcamentoSalvo.dado);
-            } catch (error) {
-                console.error('Erro ao carregar orçamento:', error);
+            } catch (err: any) {
+                if (err.status === 400) {
+                    notificarErro(err.message);
+                } else {
+                    notificarErro(err?.message ?? 'Erro ao cadastrar orçamento.');
+                }
             } finally {
                 setLoading(false);
             }
@@ -84,6 +90,12 @@ export default function CadastroOrcamento() {
 
     return (
         <div className='cadastro-orcamento-cointainer'>
+            <div className='text-cadastro-tradicional'>
+                <p>Faça seu próprio orçamento</p>
+                <a href="http://localhost:5173/orcamento/tradicional/cadastro"><p className='text-clique-aqui'>clique aqui</p></a>
+            </div>
+
+
             <div className='container-titulo'>
                 <p>Digite seu orçamento</p>
                 <p className='segundo-titulo'>Que a IA faz</p>
@@ -94,6 +106,7 @@ export default function CadastroOrcamento() {
                 value={titulo}
                 onChange={setTitulo}
                 inativo={orcamentoCriado !== null}
+                senha={false}
             />
 
             {loading ? (
@@ -139,18 +152,14 @@ export default function CadastroOrcamento() {
                             {orcamentoCriado &&
                                 <div className='botoes-pdf-orc'>
                                     <a
-                                        href={orcamentoCriado?.urlArquivo}
+                                        href={orcamentoCriado.urlArquivo}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="botao-visualizar"
                                     >
                                         Abrir em nova aba
                                     </a>
-
-                                    <a href={`http://localhost:8080/arquivos/download/${extrairNomeArquivo(orcamentoCriado.urlArquivo)}`} download target="_blank" rel="noopener noreferrer" className='botao-dowload-pdf'>
-                                        <img src={DowloadImage} alt="Download de imagem" />
-                                    </a>
-
+                                    < button className='botao-dowload-pdf'><img src={DowloadImage} alt="Dowload de imagem" /></button>
                                 </div>
                             }
                         </div>

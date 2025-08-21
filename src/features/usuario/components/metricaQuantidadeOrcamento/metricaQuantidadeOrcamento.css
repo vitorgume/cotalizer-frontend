@@ -1,0 +1,24 @@
+.metrica-container {
+  width: 70%;
+}
+
+.barra {
+  height: 0.8rem;
+  background-color: #e0e0e0;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.barra-usada {
+  height: 100%;
+  background-color: #2a68ff;
+  transition: width 0.3s ease-in-out;
+}
+
+.valores {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.3rem;
+  color: #2a68ff;
+}

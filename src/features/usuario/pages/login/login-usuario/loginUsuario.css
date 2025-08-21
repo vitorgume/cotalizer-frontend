@@ -18,3 +18,14 @@
 .botao-entrar {
     margin-top: 6%;
 }
+
+.botao-esqueceu-senha {
+    background-color: transparent;
+    font-size: 1rem;
+    color: #3B82F6;
+    align-self: flex-start;
+}
+
+.botao-esqueceu-senha:hover {
+    cursor: pointer;
+}

@@ -6,4 +6,9 @@ export default interface Usuario {
     cpf: string;
     cnpj: string;
     senha: string;
+    plano: string;
+    idCustomer: string;
+    idAssinatura: string;
+    url_logo: string;
+    feedback: boolean;
 }

@@ -14,12 +14,6 @@
     align-items: start;
 }
 
-.header-detalhes-orc > button {
-    background-color: white;
-    height: 50%;
-    border-radius: 1rem;
-}
-
 .header-detalhes-orc > button:hover {
     cursor: pointer;
 }
@@ -141,6 +135,72 @@
     font-size: clamp(1rem, 2vw, 1.4rem);
     text-align: center;
     margin: 0;
+}
+
+.botoes-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    width: 30%;
+}
+
+.botao-reprovacao {
+    background-color: rgb(255, 255, 255);
+    width: 8rem;
+    height: 2rem;
+    color: rgb(0, 0, 0);
+    font-size: 1.2rem;
+    border: solid #3B82F6 0.1rem;
+    border-radius: 0.5rem;
+}
+
+.botao-reprovacao:hover {
+    cursor: pointer;
+}
+
+.botao-reprovacao:active {
+    background-color: rgb(237, 237, 237);
+}
+
+.botao-aprovacao {
+    background-color: #ffffff;
+    width: 8rem;
+    height: 2rem;
+    color: rgb(0, 0, 0);
+    font-size: 1.2rem;
+    border-radius: 0.5rem;
+    border: solid #5e98f4 0.1rem;
+}
+
+.botao-aprovacao:hover {
+    cursor: pointer;
+}
+
+.botao-aprovacao:active {
+    background-color: #d6e6ff;
+}
+
+.botao-excluir {
+    background-color: transparent;
+    height: 50%;
+    border-radius: 1rem;
+    cursor: pointer;
+}
+
+.botao-excluir > img {
+    width: 100%;
+}
+
+.botao-aprovacao.ativo {
+    background-color: #4CAF50; 
+    color: white;
+}
+
+.botao-reprovacao.ativo {
+    background-color: #E53935; 
+    color: white;
+    border: none;
 }
 
 @media screen and (max-width: 768px) {

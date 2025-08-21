@@ -18,8 +18,13 @@
     font-weight: lighter;
 }
 
-.header-menu > img {
+.header-menu > button {
     width: 3rem;
+    background-color: transparent;
+}
+
+.header-menu > button:hover {
+    cursor: pointer;
 }
 
 .card-info-geral {
@@ -77,4 +82,21 @@
     align-items: center;
     justify-content: space-between;
     width: 90%;
+}
+
+.div-valores {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.valor-total-info-aprovado {
+    color: #00a849;
+    font-size: 1.2rem;
+}
+
+.valor-total-info-reprovado {
+    color: #f90000;
+    font-size: 1.2rem;
 }

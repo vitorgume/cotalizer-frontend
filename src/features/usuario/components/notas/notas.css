@@ -1,0 +1,60 @@
+/* acessibilidade para o legend escondido */
+.sr-only {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+/* container: ordem visual 0..10, mas DOM invertido para o ~ funcionar */
+.nps-scale {
+  display: flex;
+  flex-direction: row-reverse;   /* mostra 0..10 da esquerda p/ direita */
+  gap: 8px;
+}
+
+/* escondemos os radios sem perder acessibilidade */
+.nps-scale input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* “quadradinhos” */
+.nps-scale label {
+  --nps-blue: #1a73e8;
+
+  min-width: 42px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 2px solid var(--nps-blue);
+  border-radius: 10px;
+  color: var(--nps-blue);
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  transition: background .12s, color .12s, border-color .12s;
+}
+
+/* pinta selecionado e todos os “anteriores” */
+.nps-scale input:checked ~ label {
+  background: var(--nps-blue);
+  color: #fff;
+  border-color: var(--nps-blue);
+}
+
+/* preview no hover (opcional) */
+.nps-scale label:hover,
+.nps-scale label:hover ~ label {
+  background: rgba(26,115,232,0.08);
+}
+
+/* foco via teclado: desenha no label associado */
+.nps-scale input:focus-visible + label {
+  outline: 3px solid #111;
+  outline-offset: 2px;
+}

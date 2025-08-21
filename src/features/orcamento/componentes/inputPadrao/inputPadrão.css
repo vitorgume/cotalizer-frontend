@@ -2,21 +2,45 @@
     background-color: #F9FAFB;
     padding: 0.7rem 1rem;
     width: 100%;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    font-size: 1rem;
     border-radius: 0.5rem;
-    border: 1px solid #E5E7EB;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    outline: none;
+    border: none;
 }
 
 .input-padrao:focus {
-    border-color: #3B82F6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    border-color: transparent; 
+    box-shadow: none;
+    outline: none;
 }
 
 .input-padrao::placeholder {
     color: #9CA3AF;
+}
+
+.input-padrao-wrapper {
+    width: 100%;
+    background-color: #F9FAFB;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 1rem;
+    padding: 0 1rem 0 0;
+    border-radius: 0.5rem;
+    border: 1px solid #E5E7EB;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+    justify-content: space-between;
+}
+
+
+.button-visibilidade-senha {
+    background-color: #F9FAFB;
+    color: #3B82F6;
+}
+
+.input-padrao-wrapper:focus-within {
+    border-color: #3B82F6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
 }
 
 @media (max-width: 768px) {

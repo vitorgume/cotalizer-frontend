@@ -103,3 +103,17 @@
     resize: none;
     font-size: 1rem;
 }
+
+.text-cadastro-tradicional {
+    width: 100%;
+    display: flex;
+    flex: row;
+    gap: 0.4rem;
+    align-items: center;
+}
+
+.text-clique-aqui  {
+    color: #3B82F6;
+    font-size: 1.2rem;
+    font-weight: bolder;
+}

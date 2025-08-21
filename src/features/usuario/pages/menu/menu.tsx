@@ -1,5 +1,5 @@
 import './menu.css';
-    import Logo from '../../../../assets/ChatGPT_Image_6_de_jun._de_2025__14_33_15-removebg-preview 2.png';
+import IconPerfil from '../../../../assets/icon-perfil.png';
 import OrcamentoItem from '../../../orcamento/componentes/orcamentoItem/orcamentoItem';
 import TextoResumo from '../../components/textoResumo/textoResumo';
 import { useEffect, useState } from 'react';
@@ -8,53 +8,124 @@ import type Orcamento from '../../../../models/orcamento';
 import { Link, useNavigate } from 'react-router-dom';
 import Loading from '../../../orcamento/componentes/loading/Loading';
 import { consultarUsuarioPeloId } from '../../usuario.service';
-import { listarPorUsuario } from '../../../orcamento/orcamento.service';
+import { listarPorUsuario, listarTradicionaisPorUsuario } from '../../../orcamento/orcamento.service';
+import ModalAvaliar from '../../components/modalAvaliar/modalAvaliar';
 
 export default function Menu() {
     const [usuario, setUsuario] = useState<Usuario | null>(null);
-    const [orcamentos, setOrcamentos] = useState<Orcamento[] | []>([]);
-    const [loading, setLoading] = useState(true);
+    const [orcamentos, setOrcamentos] = useState<any[] | []>([]);
+    const [loading, setLoading] = useState(false);
+    const [modalAvaliar, setModalAvaliar] = useState<boolean>(false);
+
 
     const navigate = useNavigate();
 
-    function calcularValorTotal(orcamentos: Orcamento[]) {
-        const total = orcamentos.reduce((total, orcamento) => total + Number(orcamento.orcamentoFormatado.total), 0);
+    function parseValor(v: unknown): number {
+        if (v == null) return 0;
+        if (typeof v === 'number' && Number.isFinite(v)) return v;
+        if (typeof v === 'string') {
+            const s = v
+                .replace(/\s+/g, '')
+                .replace(/[R$]/g, '')
+                .replace(/\./g, '')   // remove separador de milhar
+                .replace(/,/g, '.');  // vírgula -> ponto
+            const n = parseFloat(s);
+            return Number.isNaN(n) ? 0 : n;
+        }
+        return 0;
+    }
+
+    // Pega o total de um orçamento, seja IA ou Tradicional
+    function getTotalOrcamento(o: any): number {
+        // IA costuma estar em o.orcamentoFormatado.total
+        // Tradicional pode vir em o.valorTotal (mas você já mapeou para orcamentoFormatado.total)
+        const bruto = o?.orcamentoFormatado?.total ?? o?.valorTotal ?? o?.total ?? 0;
+        return parseValor(bruto);
+    }
+
+    function calcularValorTotal(orcamentos: any[]) {
+        const total = orcamentos.reduce((acc, o) => acc + getTotalOrcamento(o), 0);
         return total.toLocaleString('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
     }
 
-    function obterCincoOrcamentosMaisRecentes(orcamentos: Orcamento[]) {
+    function obterCincoOrcamentosMaisRecentes(orcamentos: any[]) {
         return orcamentos
             .slice()
             .sort((a, b) => new Date(b.dataCriacao).getTime() - new Date(a.dataCriacao).getTime())
             .slice(0, 5);
     }
 
-
-
+    function botaoPerfil() {
+        navigate('/usuario/perfil');
+    }
 
     useEffect(() => {
-
         const usuarioId = localStorage.getItem('id-usuario');
-
-        async function carregarUsuario(idUsuario: string) {
-            const response = await consultarUsuarioPeloId(idUsuario);
-            setUsuario(response.dado);
+        if (!usuarioId) {
+            navigate('/menu');
+            return;
         }
+        setLoading(true);
 
-        async function carregarOrcamentos(idUsuario: string) {
-            const response = await listarPorUsuario(idUsuario);
-
-            if (response) {
-                if (response.dado)
-                    setOrcamentos(response.dado.content);
+        function abrirModalAvaliar(usuario: Usuario, orcamentos: any[]) {
+            if (usuario) {
+                if (!usuario.feedback && orcamentos.length === 3) {
+                    setModalAvaliar(true);
+                }
             }
         }
 
-        if (usuarioId) {
-            carregarUsuario(usuarioId);
-            carregarOrcamentos(usuarioId);
-            setLoading(false);
+        async function carregarDados() {
+            try {
+                if (usuarioId) {
+                    const usuarioResponse = await consultarUsuarioPeloId(usuarioId);
+
+                    const [iaRes, tradRes] = await Promise.all([
+                        listarPorUsuario(usuarioId),
+                        listarTradicionaisPorUsuario(usuarioId)
+                    ]);
+
+                    if (!usuarioResponse.dado || !iaRes.dado || !tradRes.dado) {
+                        throw new Error('Falha ao carregar dados');
+                    }
+
+                    const iaList: Orcamento[] = iaRes.dado.content.map(o => ({
+                        ...o,
+                        tipoOrcamento: 'IA'
+                    }));
+
+                    const tradList: Orcamento[] = tradRes.dado.content.map(t => (
+                        {
+                            id: t.id,
+                            conteudoOriginal: '',
+                            orcamentoFormatado: { total: t.valorTotal },
+                            dataCriacao: t.dataCriacao,
+                            titulo: t.cliente,
+                            urlArquivo: t.urlArquivo,
+                            usuarioId: t.idUsuario,
+                            status: t.status,
+                            tipoOrcamento: 'TRADICIONAL'
+                        }
+                    ));
+
+                    const todos = [...iaList, ...tradList].sort(
+                        (a, b) => new Date(b.dataCriacao).getTime() - new Date(a.dataCriacao).getTime()
+                    );
+
+                    abrirModalAvaliar(usuarioResponse.dado, todos);
+
+                    setUsuario(usuarioResponse.dado);
+                    setOrcamentos(todos);
+                }
+            } catch (err) {
+                console.error('Erro ao carregar dados:', err);
+                navigate('/menu');
+            } finally {
+                setLoading(false);
+            }
         }
+
+        carregarDados();
     }, []);
 
     return (
@@ -63,7 +134,7 @@ export default function Menu() {
                 <div className='menu-container'>
                     <header className='header-menu'>
                         {usuario ? <h1>Olá, {usuario.nome} !</h1> : <h1>Olá, visitante !</h1>}
-                        <img src={Logo} alt="Logo" />
+                        <button onClick={botaoPerfil}><img src={IconPerfil} alt="Logo" /></button>
                     </header>
 
                     <div className='card-info-geral'>
@@ -75,10 +146,19 @@ export default function Menu() {
                             />
                             <TextoResumo
                                 titulo='Aprovados:'
-                                valor='0'
+                                valor={String(orcamentos.filter(orc => orc.status === 'APROVADO').length)}
+                            />
+
+                            <TextoResumo
+                                titulo='Reprovados:'
+                                valor={String(orcamentos.filter(orc => orc.status === 'REPROVADO').length)}
                             />
                         </div>
-                        <p className='valor-total-info-geral'>R$ {calcularValorTotal(orcamentos)}</p>
+                        <div className='div-valores'>
+                            <p className='valor-total-info-geral'>R$ {calcularValorTotal(orcamentos)}</p>
+                            <p className='valor-total-info-aprovado'>R$ {calcularValorTotal(orcamentos.filter(orc => orc.status === 'APROVADO'))}</p>
+                            <p className='valor-total-info-reprovado'>R$ {calcularValorTotal(orcamentos.filter(orc => orc.status === 'REPROVADO'))}</p>
+                        </div>
                     </div>
 
                     <button className='btn-novo-orcamento' onClick={() => { navigate('/orcamento/cadastro') }}>Novo Orçamento</button>
@@ -100,8 +180,7 @@ export default function Menu() {
                                 <OrcamentoItem
                                     key={orc.id}
                                     orcamento={orc}
-                                    handleOpenDeleteModal={() => {}}
-                                    deleteButton={false}
+                                    misturado={true}
                                 />
                             ))
                         ) : (
@@ -110,6 +189,13 @@ export default function Menu() {
 
 
                     </div>
+
+                    {modalAvaliar &&
+                        <ModalAvaliar
+                            fechar={() => setModalAvaliar(false)}
+
+                        />
+                    }
                 </div>
                 :
                 <Loading message="Carregando..." />
