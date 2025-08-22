@@ -1,31 +1,175 @@
-.login-usuario-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 1rem 2rem 1rem 2rem;
-    gap: 5rem;
+/* ===== Tema base (alinhado com a landing) ===== */
+:root{
+  --base:#2D4254;
+  --primary:#18AF91;
+  --secondary:#2C8ABB;
+
+  --text:rgba(255,255,255,.95);
+  --text-dim:rgba(255,255,255,.9);
+  --text-soft:rgba(255,255,255,.72);
+
+  --glass-bg:rgba(255,255,255,.06);
+  --glass-brd:rgba(255,255,255,.14);
+  --glass-slot:rgba(255,255,255,.10);
+  --focus:rgba(24,175,145,.35);
 }
 
-.form-login-usuario {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    width: 100%;
-    align-items: center;
-    justify-content: center;
+/* Cartão translúcido padrão */
+.glass-card{
+  background:var(--glass-bg);
+  border:1px solid var(--glass-brd);
+  border-radius:16px;
+  box-shadow:0 18px 36px rgba(0,0,0,.22);
+  backdrop-filter:blur(6px);
 }
 
-.botao-entrar {
-    margin-top: 6%;
+/* ===== Fundo com blobs ===== */
+.login-page{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:2rem;
+  color:var(--text);
+  position:relative;
+  overflow:hidden;
+  background:
+    radial-gradient(1200px 500px at 10% -10%, rgba(44,138,187,.25) 0%, transparent 60%),
+    radial-gradient(900px 600px at 110% 0%, rgba(24,175,145,.25) 0%, transparent 60%),
+    var(--base);
 }
 
-.botao-esqueceu-senha {
-    background-color: transparent;
-    font-size: 1rem;
-    color: #3B82F6;
-    align-self: flex-start;
+.login-page::before,
+.login-page::after{
+  content:"";
+  position:absolute;
+  pointer-events:none;
+  filter:blur(30px);
+  opacity:.25;
 }
 
-.botao-esqueceu-senha:hover {
-    cursor: pointer;
+.login-page::before{
+  width:38rem; height:38rem;
+  left:-18rem; top:-10rem;
+  background:radial-gradient(circle, var(--secondary) 0%, transparent 60%);
+}
+.login-page::after{
+  width:34rem; height:34rem;
+  right:-16rem; top:-6rem;
+  background:radial-gradient(circle, var(--primary) 0%, transparent 60%);
+}
+
+/* ===== Card ===== */
+.login-card{
+  width:100%;
+  max-width:480px;
+  padding:1.5rem 1.5rem 2rem;
+  position:relative;
+}
+
+/* opcional: linha decorativa no topo do card */
+.login-card::before{
+  content:"";
+  position:absolute;
+  top:0; left:0; right:0;
+  height:3px;
+  background:linear-gradient(90deg, var(--secondary), var(--primary));
+  border-top-left-radius:16px;
+  border-top-right-radius:16px;
+}
+
+/* ===== Form ===== */
+.form-login-usuario{
+  display:flex;
+  flex-direction:column;
+  gap:1.1rem;
+  margin-top:.5rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.form-field{
+  display:flex;
+  flex-direction:column;
+  gap:.5rem;
+  width: 100%;
+}
+
+.label-login{
+  font-weight:800;
+  color:var(--text-soft);
+  font-size:.8rem;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
+
+/* link auxiliar */
+.row-aux{
+  display:flex;
+  justify-content:flex-end;
+}
+
+.link-esqueceu{
+  color:var(--text);
+  text-decoration:none;
+  opacity:.8;
+  transition:opacity .15s ease, transform .12s ease;
+}
+
+.link-esqueceu:hover{
+  opacity:1;
+  transform:translateY(-1px);
+}
+
+/* botão entrar */
+.btn-entrar{
+  margin-top:.4rem;
+  width:100%;
+  padding:.9rem 1.2rem;
+  border-radius:12px;
+  border:none;
+  cursor:pointer;
+  font-weight:800;
+  font-size:1rem;
+  color:#0C2C25;
+  background:linear-gradient(135deg, var(--primary), var(--secondary));
+  box-shadow:0 14px 30px rgba(24,175,145,.28);
+  transition:transform .12s ease, box-shadow .12s ease, filter .2s ease;
+}
+
+.btn-entrar:hover{
+  transform:translateY(-1px);
+  box-shadow:0 16px 34px rgba(24,175,145,.34);
+}
+
+.btn-entrar:active{
+  transform:translateY(0);
+}
+
+/* divisor */
+.divider{
+  display:flex;
+  align-items:center;
+  gap:.75rem;
+  color:var(--text-soft);
+  margin:.25rem 0 .25rem;
+  user-select:none;
+}
+
+.divider::before,
+.divider::after{
+  content:"";
+  flex:1;
+  height:1px;
+  background:var(--glass-brd);
+}
+
+/* botão Google (wrapper) */
+.google-wrapper{
+  margin-top:.25rem;
+}
+
+/* ===== Responsivo ===== */
+@media (max-width:520px){
+  .login-card{ padding:1.25rem 1rem 1.5rem; }
 }

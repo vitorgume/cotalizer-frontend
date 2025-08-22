@@ -17,7 +17,7 @@ type Props = {
     idUsuario: string;
     emailInicial?: string;
     nomeInicial?: string;
-    onAssinou?: () => Promise<void> | void; // para o pai recarregar usuário/atualizar UI
+    onAssinou?: () => Promise<void> | void; 
 };
 
 export default function AssinaturaForms({ open, onClose, idUsuario, emailInicial = '', nomeInicial = '', onAssinou }: Props) {

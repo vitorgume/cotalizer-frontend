@@ -16,13 +16,11 @@ export default function LoginUsuario() {
     const navigate = useNavigate();
 
     async function logar(event: React.FormEvent) {
-        event.preventDefault();            
+        event.preventDefault();
         setLoading(true);
 
         try {
-            setLoading(true);
             const usuarioLogado = await logarUsuario(email, senha);
-
             if (usuarioLogado.dado?.token) {
                 localStorage.setItem('id-usuario', usuarioLogado.dado.usuarioId);
                 localStorage.setItem('token', usuarioLogado.dado.token);
@@ -30,52 +28,60 @@ export default function LoginUsuario() {
             } else {
                 notificarErro('Credenciais incorretas. Tente novamente.');
             }
-        } catch (error) {
+        } catch {
             notificarErro('Não foi possível conectar. Verifique sua internet.');
         } finally {
             setLoading(false);
         }
     }
 
-    return (
-        <div>
-            {loading ?
-                <Loading message="Autenticando..." />
-                : <div className='login-usuario-container'>
-                    <HeaderForms
-                        titulo='Bem vindo de volta'
-                    />
+    if (loading) return <Loading message="Autenticando..." />;
 
-                    <form className='form-login-usuario' onSubmit={logar}>
+    return (
+        <div className="login-page">
+            <div className="login-card glass-card">
+                <HeaderForms titulo="Bem-vindo de volta" />
+
+                <form className="form-login-usuario" onSubmit={logar}>
+                    <div className="form-field">
+                        <label className="label-login">Email</label>
                         <InputPadrao
-                            placeholder='Email'
+                            placeholder="seuemail@exemplo.com"
                             value={email}
                             onChange={setEmail}
                             inativo={false}
                             senha={false}
                         />
+                    </div>
 
+                    <div className="form-field">
+                        <label className="label-login">Senha</label>
                         <InputPadrao
-                            placeholder='Senha'
+                            placeholder="••••••••"
                             value={senha}
                             onChange={setSenha}
                             inativo={false}
                             senha={true}
                         />
-                        <Link
-                            style={{ alignSelf: 'flex-start', color: '#3B82F6' }}
-                            to={'http://localhost:5173/usuario/esqueceu-senha'}
-                        >
-                            <p>Esqueceu a senha ?</p>
-                        </Link>
+                    </div>
 
-                        <button className='botao-gerar botao-entrar'>Entrar</button>
-                    </form>
-                    <GoogleLoginButton
-                        label='Entrar com o Google'
-                    />
-                </div>
-            }
+                    <div className="row-aux">
+                        <Link to="/usuario/esqueceu-senha" className="link-esqueceu">
+                            Esqueceu a senha?
+                        </Link>
+                    </div>
+
+                    <button type="submit" className="btn-entrar">Entrar</button>
+
+                    <div className="divider">
+                        <span>ou</span>
+                    </div>
+
+                    <div className="google-wrapper">
+                        <GoogleLoginButton label="Entrar com o Google" />
+                    </div>
+                </form>
+            </div>
         </div>
     );
 }

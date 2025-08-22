@@ -3,12 +3,12 @@
   align-items: center;
   justify-content: center;
   gap: 12px;
-  background-color: #ffffff;
+  background-color: transparent;
   border: 1px solid #ddd;
   border-radius: 6px;
   padding: 10px 16px;
   font-size: 16px;
-  color: #444;
+  color: #ffffff;
   cursor: pointer;
   transition: all 0.3s ease;
   font-weight: 500;
@@ -16,7 +16,7 @@
 }
 
 .google-login-button:hover {
-  background-color: #f7f7f7;
+  background-color: #4b5864;
   box-shadow: 0 4px 6px rgba(0,0,0,0.15);
 }
 

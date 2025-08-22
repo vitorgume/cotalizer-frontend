@@ -19,7 +19,6 @@ export default function ListagemOrcamentos() {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [loading, setLoading] = useState(true);
 
-    // 1) Carrega as duas listas ao montar
     useEffect(() => {
         const idUsu = localStorage.getItem("id-usuario");
         if (!idUsu) return;
@@ -34,52 +33,46 @@ export default function ListagemOrcamentos() {
                 if (tradRes.dado) setTradOrcamentos(tradRes.dado.content);
             })
             .catch(console.error)
-            .finally(() => {
-                setLoading(false)
-            });
+            .finally(() => setLoading(false));
     }, []);
 
-    // 2) Filtra a lista visível de acordo com a aba e o termo de busca
     const listaFiltrada = useMemo(() => {
-        // escolhe a base certa de acordo com a aba
         const base = selectedTab === "IA"
-            ? iaOrcamentos as (Orcamento | OrcamentoTradicional)[]
-            : tradOrcamentos as (Orcamento | OrcamentoTradicional)[];
+            ? (iaOrcamentos as (Orcamento | OrcamentoTradicional)[])
+            : (tradOrcamentos as (Orcamento | OrcamentoTradicional)[]);
 
-        if (!termoBusca.trim()) {
-            return base;
-        }
+        if (!termoBusca.trim()) return base;
+
         const termo = termoBusca.toLowerCase();
-
         return base.filter((orc) => {
             if (selectedTab === "IA") {
-                // aqui TS já sabe que orc é do tipo Orcamento
                 const o = orc as Orcamento;
                 return (
-                    o.titulo.toLowerCase().includes(termo) ||
-                    o.conteudoOriginal.toLowerCase().includes(termo)
+                    (o.titulo ?? "").toLowerCase().includes(termo) ||
+                    (o.conteudoOriginal ?? "").toLowerCase().includes(termo)
                 );
             } else {
-                // aqui TS já sabe que orc é do tipo OrcamentoTradicional
                 const t = orc as OrcamentoTradicional;
                 return (
-                    t.cliente.toLowerCase().includes(termo) ||
-                    t.observacoes.toLowerCase().includes(termo)
+                    (t.cliente ?? "").toLowerCase().includes(termo) ||
+                    (t.observacoes ?? "").toLowerCase().includes(termo)
                 );
             }
         });
     }, [iaOrcamentos, tradOrcamentos, selectedTab, termoBusca]);
+
     const handleCloseDeleteModal = () => {
         setShowDeleteModal(false);
         setOrcamentoSelecionado(null);
     };
+
     const handleDelete = async () => {
         if (!orcamentoSelecionado) return;
         try {
             if (orcamentoSelecionado.id) {
                 await deletar(orcamentoSelecionado.id);
-                // remove de ambas as listas por via das dúvidas
                 setIaOrcamentos((l) => l.filter((o) => o.id !== orcamentoSelecionado.id));
+                // @ts-ignore (id também existe no trad via mapeamento da API)
                 setTradOrcamentos((l) => l.filter((o) => o.id !== orcamentoSelecionado.id));
             }
         } catch (e) {
@@ -90,52 +83,74 @@ export default function ListagemOrcamentos() {
     };
 
     return (
-        <div className="listagem-orcamentos">
-            <h1 className="titulo">Seus orçamentos</h1>
+        <div className="listagem-page">
+            <div className="listagem-card card-shell">
+                <header className="listagem-header">
+                    <div className="titulo-wrap">
+                        <h1>Seus orçamentos</h1>
+                        <p>Gerencie seus orçamentos por tipo e pesquise rapidamente.</p>
+                    </div>
 
-            {/* === Abas de seleção === */}
-            <div className="abas-tipo">
-                <button
-                    className={selectedTab === "IA" ? "active" : ""}
-                    onClick={() => setSelectedTab("IA")}
-                >
-                    Orçamentos IA
-                </button>
-                <button
-                    className={selectedTab === "TRAD" ? "active" : ""}
-                    onClick={() => setSelectedTab("TRAD")}
-                >
-                    Orçamentos Tradicionais
-                </button>
+                    <div className="tabs">
+                        <button
+                            className={`tab ${selectedTab === "IA" ? "active" : ""}`}
+                            onClick={() => setSelectedTab("IA")}
+                            type="button"
+                        >
+                            Orçamentos IA
+                        </button>
+                        <button
+                            className={`tab ${selectedTab === "TRAD" ? "active" : ""}`}
+                            onClick={() => setSelectedTab("TRAD")}
+                            type="button"
+                        >
+                            Orçamentos Tradicionais
+                        </button>
+                    </div>
+                </header>
+
+                <InputPadrao
+                    placeholder={`Buscar em ${selectedTab === "IA" ? "IA" : "Tradicionais"}...`}
+                    value={termoBusca}
+                    onChange={setTermoBusca}
+                    inativo={false}
+                    senha={false}
+                />
+
+
+                <main className="result-area">
+                    {loading ? (
+                        <Loading message="Carregando orçamentos..." />
+                    ) : listaFiltrada.length > 0 ? (
+                        <div className="lista">
+                            {listaFiltrada.map((orc: any) => (
+                                <div className="lista-item" key={orc.id}>
+                                    <OrcamentoItem
+                                        orcamento={orc}
+                                        /* Mantém o componente existente; o visual já foi ajustado no CSS dele */
+                                        misturado={false}
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="empty card-glass">
+                            <p>
+                                Nenhum orçamento {selectedTab === "IA" ? "IA" : "tradicional"} encontrado.
+                            </p>
+                        </div>
+                    )}
+                </main>
+
+                <footer className="listagem-footer">
+                    <div className="legend">
+                        <span className="dot dot-ia" /> <span>IA</span>
+                        <span className="sep">•</span>
+                        <span className="dot dot-trad" /> <span>Tradicional</span>
+                    </div>
+                </footer>
             </div>
 
-            {/* === Busca texto === */}
-            <InputPadrao
-                placeholder="Buscar por título ou conteúdo"
-                value={termoBusca}
-                onChange={setTermoBusca}
-                inativo={false}
-                senha={false}
-            />
-
-            {/* === Conteúdo principal === */}
-            {loading ? (
-                <Loading message="Carregando orçamentos..." />
-            ) : listaFiltrada.length > 0 ? (
-                listaFiltrada.map((orc) => (
-                    <OrcamentoItem
-                        key={orc.id}
-                        orcamento={orc}
-                        misturado={false}
-                    />
-                ))
-            ) : (
-                <p className="mensagem-vazia">
-                    Nenhum orçamento {selectedTab === "IA" ? "IA" : "tradicional"} encontrado.
-                </p>
-            )}
-
-            {/* === Modal de confirmação de delete === */}
             <ModalDelete
                 isOpen={showDeleteModal}
                 onClose={handleCloseDeleteModal}

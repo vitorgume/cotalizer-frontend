@@ -1,0 +1,112 @@
+/* ====== THEME (alinha com a landing) ====== */
+:root {
+  --base: #2D4254;
+  --primary: #18AF91;
+  --secondary: #2C8ABB;
+
+  --text: #ffffff;
+  --text-dim: rgba(255,255,255,0.9);
+  --text-soft: rgba(255,255,255,0.7);
+
+  --glass-bg: rgba(255,255,255,0.06);
+  --glass-brd: rgba(255,255,255,0.14);
+  --glass-input: rgba(255,255,255,0.08);
+  --focus-ring: rgba(24,175,145,0.35);
+}
+
+/* Contêiner “glass” do input */
+.inputp-wrap {
+  width: 100%;
+  display: flex;
+  align-items: stretch;
+  gap: .5rem;
+
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-brd);
+  border-radius: 12px;
+  padding: 0.55rem 0.6rem 0.55rem 0.75rem;
+
+  color: var(--text-dim);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.22);
+  backdrop-filter: blur(6px);
+
+  transition: border-color .15s ease, box-shadow .15s ease, background-color .15s ease;
+}
+
+/* estado desabilitado */
+.inputp-wrap.is-disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* efeito focus */
+.inputp-wrap:focus-within {
+  border-color: rgba(255,255,255,0.28);
+  box-shadow:
+    0 16px 40px rgba(0,0,0,0.28),
+    0 0 0 3px var(--focus-ring);
+}
+
+/* Campo em si */
+.inputp-field {
+  flex: 1;
+  background: transparent;
+  color: var(--text);
+  border-radius: 8px;
+  padding: 0.65rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.2;
+
+  outline: none;
+  transition: background-color .15s ease, border-color .15s ease;
+}
+
+.inputp-field::placeholder {
+  color: var(--text-soft);
+}
+
+.inputp-field:focus {
+  border-color: rgba(255,255,255,0.28);
+  background: rgba(255,255,255,0.12);
+}
+
+/* Botão “Ver/Ocultar” senha */
+.inputp-toggle {
+  appearance: none;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: linear-gradient(90deg, rgba(24,175,145,0.18), rgba(44,138,187,0.18));
+  color: var(--text);
+  border-radius: 8px;
+  padding: 0 .8rem;
+  font-weight: 700;
+  letter-spacing: .2px;
+  cursor: pointer;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: background-color .15s ease, transform .1s ease, border-color .15s ease;
+  white-space: nowrap;
+}
+
+.inputp-toggle:hover {
+  background: linear-gradient(90deg, rgba(24,175,145,0.25), rgba(44,138,187,0.25));
+  transform: translateY(-1px);
+}
+
+.inputp-toggle:active {
+  transform: translateY(0);
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .inputp-field {
+    padding: 0.55rem 0.65rem;
+    font-size: 0.95rem;
+  }
+  .inputp-toggle {
+    padding: 0 .7rem;
+    font-size: 0.95rem;
+  }
+}

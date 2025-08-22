@@ -15,7 +15,7 @@ export function FormsProdutoList({ onAddProduto }: FormsProdutoListProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!descricao.trim() || !valor || !quantidade) {
       alert('Por favor, preencha todos os campos');
       return;
@@ -46,7 +46,6 @@ export function FormsProdutoList({ onAddProduto }: FormsProdutoListProps) {
 
       onAddProduto(novoProduto);
 
-      // Limpar formulário
       setDescricao('');
       setValor('');
       setQuantidade('');
@@ -66,7 +65,7 @@ export function FormsProdutoList({ onAddProduto }: FormsProdutoListProps) {
 
   return (
     <div className="forms-produto-container">
-      <form className="forms-produto" onSubmit={handleSubmit}>
+      <form className="forms-produto glass-card" onSubmit={handleSubmit}>
         <div className="form-header">
           <h3>Adicionar Produto</h3>
           <p className="form-subtitle">Preencha os dados do produto</p>
@@ -111,7 +110,7 @@ export function FormsProdutoList({ onAddProduto }: FormsProdutoListProps) {
 
         <div className="form-preview">
           {descricao && valor && quantidade && (
-            <div className="preview-card">
+            <div className="preview-card glass-slot">
               <h4>Preview do Produto</h4>
               <div className="preview-details">
                 <p><strong>Produto:</strong> {descricao}</p>

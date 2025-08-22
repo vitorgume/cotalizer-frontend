@@ -1,8 +1,7 @@
 import { useEffect } from 'react';
-import './loginSucesso.css';
 import { useNavigate } from 'react-router-dom';
-import { getId } from '../../../../../utils/idTokenUtil';
-import Loading from '../../../../orcamento/componentes/loading/Loading';
+import { getId } from '../../../../utils/idTokenUtil';
+import Loading from '../../../orcamento/componentes/loading/Loading';
 
 export default function LoginSucesso() {
     const navigate = useNavigate();

@@ -21,7 +21,6 @@ export default function CadastroOrcamentoTradicional() {
 
     const navigate = useNavigate();
 
-    // Calcula o total dos produtos
     const valorTotal = useMemo(() => {
         return produtos.reduce((acc, p) => acc + p.valor * p.quantidade, 0);
     }, [produtos]);
@@ -65,7 +64,6 @@ export default function CadastroOrcamentoTradicional() {
         } finally {
             setLoading(false);
         }
-
     };
 
     const addCustomField = () => {
@@ -79,9 +77,7 @@ export default function CadastroOrcamentoTradicional() {
 
     const updateCustomField = (id: string, field: keyof Omit<CampoPersonalizado, 'id'>, value: string) => {
         setCustomFields(prev =>
-            prev.map(item =>
-                item.id === id ? { ...item, [field]: value } : item
-            )
+            prev.map(item => (item.id === id ? { ...item, [field]: value } : item))
         );
     };
 
@@ -94,50 +90,66 @@ export default function CadastroOrcamentoTradicional() {
     };
 
     const addProduto = (produto: Omit<Produto, 'id'>) => {
-        const newProduto: Produto = {
-            ...produto,
-            id: Date.now().toString()
-        };
+        const newProduto: Produto = { ...produto, id: Date.now().toString() };
         setProdutos(prev => [...prev, newProduto]);
     };
 
     return (
         <div>
-            {loading
-                ? <Loading message='Salvando orçamento...' />
-                :
-                <div className="cadastro-container">
-                    <header className="cadastro-header">
-                        <h1>Novo Orçamento</h1>
+            {loading ? (
+                <Loading message="Salvando orçamento..." />
+            ) : (
+                <div className="cadastro-container cotalizer-theme">
+                    {/* HEADER */}
+                    <header className="cadastro-header glass-card">
+                        <div className="header-top">
+                            <h1>Novo orçamento tradicional</h1>
+                            <span className="badge-variant">Manual</span>
+                        </div>
+                        <p className="header-sub">Monte itens, adicione observações e gere o PDF.</p>
                     </header>
 
+                    {/* MAIN */}
                     <main className="cadastro-main">
-                        <section className="secao-cliente">
-                            <div className="input-group">
-                                <label htmlFor="cliente">Cliente</label>
-                                <InputPadrao
-                                    placeholder="Nome do cliente"
-                                    value={cliente}
-                                    onChange={setCliente}
-                                    inativo={false}
-                                    senha={false}
-                                />
-                            </div>
+                        {/* CLIENTE */}
+                        <section className="secao-cliente glass-card">
+                            <h2>Dados do cliente</h2>
+                            <div className="grid-2">
+                                <div className="input-group">
+                                    <label>Cliente</label>
+                                    <InputPadrao
+                                        placeholder="Nome do cliente"
+                                        value={cliente}
+                                        onChange={setCliente}
+                                        inativo={false}
+                                        senha={false}
+                                    />
+                                </div>
 
-                            <div className="input-group">
-                                <label htmlFor="cnpj-cpf">CNPJ/CPF</label>
-                                <InputPadrao
-                                    placeholder="000.000.000-00"
-                                    value={cnpjCpf}
-                                    onChange={setCnpjCpf}
-                                    inativo={false}
-                                    senha={false}
-                                />
+                                <div className="input-group">
+                                    <label>CNPJ/CPF</label>
+                                    <InputPadrao
+                                        placeholder="00.000.000/0000-00 ou 000.000.000-00"
+                                        value={cnpjCpf}
+                                        onChange={setCnpjCpf}
+                                        inativo={false}
+                                        senha={false}
+                                    />
+                                </div>
                             </div>
                         </section>
 
-                        <section className="secao-produtos">
-                            <h2>Produtos</h2>
+                        {/* PRODUTOS */}
+                        <section className="secao-produtos glass-card">
+                            <div className="secao-head">
+                                <h2>Produtos</h2>   
+                                <div className="kpi-total">
+                                    Total atual:{' '}
+                                    <strong>
+                                        R$ {valorTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                    </strong>
+                                </div>
+                            </div>
 
                             <div className="lista-produtos">
                                 {produtos.map((produto, index) => (
@@ -152,27 +164,30 @@ export default function CadastroOrcamentoTradicional() {
                                 ))}
                             </div>
 
-                            <FormsProdutoList onAddProduto={addProduto} />
-
-                            {produtos.length > 0 && (
-                                <div className="secao-total">
-                                    <h3>Total: R$ {valorTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</h3>
-                                </div>
-                            )}
+                            <div className="forms-wrapper">
+                                <FormsProdutoList onAddProduto={addProduto} />
+                            </div>
                         </section>
 
-                        <section className="secao-observacoes">
+                        {/* OBSERVAÇÕES */}
+                        <section className="secao-observacoes glass-card">
                             <h2>Observações</h2>
                             <textarea
                                 className="textarea-observacoes"
-                                placeholder="Digite suas observações aqui..."
+                                placeholder="Condições de pagamento, prazos, garantia, etc."
                                 value={observacoes}
                                 onChange={(e) => setObservacoes(e.target.value)}
                             />
                         </section>
 
-                        <section className="secao-campos-personalizados">
-                            <h2>Campos Personalizados</h2>
+                        {/* CAMPOS PERSONALIZADOS */}
+                        <section className="secao-campos-personalizados glass-card">
+                            <div className="secao-head">
+                                <h2>Campos personalizados</h2>
+                                <button type="button" className="btn primary-outline" onClick={addCustomField}>
+                                    + Adicionar novo campo
+                                </button>
+                            </div>
 
                             <div className="campos-personalizados-lista">
                                 {customFields.map((field) => (
@@ -180,50 +195,43 @@ export default function CadastroOrcamentoTradicional() {
                                         <input
                                             type="text"
                                             placeholder="Título do campo"
-                                            className="input-campo-titulo"
+                                            className="chip-input"
                                             value={field.titulo}
                                             onChange={(e) => updateCustomField(field.id, 'titulo', e.target.value)}
                                         />
                                         <input
                                             type="text"
                                             placeholder="Valor"
-                                            className="input-campo-valor"
+                                            className="chip-input"
                                             value={field.valor}
                                             onChange={(e) => updateCustomField(field.id, 'valor', e.target.value)}
                                         />
                                         <button
                                             type="button"
-                                            className="btn-remover-campo"
+                                            className="btn danger-outline small"
                                             onClick={() => removeCustomField(field.id)}
                                             aria-label="Remover campo"
+                                            title="Remover campo"
                                         >
-                                            ❌
+                                            Remover
                                         </button>
                                     </div>
                                 ))}
                             </div>
-
-                            <button
-                                type="button"
-                                className="btn-adicionar-campo"
-                                onClick={addCustomField}
-                            >
-                                + Adicionar novo campo
-                            </button>
                         </section>
 
-                        <footer className="cadastro-footer">
-                            <button type="button" className="btn-cancelar">
+                        {/* FOOTER */}
+                        <footer className="cadastro-footer glass-card">
+                            <button type="button" className="btn secondary-outline" onClick={() => navigate(-1)}>
                                 Cancelar
                             </button>
-                            <button onClick={salvarOrcamento} type="button" className="btn-salvar">
-                                Salvar Orçamento
+                            <button type="button" className="btn primary-solid" onClick={salvarOrcamento}>
+                                Salvar orçamento
                             </button>
                         </footer>
                     </main>
                 </div>
-            }
-
+            )}
         </div>
     );
 }

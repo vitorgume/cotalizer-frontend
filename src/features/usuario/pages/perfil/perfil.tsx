@@ -19,17 +19,10 @@ export default function Perfil() {
     const [orcamentosIA, setOrcamentosIA] = useState<Orcamento[]>([]);
     const [orcamentosTradicional, setOrcamentoTradicional] = useState<OrcamentoTradicional[]>([])
     const [isEditing, setIsEditing] = useState(false);
-    const [form, setForm] = useState({
-        nome: '',
-        email: '',
-        telefone: '',
-        cpf: '',
-        cnpj: ''
-    });
+    const [form, setForm] = useState({ nome: '', email: '', telefone: '', cpf: '', cnpj: '' });
     const [logoFile, setLogoFile] = useState<File | null>(null);
     const [originalEmail, setOriginalEmail] = useState<string>('');
     const [abrirAssinatura, setAbrirAssinatura] = useState(false);
-
 
     const navigate = useNavigate();
 
@@ -37,28 +30,19 @@ export default function Perfil() {
         const id = localStorage.getItem('id-usuario')!;
         async function init() {
             const respUser = await consultarUsuarioPeloId(id);
-            console.log('Usuário: ', respUser);
             if (respUser.dado) {
                 const u = respUser.dado;
                 setUsuario(u);
                 setOriginalEmail(u.email);
                 setForm({
-                    nome: u.nome,
-                    email: u.email,
-                    telefone: u.telefone,
-                    cpf: u.cpf || '',
-                    cnpj: u.cnpj || ''
+                    nome: u.nome, email: u.email, telefone: u.telefone, cpf: u.cpf || '', cnpj: u.cnpj || ''
                 });
             }
             const respOrcs = await listarPorUsuario(id);
-            if (respOrcs.dado?.content) {
-                setOrcamentosIA(respOrcs.dado.content);
-            }
+            if (respOrcs.dado?.content) setOrcamentosIA(respOrcs.dado.content);
 
             const respoOrcsTrad = await listarTradicionaisPorUsuario(id);
-            if (respoOrcsTrad.dado?.content) {
-                setOrcamentoTradicional(respoOrcsTrad.dado.content);
-            }
+            if (respoOrcsTrad.dado?.content) setOrcamentoTradicional(respoOrcsTrad.dado.content);
         }
         init();
     }, [])
@@ -69,19 +53,10 @@ export default function Perfil() {
         if (resp.dado) setUsuario(resp.dado);
     }
 
-    function onEdit() {
-        setIsEditing(true);
-    }
-
+    function onEdit() { setIsEditing(true); }
     function onCancel() {
         if (usuario) {
-            setForm({
-                nome: usuario.nome,
-                email: usuario.email,
-                telefone: usuario.telefone,
-                cpf: usuario.cpf || '',
-                cnpj: usuario.cnpj || ''
-            });
+            setForm({ nome: usuario.nome, email: usuario.email, telefone: usuario.telefone, cpf: usuario.cpf || '', cnpj: usuario.cnpj || '' });
             setLogoFile(null);
         }
         setIsEditing(false);
@@ -89,28 +64,17 @@ export default function Perfil() {
 
     async function onSave() {
         if (!usuario) return;
-
         const emailChanged = form.email !== originalEmail;
 
         if (usuario.id) {
             await atualizarUsuario(usuario.id, {
-                nome: form.nome,
-                email: form.email,
-                telefone: form.telefone,
-                cpf: form.cpf,
-                cnpj: form.cnpj,
-                senha: usuario.senha,
-                plano: usuario.plano,
-                idCustomer: usuario.idCustomer,
-                idAssinatura: usuario.idAssinatura,
-                url_logo: usuario.url_logo,
-                feedback: usuario.feedback
+                nome: form.nome, email: form.email, telefone: form.telefone, cpf: form.cpf, cnpj: form.cnpj,
+                senha: usuario.senha, plano: usuario.plano, idCustomer: usuario.idCustomer, idAssinatura: usuario.idAssinatura,
+                url_logo: usuario.url_logo, feedback: usuario.feedback
             });
         }
 
-        if (logoFile && usuario.id) {
-            await cadastrarLogoUsuario(usuario.id, logoFile);
-        }
+        if (logoFile && usuario.id) await cadastrarLogoUsuario(usuario.id, logoFile);
 
         if (emailChanged) {
             navigate(`/validacao/email/${form.email}`);
@@ -119,16 +83,11 @@ export default function Perfil() {
 
         if (usuario.id) {
             const resp = await consultarUsuarioPeloId(usuario.id);
-
-
             if (resp.dado) {
-                setUsuario(resp.dado)
+                setUsuario(resp.dado);
                 setForm({
-                    nome: resp.dado.nome,
-                    email: resp.dado.email,
-                    telefone: resp.dado.telefone,
-                    cpf: resp.dado.cpf || '',
-                    cnpj: resp.dado.cnpj || ''
+                    nome: resp.dado.nome, email: resp.dado.email, telefone: resp.dado.telefone,
+                    cpf: resp.dado.cpf || '', cnpj: resp.dado.cnpj || ''
                 });
             }
         }
@@ -137,12 +96,8 @@ export default function Perfil() {
         setIsEditing(false);
     }
 
-    const handleChange = (field: keyof typeof form) => (value: string) => {
-        setForm({ ...form, [field]: value });
-    }
-    const handleLogoChange = (file: File | null) => {
-        setLogoFile(file);
-    }
+    const handleChange = (field: keyof typeof form) => (value: string) => setForm({ ...form, [field]: value });
+    const handleLogoChange = (file: File | null) => setLogoFile(file);
 
     async function cancelar() {
         const idUsuario = localStorage.getItem('id-usuario');
@@ -152,115 +107,97 @@ export default function Perfil() {
         }
     }
 
-    return (
-        <div className="page-perfil">
-            <h1>Sua conta</h1>
+    const usados = orcamentosIA.length + orcamentosTradicional.length;
+    const limite = usuario?.plano === 'GRATIS' ? 5 : 100;
 
-            <div className="perfil-header">
-                <div className="perfil-logo">
-                    {usuario?.url_logo
-                        ? <img src={usuario.url_logo} alt="Logo do Usuário" />
-                        : <div className="placeholder-logo">Sem logo</div>
-                    }
+    return (
+        <div className="page-perfil cotalizer-theme">
+            <header className="perfil-header glass-card">
+                <div className="perfil-identidade">
+                    <div className="perfil-logo">
+                        {usuario?.url_logo
+                            ? <img src={usuario.url_logo} alt="Logo do Usuário" />
+                            : <div className="placeholder-logo">Sem logo</div>}
+                    </div>
+                    <div className="perfil-titulos">
+                        <h1>Sua conta</h1>
+                        {usuario && (
+                            <p className="perfil-subtitulo">{usuario.nome} • {usuario.email}</p>
+                        )}
+                        {usuario && (
+                            <span className={`badge-plano ${usuario.plano === 'GRATIS' ? 'badge-free' : 'badge-plus'}`}>
+                                {usuario.plano === 'GRATIS' ? 'Plano Grátis' : 'Assinatura Plus'}
+                            </span>
+                        )}
+                    </div>
                 </div>
-                {!isEditing
-                    ? <button onClick={onEdit} className="btn-editar-perfil">Editar</button>
-                    : (
+
+                <div className="perfil-acoes">
+                    {!isEditing ? (
+                        <button onClick={onEdit} className="btn primary-outline">Editar</button>
+                    ) : (
                         <>
-                            <button onClick={onSave} className="btn-salvar-perfil">Salvar</button>
-                            <button onClick={onCancel} className="btn-cancelar-edicao">Cancelar</button>
+                            <button onClick={onSave} className="btn primary-solid">Salvar</button>
+                            <button onClick={onCancel} className="btn danger-ghost">Cancelar</button>
                         </>
-                    )
-                }
-            </div>
+                    )}
+                </div>
+            </header>
 
             {isEditing && (
-                <UploadLogo onLogoChange={handleLogoChange} />
+                <div className="upload-logo-container glass-card">
+                    <UploadLogo onLogoChange={handleLogoChange} />
+                </div>
             )}
 
-            {/* Dados do Usuário */}
-            <section className="sec-dados">
+            <section className="sec-dados glass-card">
                 <h3>Seus dados</h3>
                 {usuario ? (
                     <div className="div-inputs">
-                        <InputPadrao
-                            placeholder="Nome"
-                            value={form.nome}
-                            onChange={handleChange('nome')}
-                            inativo={!isEditing}
-                            senha={false}
-                        />
-                        <InputPadrao
-                            placeholder="Email"
-                            value={form.email}
-                            onChange={handleChange('email')}
-                            inativo={!isEditing}
-                            senha={false}
-                        />
-                        <InputPadrao
-                            placeholder="Telefone"
-                            value={form.telefone}
-                            onChange={handleChange('telefone')}
-                            inativo={!isEditing}
-                            senha={false}
-                        />
-                        {form.cpf
-                            ? (
-                                <InputPadrao
-                                    placeholder="CPF"
-                                    value={form.cpf}
-                                    onChange={handleChange('cpf')}
-                                    inativo={!isEditing}
-                                    senha={false}
-                                />
-                            ) : (
-                                <InputPadrao
-                                    placeholder="CNPJ"
-                                    value={form.cnpj}
-                                    onChange={handleChange('cnpj')}
-                                    inativo={!isEditing}
-                                    senha={false}
-                                />
-                            )
-                        }
+                        <InputPadrao placeholder="Nome" value={form.nome} onChange={handleChange('nome')} inativo={!isEditing} senha={false} />
+                        <InputPadrao placeholder="Email" value={form.email} onChange={handleChange('email')} inativo={!isEditing} senha={false} />
+                        <InputPadrao placeholder="Telefone" value={form.telefone} onChange={handleChange('telefone')} inativo={!isEditing} senha={false} />
+                        {form.cpf ? (
+                            <InputPadrao placeholder="CPF" value={form.cpf} onChange={handleChange('cpf')} inativo={!isEditing} senha={false} />
+                        ) : (
+                            <InputPadrao placeholder="CNPJ" value={form.cnpj} onChange={handleChange('cnpj')} inativo={!isEditing} senha={false} />
+                        )}
                     </div>
                 ) : <p>Usuário não encontrado</p>}
             </section>
 
             {usuario && (
-                <section className="sec-assinatura">
+                <section className="sec-assinatura glass-card">
                     <div className="header-sec-assinatura">
                         <h3>Assinatura</h3>
-                        {usuario.plano === 'GRATIS'
-                            ? <p>Gratuito</p>
-                            : <p className="text-assinatura-plus">Assinatura Plus</p>
-                        }
+                        <p className={usuario.plano === 'GRATIS' ? 'plano-free' : 'text-assinatura-plus'}>
+                            {usuario.plano === 'GRATIS' ? 'Gratuito' : 'Assinatura Plus'}
+                        </p>
                     </div>
 
                     <div className="metricas-sec-assinatura">
-                        <p>Limite orçamentos</p>
-                        <MetricaQuantidadeOrcamento
-                            usado={orcamentosIA.length + orcamentosTradicional.length}
-                            limite={usuario.plano === 'GRATIS' ? 5 : 100}
-                        />
+                        <div className="metricas-head">
+                            <p>Limite de orçamentos</p>
+                            <span className="pill-usage">{usados}/{limite}</span>
+                        </div>
+                        <MetricaQuantidadeOrcamento usado={usados} limite={limite} />
                     </div>
 
-                    {usuario.plano === 'GRATIS'
-                        ? <button onClick={() => setAbrirAssinatura(true)} className="botao-gerar">Obter Plus</button>
-                        : (
-                            <div className="div-botoes-assinatura">
-                                <button
-                                    onClick={() => window.location.href = "https://wa.me/554391899898"}
-                                    className="botao-gerar"
-                                >
-                                    Plano personalizado
-                                </button>
-                                <button onClick={cancelar} className="botao-cancelar-assinatura">
-                                    Cancelar assinatura
-                                </button>
-                            </div>
-                        )
-                    }
+                    {usuario.plano === 'GRATIS' ? (
+                        <button onClick={() => setAbrirAssinatura(true)} className="btn primary-solid">Obter Plus</button>
+                    ) : (
+                        <div className="div-botoes-assinatura">
+                            <button
+                                onClick={() => window.location.href = "https://wa.me/554391899898"}
+                                className="btn primary-outline"
+                            >
+                                Plano personalizado
+                            </button>
+                            <button onClick={cancelar} className="btn danger-ghost">
+                                Cancelar assinatura
+                            </button>
+                        </div>
+                    )}
                 </section>
             )}
 
@@ -271,10 +208,9 @@ export default function Perfil() {
                     idUsuario={usuario.id!}
                     emailInicial={usuario.email}
                     nomeInicial={usuario.nome}
-                    onAssinou={recarregarUsuario} 
+                    onAssinou={recarregarUsuario}
                 />
             )}
-
         </div>
     );
 }

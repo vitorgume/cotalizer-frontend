@@ -3,61 +3,69 @@ import InputPadrao from '../../../../orcamento/componentes/inputPadrao/inputPadr
 import './esqueceuSenha.css';
 import { solicitarNovaSenha } from '../../../usuario.service';
 import Loading from '../../../../orcamento/componentes/loading/Loading';
+import { notificarErro, notificarSucesso } from '../../../../../utils/notificacaoUtils';
 
 export default function EsqueceuSenha() {
-
-    const [email, setEmail] = useState<string | ''>('');
+    const [email, setEmail] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false);
     const [finalizado, setFinalizado] = useState<boolean>(false);
 
-    function solicitarAlteracaoSenha() {
-
-        if (email) {
-            try {
-                setLoading(true);
-                solicitarNovaSenha(email)
-            } catch (err) {
-                console.error('Erro ao solicitar nova senha', err);
-            } finally {
-                setLoading(false);
-                setFinalizado(true);
-            }
-
+    async function solicitarAlteracaoSenha(e: React.FormEvent) {
+        e.preventDefault();
+        if (!email) return;
+        try {
+            setLoading(true);
+            await solicitarNovaSenha(email);
+            setFinalizado(true);
+            notificarSucesso('Enviamos um link de recuperação para seu email.');
+        } catch (err) {
+            notificarErro('Não foi possível enviar o email. Tente novamente.');
+            console.error('Erro ao solicitar nova senha', err);
+        } finally {
+            setLoading(false);
         }
-
     }
 
     return (
+        <div className="forgot-page">
+            {loading ? (
+                <Loading message="Enviando para o email..." />
+            ) : (
+                <div className="forgot-card glass-card" role="dialog" aria-modal="true">
+                    {!finalizado ? (
+                        <form className="forgot-form" onSubmit={solicitarAlteracaoSenha}>
+                            <div className="forgot-head">
+                                <h1>Recuperar acesso</h1>
+                                <p>Informe o email cadastrado para enviarmos o link de recuperação.</p>
+                            </div>
 
-        <div className='page-esqueceu-senha'>
-            {finalizado ?
-                <div className='solicitacao-senha-finalizado'>
-                    <p>Continue a sua recuperação de senha pelo seu email</p>
+                            <div className="form-field">
+                                <label className="label-forgot">Email</label>
+                                <InputPadrao
+                                    placeholder="seuemail@exemplo.com"
+                                    value={email}
+                                    onChange={setEmail}
+                                    inativo={false}
+                                    senha={false}
+                                />
+                            </div>
+
+                            <button type="submit" className="btn-enviar">Enviar link</button>
+                        </form>
+                    ) : (
+                        <div className="forgot-success">
+                            <h2>Verifique sua caixa de entrada</h2>
+                            <p>
+                                Enviamos um email com instruções para redefinir sua senha.
+                                Se não encontrar, confira também a pasta de spam.
+                            </p>
+                            <button className="btn-enviar" onClick={() => setFinalizado(false)}>
+                                Enviar outro email
+                            </button>
+                        </div>
+                    )}
                 </div>
-                : (
-                    <div className='container-esqueceu-senha'>
-
-                        {loading ?
-                            <Loading message='Enviando para o email...' />
-                            : (
-                                <form className='form-esqueceu-senha' onSubmit={solicitarAlteracaoSenha}>
-
-                                    <p>Digite o email usado no cadastro da sua conta</p>
-                                    <InputPadrao
-                                        placeholder='Email'
-                                        value={email}
-                                        onChange={setEmail}
-                                        inativo={false}
-                                        senha={false}
-                                    />
-
-                                    <button className='botao-gerar'>Enviar</button>
-                                </form>
-                            )
-                        }
-                    </div>
-                )
-            }
+            )}
         </div>
     );
 }

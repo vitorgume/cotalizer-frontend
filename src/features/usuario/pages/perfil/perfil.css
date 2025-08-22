@@ -1,185 +1,167 @@
-.page-perfil {
-    display: flex;
-    flex-direction: column;
-    padding: 2rem;
-    gap: 2rem;
+/* ====== THEME (mesmo da landing) ====== */
+:root{
+  --base:#2D4254;
+  --primary:#18AF91;
+  --secondary:#2C8ABB;
+
+  --text:#ffffff;
+  --text-dim:rgba(255,255,255,0.9);
+  --text-soft:rgba(255,255,255,0.75);
+
+  --glass-bg:rgba(255,255,255,0.06);
+  --glass-brd:rgba(255,255,255,0.14);
+  --glass-slot:rgba(255,255,255,0.10);
+  --focus:rgba(24,175,145,0.35);
 }
 
-.page-perfil > h1 {
-    font-weight: 100;
+/* Fundo/escopo da página */
+.page-perfil.cotalizer-theme{
+  min-height:100vh;
+  padding:2rem;
+  color:var(--text-dim);
+  background:
+    radial-gradient(900px 400px at 8% -10%, rgba(44,138,187,0.2) 0%, transparent 60%),
+    radial-gradient(700px 500px at 110% 0%, rgba(24,175,145,0.2) 0%, transparent 60%),
+    var(--base);
+  display:flex;
+  flex-direction:column;
+  gap:1.25rem;
 }
 
-.sec-dados {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    width: 100%;
+/* Utilitário glass */
+.glass-card{
+  background:var(--glass-bg);
+  border:1px solid var(--glass-brd);
+  border-radius:16px;
+  box-shadow:0 20px 40px rgba(0,0,0,0.18);
+  backdrop-filter: blur(6px);
 }
 
-.sec-dados > h3 {
-    font-weight: 100;
+/* Header */
+.perfil-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:1rem 1.25rem;
 }
 
-.div-inputs {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    width: 100%;
+.perfil-identidade{
+  display:flex;
+  align-items:center;
+  gap:1rem;
 }
 
-.sec-assinatura {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
+.perfil-logo{
+  width:96px; height:96px; border-radius:50%;
+  overflow:hidden; background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.18);
+  display:flex; align-items:center; justify-content:center;
+}
+.perfil-logo img{ width:100%; height:100%; object-fit:cover; }
+.placeholder-logo{ color:var(--text-soft); font-size:.9rem; padding:.25rem; text-align:center; }
+
+.perfil-titulos h1{
+  margin:0; color:var(--text); font-size:1.6rem; font-weight:800;
+}
+.perfil-subtitulo{
+  margin:.25rem 0 0 0; color:var(--text-soft); font-size:.95rem;
 }
 
-.header-sec-assinatura {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
+/* Badges de plano */
+.badge-plano{
+  display:inline-block;
+  margin-top:.5rem;
+  padding:.25rem .6rem;
+  border-radius:999px;
+  font-size:.78rem;
+  font-weight:800;
+  border:1px solid rgba(255,255,255,0.18);
+  background:linear-gradient(90deg, rgba(44,138,187,0.18), rgba(24,175,145,0.18));
+  color:var(--text);
+}
+.badge-plus{
+  background:var(--primary);
+  color:#0C2C25;
+  border-color:transparent;
 }
 
-.header-sec-assinatura > h3 {
-    font-weight: 100;
-}
+/* Ações do header */
+.perfil-acoes{ display:flex; gap:.6rem; }
 
-.header-sec-assinatura > p {
-    font-weight: bold;
-    color: #3B82F6;
-    font-size: 1.3rem;
-}
-
-.metricas-sec-assinatura {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    gap: 1.5rem;
-    justify-content: center;
-    align-items: center;
-}
-
-.metricas-sec-assinatura > p {
-    align-self: flex-start;
-}
-
-.text-assinatura-plus {
-    background: linear-gradient(to right, #0049BF, #002259);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  color: transparent;
-}
-
-.botao-cancelar-assinatura {
-    color: white;
-    background-color: #FFC0BA;
-    padding: 0.5rem;
-    width: 30%;
-    border-radius: 0.5rem;
-}
-
-.botao-cancelar-assinatura:hover {
-    background-color: #fe8479;
-    cursor: pointer;
-}
-
-.botao-cancelar-assinatura:active {
-    background-color: #ea3928;
-}
-
-.div-botoes-assinatura {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    gap: 1rem;
-    justify-content: center;
-    align-items: center;
-}
-
-/* Header do perfil: logo + botões */
-.perfil-header {
+/* Botões genéricos */
+.btn{
+  appearance:none; cursor:pointer;
+  border-radius:10px; padding:.6rem 1rem;
+  font-weight:800; letter-spacing:.2px;
+  transition: transform .12s ease, box-shadow .12s ease, opacity .2s ease, background .2s ease, border-color .2s ease;
+  border:1px solid rgba(255,255,255,0.18);
+  color:var(--text);
+  background:linear-gradient(90deg, rgba(24,175,145,0.15), rgba(44,138,187,0.15));
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  margin-bottom: 1.5rem;
-  gap: 1rem;
-}
-
-/* Container da logo: círculo responsivo */
-.perfil-logo {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  overflow: hidden;
-  background-color: #f3f4f6;
-  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
 }
+.btn:hover{ transform: translateY(-1px); box-shadow:0 10px 24px rgba(0,0,0,0.25); }
 
-.perfil-logo img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.primary-solid{
+  background:var(--primary); color:#0C2C25; border-color:transparent;
 }
-
-/* Placeholder quando não há logo */
-.placeholder-logo {
-  color: #9ca3af;
-  font-size: 0.875rem;
-  text-align: center;
-  padding: 0.5rem;
+.primary-outline{
+  background:transparent; color:var(--text);
+}
+.danger-ghost{
+  background:transparent; color:#ffd1d1; border-color:rgba(255,209,209,0.35);
 }
 
-/* Botões de editar / salvar / cancelar */
-.btn-editar-perfil,
-.btn-salvar-perfil,
-.btn-cancelar-edicao {
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 0.375rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+/* Upload logo “slot” */
+.upload-logo-container{ padding:1rem; }
+
+/* Seção dados */
+.sec-dados{
+  padding:1.2rem;
+}
+.sec-dados h3{
+  margin:0 0 .75rem 0; color:var(--text); font-weight:800; font-size:1.2rem;
+}
+.div-inputs{ display:flex; flex-direction:column; gap:1rem; }
+
+/* Seção assinatura */
+.sec-assinatura{
+  padding:1.2rem; display:flex; flex-direction:column; gap:1rem;
+}
+.header-sec-assinatura{
+  display:flex; align-items:center; justify-content:space-between;
+}
+.header-sec-assinatura h3{ margin:0; color:var(--text); font-weight:800; font-size:1.2rem; }
+.header-sec-assinatura p{ margin:0; font-weight:800; }
+
+.plano-free{ color:var(--text-dim); }
+.text-assinatura-plus{
+  background: linear-gradient(to right, #18AF91, #2C8ABB);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
 }
 
-/* Editar */
-.btn-editar-perfil {
-  background-color: #3b82f6;
-  color: #ffffff;
+/* Métricas */
+.metricas-sec-assinatura{ display:flex; flex-direction:column; gap:.75rem; }
+.metricas-head{
+  display:flex; align-items:center; justify-content:space-between;
+  color:var(--text-soft);
 }
-.btn-editar-perfil:hover {
-  background-color: #2563eb;
-}
-
-/* Salvar */
-.btn-salvar-perfil {
-  background-color: #10b981;
-  color: #ffffff;
-}
-.btn-salvar-perfil:hover {
-  background-color: #059669;
+.pill-usage{
+  display:inline-block; padding:.15rem .6rem; border-radius:999px;
+  background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.18);
+  color:var(--text); font-weight:800; font-size:.82rem;
 }
 
-/* Cancelar edição */
-.btn-cancelar-edicao {
-  background-color: #ef4444;
-  color: #ffffff;
-}
-.btn-cancelar-edicao:hover {
-  background-color: #dc2626;
+/* Botões da seção assinatura */
+.div-botoes-assinatura{
+  display:flex; flex-direction:column; gap:.6rem; width:100%; max-width:420px; align-self:flex-end;
 }
 
-/* Espaçamento para o componente de upload (quando visível) */
-.upload-logo-container {
-  width: 100%;
-  margin-bottom: 1.5rem;
+/* Responsivo */
+@media (max-width: 768px){
+  .page-perfil.cotalizer-theme{ padding:1rem; }
+  .perfil-header{ flex-direction:column; align-items:flex-start; gap:1rem; }
+  .div-botoes-assinatura{ align-self:stretch; max-width:none; }
 }

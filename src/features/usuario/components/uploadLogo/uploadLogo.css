@@ -7,7 +7,7 @@
 
 .upload-logo-label {
     font-weight: 500;
-    color: #374151;
+    color: #ffffff;
     font-size: 0.875rem;
     margin-bottom: 0.5rem;
 }
@@ -19,7 +19,7 @@
     text-align: center;
     cursor: pointer;
     transition: all 0.2s ease;
-    background-color: #f9fafb;
+    background-color: #2D4254;
     min-height: 120px;
     display: flex;
     align-items: center;
@@ -27,8 +27,8 @@
 }
 
 .upload-logo-area:hover {
-    border-color: #3b82f6;
-    background-color: #f0f9ff;
+    border-color: #d1d5db;
+    background-color: #455461;
 }
 
 .upload-logo-area.dragging {
@@ -51,13 +51,13 @@
 
 .upload-text {
     font-weight: 500;
-    color: #374151;
+    color: #ffffff;
     margin: 0;
     font-size: 1rem;
 }
 
 .upload-hint {
-    color: #6b7280;
+    color: #c2c6cd;
     font-size: 0.875rem;
     margin: 0;
 }

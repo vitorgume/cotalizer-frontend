@@ -7,7 +7,7 @@ import CadastroOrcamento from './features/orcamento/pages/cadastro-orcamento/cad
 import Menu from './features/usuario/pages/menu/menu';
 import CadastroUsuario from './features/usuario/pages/cadastro-usuario/cadastroUsuario';
 import LoginUsuario from './features/usuario/pages/login/login-usuario/loginUsuario';
-import LoginSucesso from './features/usuario/pages/login/loginSucesso/loginSucesso';
+import LoginSucesso from './features/usuario/pages/login/loginSucesso';
 import CodigoValidacaoEmail from './features/usuario/pages/login/codigo-validacao-email/codigoValidacaoEmail';
 import CadastroCnpjCpf from './features/usuario/pages/login/cadastro-cnpj-cpf/cadastroCnpjCpf';
 import AlterarSenha from './features/usuario/pages/alterarSenha/alterarSenha';

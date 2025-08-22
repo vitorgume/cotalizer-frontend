@@ -1,5 +1,5 @@
 .metrica-container {
-  width: 70%;
+  width: 100%;
 }
 
 .barra {
@@ -12,7 +12,7 @@
 
 .barra-usada {
   height: 100%;
-  background-color: #2a68ff;
+  background-color: #18AF91;
   transition: width 0.3s ease-in-out;
 }
 
@@ -20,5 +20,5 @@
   display: flex;
   justify-content: space-between;
   font-size: 1.3rem;
-  color: #2a68ff;
+  color: #18AF91;
 }

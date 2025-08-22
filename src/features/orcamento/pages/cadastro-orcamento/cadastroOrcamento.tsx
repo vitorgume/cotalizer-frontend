@@ -9,8 +9,8 @@ import FormDinamico from '../../componentes/formDinamico/formDinamico';
 import { notificarErro } from '../../../../utils/notificacaoUtils';
 
 export default function CadastroOrcamento() {
-    const [titulo, setTitulo] = useState<string | ''>('');
-    const [conteudo, setConteudo] = useState<string | ''>('');
+    const [titulo, setTitulo] = useState<string>('');
+    const [conteudo, setConteudo] = useState<string>('');
     const [orcamentoCriado, setOrcamentoCriado] = useState<Orcamento | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [estruturaOrcamento, setEstruturaOrcamento] = useState<any | null>(null);
@@ -18,154 +18,165 @@ export default function CadastroOrcamento() {
 
     async function handleInterpretar() {
         const idUsuario = localStorage.getItem('id-usuario');
+        if (!idUsuario) return;
 
-        if (idUsuario) {
-            const novoOrcamento: Orcamento = {
-                conteudoOriginal: conteudo,
-                dataCriacao: '',
-                titulo: titulo,
-                urlArquivo: '',
-                usuarioId: idUsuario,
-                status: 'PENDENTE',
-                tipoOrcamento: 'IA'
-            }
+        const novoOrcamento: Orcamento = {
+            conteudoOriginal: conteudo,
+            dataCriacao: '',
+            titulo,
+            urlArquivo: '',
+            usuarioId: idUsuario,
+            status: 'PENDENTE',
+            tipoOrcamento: 'IA'
+        };
 
-            try {
-                setLoading(true);
-                const resposta = await interpretarOrcamento(novoOrcamento);
-                setOrcamentoCriado(resposta.dado);
-                setEstruturaOrcamento(resposta.dado?.orcamentoFormatado);
-            } catch (error) {
-                console.error('Erro ao interpretar orçamento:', error);
-            } finally {
-                setLoading(false);
-            }
+        try {
+            setLoading(true);
+            const resposta = await interpretarOrcamento(novoOrcamento);
+            setOrcamentoCriado(resposta.dado);
+            setEstruturaOrcamento(resposta.dado?.orcamentoFormatado);
+        } catch (error) {
+            console.error('Erro ao interpretar orçamento:', error);
+        } finally {
+            setLoading(false);
         }
     }
 
     async function gerarOrcamento() {
-
-        if (orcamentoCriado) {
-            try {
-                setLoading(true);
-                const orcamentoSalvo = await criarOrcamento(orcamentoCriado);
-
-                console.log(orcamentoSalvo);
-
-                if (orcamentoSalvo.dado) {
-                    setUrlPdf(orcamentoSalvo.dado.urlArquivo);
-                }
-
-                setOrcamentoCriado(orcamentoSalvo.dado);
-            } catch (err: any) {
-                if (err.status === 400) {
-                    notificarErro(err.message);
-                } else {
-                    notificarErro(err?.message ?? 'Erro ao cadastrar orçamento.');
-                }
-            } finally {
-                setLoading(false);
+        if (!orcamentoCriado) return;
+        try {
+            setLoading(true);
+            const orcamentoSalvo = await criarOrcamento(orcamentoCriado);
+            if (orcamentoSalvo.dado) {
+                setUrlPdf(orcamentoSalvo.dado.urlArquivo);
             }
-        } else {
-            console.log("Orçamento não foi criado");
+            setOrcamentoCriado(orcamentoSalvo.dado);
+        } catch (err: any) {
+            if (err.status === 400) {
+                notificarErro(err.message);
+            } else {
+                notificarErro(err?.message ?? 'Erro ao cadastrar orçamento.');
+            }
+        } finally {
+            setLoading(false);
         }
     }
 
-
     async function editarOrcamento(orcamentoFormatado: any) {
-        if (orcamentoCriado) {
-            setOrcamentoCriado(orcamentoCriado.orcamentoFormatado = orcamentoFormatado);
-            try {
-                const response = await atualizarOrcamento(orcamentoCriado);
-                setOrcamentoCriado(response.dado);
-                return true;
-            } catch (err) {
-                console.log("Erro ao editar orçamento");
-                return false;
-            }
+        if (!orcamentoCriado) return false;
+        orcamentoCriado.orcamentoFormatado = orcamentoFormatado;
+        try {
+            const response = await atualizarOrcamento(orcamentoCriado);
+            setOrcamentoCriado(response.dado);
+            return true;
+        } catch {
+            console.log('Erro ao editar orçamento');
+            return false;
         }
-
-        return false;
     }
 
     return (
-        <div className='cadastro-orcamento-cointainer'>
-            <div className='text-cadastro-tradicional'>
-                <p>Faça seu próprio orçamento</p>
-                <a href="http://localhost:5173/orcamento/tradicional/cadastro"><p className='text-clique-aqui'>clique aqui</p></a>
+        <div className="cadastro-orcamento-cointainer cotalizer-theme">
+            {/* Atalho para o tradicional */}
+            <div className="text-cadastro-tradicional glass-card">
+                <p>Prefere montar item a item?</p>
+                <a href="/orcamento/tradicional/cadastro" className="text-clique-aqui">Clique aqui</a>
             </div>
 
-
-            <div className='container-titulo'>
-                <p>Digite seu orçamento</p>
-                <p className='segundo-titulo'>Que a IA faz</p>
+            {/* Título */}
+            <div className="container-titulo">
+                <h1 className="titulo-principal">Digite seu orçamento</h1>
+                <p className="subtitulo-grad">que a IA faz o resto</p>
             </div>
+
+            {/* Campo de título */}
 
             <InputPadrao
-                placeholder='Titulo'
+                placeholder="Título do orçamento"
                 value={titulo}
                 onChange={setTitulo}
                 inativo={orcamentoCriado !== null}
                 senha={false}
             />
 
-            {loading ? (
-                <Loading message="Processando..." />
-            ) : (
-                <div className='orcamento-estruturado'>
 
+            {loading ? (
+                <div className="glass-card bloco-loading">
+                    <Loading message="Processando..." />
+                </div>
+            ) : (
+                <div className="orcamento-estruturado">
+                    {/* Passo 1 – texto livre */}
                     {!estruturaOrcamento && !urlPdf && (
-                        <>
+                        <div className="glass-card bloco-texto">
                             <textarea
-                                placeholder='Ex: Fazer orçamento pra Maria. 2 janelas de alumínio, 3 portas de madeira...'
+                                placeholder="Ex: Fazer orçamento pra Maria. 2 janelas de alumínio, 3 portas de madeira..."
                                 value={conteudo}
                                 onChange={(e) => setConteudo(e.target.value)}
-                                className='textarea-padrao'
-                            ></textarea>
-
-                            <button className='botao-gerar' onClick={handleInterpretar}>
-                                Interpretar orçamento
-                            </button>
-                        </>
+                                className="textarea-ia"
+                            />
+                            <div className="acoes">
+                                <button className="btn primary-solid" onClick={handleInterpretar} disabled={!titulo || !conteudo}>
+                                    Interpretar orçamento
+                                </button>
+                            </div>
+                        </div>
                     )}
 
+                    {/* Passo 2 – formulário estruturado */}
                     {estruturaOrcamento && !urlPdf && (
-                        <FormDinamico
-                            orcamentoEstrutura={estruturaOrcamento}
-                            setOrcamentoEstrutura={setEstruturaOrcamento}
-                            gerarPdf={gerarOrcamento}
-                            editarOrcamento={editarOrcamento}
-                        />
+                        <div className="glass-card bloco-form">
+                            <FormDinamico
+                                orcamentoEstrutura={estruturaOrcamento}
+                                setOrcamentoEstrutura={setEstruturaOrcamento}
+                                gerarPdf={gerarOrcamento}
+                                editarOrcamento={editarOrcamento}
+                            />
+                        </div>
                     )}
 
+                    {/* Passo 3 – preview PDF */}
                     {urlPdf && (
-                        <div className="preview-pdf">
-                            <h3>Visualização do PDF:</h3>
+                        <div className="glass-card preview-pdf">
+                            <div className="preview-head">
+                                <h3>Visualização do PDF</h3>
+                                <span className="badge-ia">IA aplicada</span>
+                            </div>
+
                             <iframe
                                 src={urlPdf}
                                 width="100%"
-                                height="600px"
-                                style={{ border: '1px solid #ccc', borderRadius: '8px' }}
+                                height="600"
+                                style={{ border: '1px solid #34495d', borderRadius: '12px' }}
                                 title="Visualização do Orçamento"
-                            ></iframe>
+                            />
 
-                            {orcamentoCriado &&
-                                <div className='botoes-pdf-orc'>
+                            {orcamentoCriado && (
+                                <div className="botoes-pdf-orc">
                                     <a
                                         href={orcamentoCriado.urlArquivo}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="botao-visualizar"
+                                        className="btn primary-solid"
                                     >
                                         Abrir em nova aba
                                     </a>
-                                    < button className='botao-dowload-pdf'><img src={DowloadImage} alt="Dowload de imagem" /></button>
+
+                                    <a
+                                        href={orcamentoCriado.urlArquivo}
+                                        download
+                                        className="btn primary-outline icon-only"
+                                        aria-label="Baixar PDF"
+                                        title="Baixar PDF"
+                                    >
+                                        <img src={DowloadImage} alt="Baixar" />
+                                    </a>
                                 </div>
-                            }
+                            )}
                         </div>
                     )}
                 </div>
             )}
-        </div >
+        </div>
     );
 }

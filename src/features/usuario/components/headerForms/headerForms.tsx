@@ -1,4 +1,4 @@
-import Logo from '../../../../assets/ChatGPT_Image_6_de_jun._de_2025__14_33_15-removebg-preview 2.png';
+import Logo from '../../../../assets/image_1-removebg-preview.png';
 import './headerForms.css';
 
 export default function HeaderForms({titulo}: {titulo: string}) {
@@ -9,7 +9,7 @@ export default function HeaderForms({titulo}: {titulo: string}) {
                 <div className='container-header-centralizado'>
                     <div className='div-header-cadastro-usuario'>
                         <img src={Logo} alt="Logo" />
-                        <h1>OrçaJá</h1>
+                        <h1>Cotalizer</h1>
                     </div>
                     <h2>{titulo}</h2>
                 </div>

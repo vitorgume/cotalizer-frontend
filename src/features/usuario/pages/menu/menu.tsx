@@ -1,5 +1,4 @@
 import './menu.css';
-import IconPerfil from '../../../../assets/icon-perfil.png';
 import OrcamentoItem from '../../../orcamento/componentes/orcamentoItem/orcamentoItem';
 import TextoResumo from '../../components/textoResumo/textoResumo';
 import { useEffect, useState } from 'react';
@@ -10,6 +9,8 @@ import Loading from '../../../orcamento/componentes/loading/Loading';
 import { consultarUsuarioPeloId } from '../../usuario.service';
 import { listarPorUsuario, listarTradicionaisPorUsuario } from '../../../orcamento/orcamento.service';
 import ModalAvaliar from '../../components/modalAvaliar/modalAvaliar';
+import { User } from 'lucide-react';
+
 
 export default function Menu() {
     const [usuario, setUsuario] = useState<Usuario | null>(null);
@@ -27,18 +28,15 @@ export default function Menu() {
             const s = v
                 .replace(/\s+/g, '')
                 .replace(/[R$]/g, '')
-                .replace(/\./g, '')   // remove separador de milhar
-                .replace(/,/g, '.');  // vírgula -> ponto
+                .replace(/\./g, '')
+                .replace(/,/g, '.');
             const n = parseFloat(s);
             return Number.isNaN(n) ? 0 : n;
         }
         return 0;
     }
 
-    // Pega o total de um orçamento, seja IA ou Tradicional
     function getTotalOrcamento(o: any): number {
-        // IA costuma estar em o.orcamentoFormatado.total
-        // Tradicional pode vir em o.valorTotal (mas você já mapeou para orcamentoFormatado.total)
         const bruto = o?.orcamentoFormatado?.total ?? o?.valorTotal ?? o?.total ?? 0;
         return parseValor(bruto);
     }
@@ -130,76 +128,61 @@ export default function Menu() {
 
     return (
         <>
-            {!loading ?
-                <div className='menu-container'>
-                    <header className='header-menu'>
-                        {usuario ? <h1>Olá, {usuario.nome} !</h1> : <h1>Olá, visitante !</h1>}
-                        <button onClick={botaoPerfil}><img src={IconPerfil} alt="Logo" /></button>
-                    </header>
+            {!loading ? (
+                <div className="menu-page">
+                    <div className="menu-container">
+                        <header className="header-menu">
+                            {usuario ? <h1>Olá, {usuario.nome} !</h1> : <h1>Olá, visitante !</h1>}
+                            <User color="#ffffff" onClick={botaoPerfil} className='user-icon' size={35}/>
 
-                    <div className='card-info-geral'>
-                        <div className='div-dir-info'>
-                            <h2>Resumo mensal</h2>
-                            <TextoResumo
-                                titulo='Orçamentos:'
-                                valor={String(orcamentos.length)}
-                            />
-                            <TextoResumo
-                                titulo='Aprovados:'
-                                valor={String(orcamentos.filter(orc => orc.status === 'APROVADO').length)}
-                            />
+                        </header>
 
-                            <TextoResumo
-                                titulo='Reprovados:'
-                                valor={String(orcamentos.filter(orc => orc.status === 'REPROVADO').length)}
-                            />
-                        </div>
-                        <div className='div-valores'>
-                            <p className='valor-total-info-geral'>R$ {calcularValorTotal(orcamentos)}</p>
-                            <p className='valor-total-info-aprovado'>R$ {calcularValorTotal(orcamentos.filter(orc => orc.status === 'APROVADO'))}</p>
-                            <p className='valor-total-info-reprovado'>R$ {calcularValorTotal(orcamentos.filter(orc => orc.status === 'REPROVADO'))}</p>
-                        </div>
-                    </div>
-
-                    <button className='btn-novo-orcamento' onClick={() => { navigate('/orcamento/cadastro') }}>Novo Orçamento</button>
-
-                    <div className='lista-orcamentos-container'>
-                        <div className='header-lista-orcamentos'>
-                            <h2>Mais recentes</h2>
-
-                            <Link
-                                to='/orcamentos'
-                                style={{ textDecoration: 'none', color: '#3B82F6' }}
-                            >
-                                <p>Ver mais</p>
-                            </Link>
-                        </div>
-
-                        {orcamentos.length > 0 ? (
-                            obterCincoOrcamentosMaisRecentes(orcamentos).map(orc => (
-                                <OrcamentoItem
-                                    key={orc.id}
-                                    orcamento={orc}
-                                    misturado={true}
+                        <div className="card-info-geral card">
+                            <div className="div-dir-info">
+                                <h2>Resumo mensal</h2>
+                                <TextoResumo titulo="Orçamentos:" valor={String(orcamentos.length)} />
+                                <TextoResumo
+                                    titulo="Aprovados:"
+                                    valor={String(orcamentos.filter(orc => orc.status === 'APROVADO').length)}
                                 />
-                            ))
-                        ) : (
-                            <p>Nenhum orçamento encontrado</p>
-                        )}
+                                <TextoResumo
+                                    titulo="Reprovados:"
+                                    valor={String(orcamentos.filter(orc => orc.status === 'REPROVADO').length)}
+                                />
+                            </div>
+                            <div className="div-valores">
+                                <p className="valor-total-info-geral">R$ {calcularValorTotal(orcamentos)}</p>
+                                <p className="valor-total-info-aprovado">R$ {calcularValorTotal(orcamentos.filter(orc => orc.status === 'APROVADO'))}</p>
+                                <p className="valor-total-info-reprovado">R$ {calcularValorTotal(orcamentos.filter(orc => orc.status === 'REPROVADO'))}</p>
+                            </div>
+                        </div>
+
+                        <button className="btn-novo-orcamento" onClick={() => navigate('/orcamento/cadastro')}>Novo Orçamento</button>
 
 
+                        <div className="lista-orcamentos-container card">
+                            <div className="header-lista-orcamentos">
+                                <h2>Mais recentes</h2>
+                                <Link to="/orcamentos" className="link-secundario">
+                                    <p>Ver mais</p>
+                                </Link>
+                            </div>
+
+                            {orcamentos.length > 0 ? (
+                                obterCincoOrcamentosMaisRecentes(orcamentos).map(orc => (
+                                    <OrcamentoItem key={orc.id} orcamento={orc} misturado={true} />
+                                ))
+                            ) : (
+                                <p className="texto-suave">Nenhum orçamento encontrado</p>
+                            )}
+                        </div>
+
+                        {modalAvaliar && <ModalAvaliar fechar={() => setModalAvaliar(false)} />}
                     </div>
-
-                    {modalAvaliar &&
-                        <ModalAvaliar
-                            fechar={() => setModalAvaliar(false)}
-
-                        />
-                    }
                 </div>
-                :
+            ) : (
                 <Loading message="Carregando..." />
-            }
+            )}
         </>
-    )
+    );
 }
