@@ -99,6 +99,7 @@ export default function CadastroCnpjCpf() {
                             onChange={(v) => setCpfCnpj(formatCpfCnpj(v))}
                             inativo={loading}
                             senha={false}
+                            limiteCaracteres={14}
                         />
                         <div className="hint-row">
                             <span className="small-info">

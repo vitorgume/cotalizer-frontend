@@ -1,20 +1,146 @@
-.cadastro-nova-senha-page {
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+:root{
+  --base:#2D4254;
+  --primary:#18AF91;
+  --secondary:#2C8ABB;
+
+  --text:rgba(255,255,255,.95);
+  --text-soft:rgba(255,255,255,.75);
+
+  --glass-bg:rgba(255,255,255,.06);
+  --glass-brd:rgba(255,255,255,.14);
+  --focus:rgba(24,175,145,.35);
 }
 
-.cadastro-nova-senha-container {
-    background-color: #F9FAFB;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
-    padding: 2rem;
-    border-radius: 1rem;
-    height: 35%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    width: 30%;
+/* Fundo com gradientes iguais à landing */
+.senha-page{
+  min-height:100vh;
+  padding:2rem;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:
+    radial-gradient(1200px 500px at 10% -10%, rgba(44,138,187,.25) 0%, transparent 60%),
+    radial-gradient(900px 600px at 110% 0%, rgba(24,175,145,.25) 0%, transparent 60%),
+    var(--base);
+  color:var(--text);
+}
+
+/* Card “glass” base */
+.glass-card{
+  background:var(--glass-bg);
+  border:1px solid var(--glass-brd);
+  border-radius:16px;
+  backdrop-filter:blur(6px);
+  box-shadow:0 18px 36px rgba(0,0,0,.22);
+}
+
+/* Card da senha */
+.senha-card{
+  width:100%;
+  max-width:560px;
+  padding:1.5rem 1.25rem 1.75rem;
+  display:flex;
+  flex-direction:column;
+  gap:1.25rem;
+  position:relative;
+}
+.senha-card::before{
+  content:"";
+  position:absolute;
+  top:0; left:0; right:0;
+  height:3px;
+  background:linear-gradient(90deg, var(--secondary), var(--primary));
+  border-top-left-radius:16px;
+  border-top-right-radius:16px;
+}
+
+/* Header */
+.senha-header h1{
+  margin:0 0 .25rem 0;
+  font-size:1.6rem;
+  font-weight:800;
+}
+.subtitle{
+  margin:0;
+  color:var(--text-soft);
+  font-size:.95rem;
+}
+
+/* Campo de senha */
+.senha-field{
+  display:flex;
+  flex-direction:column;
+  gap:.5rem;
+}
+.senha-label{
+  font-weight:700;
+}
+.senha-hint{
+  color:var(--text-soft);
+  font-size:.85rem;
+  margin-top:-.25rem;
+}
+
+/* Erros */
+.msg-erro{
+  margin:.25rem 0 0;
+  color:#ffb4b4;
+  font-size:.92rem;
+}
+
+/* Ações */
+.senha-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:.75rem;
+  padding-top:1rem;
+  border-top:1px solid rgba(255,255,255,.15);
+}
+
+/* Botões globais (mesmo padrão das outras telas) */
+.btn-primary{
+  padding:.85rem 1.25rem;
+  border-radius:12px;
+  border:none;
+  cursor:pointer;
+  font-weight:800;
+  font-size:1rem;
+  color:#0C2C25;
+  background:linear-gradient(135deg, var(--primary), var(--secondary));
+  box-shadow:0 14px 30px rgba(24,175,145,.28);
+  transition:transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+}
+.btn-primary:hover{ transform:translateY(-1px); box-shadow:0 16px 34px rgba(24,175,145,.34); }
+.btn-primary:active{ transform:translateY(0); }
+.btn-primary:disabled{ opacity:.65; cursor:not-allowed; }
+
+.btn-ghost{
+  padding:.85rem 1.25rem;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.22);
+  background:transparent;
+  color:var(--text);
+  cursor:pointer;
+  font-weight:700;
+  transition:background .12s, border-color .12s, transform .12s;
+}
+.btn-ghost:hover{ background:rgba(255,255,255,.06); transform:translateY(-1px); }
+.btn-ghost:active{ transform:translateY(0); }
+
+/* Sucesso */
+.senha-sucesso{
+  width:100%;
+  max-width:520px;
+  padding:2rem 1.5rem;
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+  gap:1.25rem;
+}
+.senha-sucesso h2{ margin:0; font-weight:800; }
+
+/* Responsivo */
+@media (max-width:720px){
+  .senha-card{ padding:1.25rem 1rem 1.25rem; }
+  .senha-header h1{ font-size:1.4rem; }
 }

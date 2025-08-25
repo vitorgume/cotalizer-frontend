@@ -47,6 +47,7 @@ export default function EsqueceuSenha() {
                                     onChange={setEmail}
                                     inativo={false}
                                     senha={false}
+                                    limiteCaracteres={100}
                                 />
                             </div>
 

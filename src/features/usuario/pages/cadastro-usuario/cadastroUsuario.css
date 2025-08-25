@@ -1,42 +1,182 @@
-.cadastro-usuario-container {
-    display: flex;
-    flex-direction: column;
-    padding: 1rem 2rem 1rem 2rem;
-    gap: 3rem;
-    align-items: center;
+:root{
+  --base:#2D4254;
+  --primary:#18AF91;
+  --secondary:#2C8ABB;
+
+  --text:rgba(255,255,255,.95);
+  --text-soft:rgba(255,255,255,.75);
+
+  --glass-bg:rgba(255,255,255,.06);
+  --glass-brd:rgba(255,255,255,.14);
+  --focus:rgba(24,175,145,.35);
 }
 
-.container-header-centralizado > h2 {
-    margin-left: 1.3rem;
+/* Fundo com os gradientes da landing */
+.signup-page{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:2rem;
+  color:var(--text);
+  position:relative;
+  overflow:hidden;
+  background:
+    radial-gradient(1200px 500px at 10% -10%, rgba(44,138,187,.25) 0%, transparent 60%),
+    radial-gradient(900px 600px at 110% 0%, rgba(24,175,145,.25) 0%, transparent 60%),
+    var(--base);
+}
+.signup-page::before,
+.signup-page::after{
+  content:"";
+  position:absolute;
+  pointer-events:none;
+  filter:blur(30px);
+  opacity:.25;
+}
+.signup-page::before{
+  width:38rem;height:38rem;
+  left:-18rem;top:-10rem;
+  background:radial-gradient(circle, var(--secondary) 0%, transparent 60%);
+}
+.signup-page::after{
+  width:34rem;height:34rem;
+  right:-16rem;top:-6rem;
+  background:radial-gradient(circle, var(--primary) 0%, transparent 60%);
 }
 
-.form-cadastro-usuario {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    align-items: center;
-    width: 100%;
+/* Cartão “glass” */
+.glass-card{
+  background:var(--glass-bg);
+  border:1px solid var(--glass-brd);
+  border-radius:16px;
+  box-shadow:0 18px 36px rgba(0,0,0,.22);
+  backdrop-filter:blur(6px);
 }
 
-.botao-cadastrar-usuario {
-    margin-top: 5%;
+/* Card principal */
+.signup-card{
+  width:100%;
+  max-width:760px;
+  padding:1.5rem 1.5rem 2rem;
+  position:relative;
+}
+.signup-card::before{
+  content:"";
+  position:absolute;
+  top:0;left:0;right:0;
+  height:3px;
+  background:linear-gradient(90deg, var(--secondary), var(--primary));
+  border-top-left-radius:16px;
+  border-top-right-radius:16px;
 }
 
-.login-info-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    width: 50%;
+/* Formulário */
+.form-cadastro-usuario{
+  display:flex;
+  flex-direction:column;
+  gap:1.25rem;
 }
 
-.text-login-info {
-    display: flex;
-    flex-direction: row;
-    gap: 0.5rem;
+.grid-2{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:1rem 1rem;
+}
+.grid-2 .full{ grid-column:1 / -1; }
+
+.form-field{
+  display:flex;
+  flex-direction:column;
+  gap:.5rem;
+}
+.form-field label{
+  font-weight:800;
+  color:var(--text-soft);
+  font-size:.8rem;
+  text-transform:uppercase;
+  letter-spacing:.08em;
 }
 
-.cadastro-usuario-container > hr {
-    border: solid 1px #aec6eb;
-    width: 90%;
+/* Upload de logo alinhado ao tema */
+.upload-logo-wrap{
+  margin-top:.5rem;
+  padding:1rem;
+  border:1px dashed rgba(255,255,255,.25);
+  border-radius:12px;
+  background:rgba(255,255,255,.04);
+}
+
+/* Botão primário (CTA) */
+.btn-primary{
+  padding:.95rem 1.25rem;
+  border-radius:12px;
+  border:none;
+  cursor:pointer;
+  font-weight:800;
+  font-size:1rem;
+  color:#0C2C25;
+  background:linear-gradient(135deg, var(--primary), var(--secondary));
+  box-shadow:0 14px 30px rgba(24,175,145,.28);
+  transition:transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+}
+.btn-primary:hover{ transform:translateY(-1px); box-shadow:0 16px 34px rgba(24,175,145,.34); }
+.btn-primary:active{ transform:translateY(0); }
+.btn-primary:disabled{ opacity:.6; cursor:not-allowed; }
+
+.btn-cadastrar{
+  margin-top:.25rem;
+}
+
+/* Divisor “ou” */
+.auth-divider{
+  display:flex;
+  align-items:center;
+  gap:.75rem;
+  margin:1rem 0 .75rem;
+}
+.auth-divider::before,
+.auth-divider::after{
+  content:"";
+  height:1px;
+  flex:1;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,.25));
+}
+.auth-divider::after{
+  background:linear-gradient(90deg, rgba(255,255,255,.25), transparent);
+}
+.auth-divider span{
+  font-size:.85rem;
+  color:var(--text-soft);
+}
+
+/* Alternativo (Google) */
+.auth-alt{
+  display:flex;
+  justify-content:center;
+  margin-bottom:.25rem;
+}
+
+/* Rodapé: já tem conta? */
+.auth-footer{
+  margin-top:1rem;
+  display:flex;
+  gap:.5rem;
+  justify-content:center;
+  align-items:center;
+  color:var(--text-soft);
+}
+.auth-footer a{
+  color:var(--primary);
+  text-decoration:none;
+  font-weight:700;
+}
+.auth-footer a:hover{
+  text-decoration:underline;
+}
+
+/* Responsivo */
+@media (max-width:720px){
+  .signup-card{ padding:1.25rem 1rem 1.5rem; }
+  .grid-2{ grid-template-columns:1fr; }
 }

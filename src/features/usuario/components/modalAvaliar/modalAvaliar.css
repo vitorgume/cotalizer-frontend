@@ -12,7 +12,7 @@
 }
 
 .modal-avaliar-content {
-    background-color: white;
+    background-color: #2D4254;
     display: flex;
     flex-direction: column;
     width: 40%;
@@ -22,7 +22,7 @@
     align-items: center;
     gap: 1rem;
     padding: 2.5rem;
-}   
+}
 
 .text-modal-avaliar {
     display: flex;
@@ -38,11 +38,25 @@
     align-self: flex-end;
 }
 
-.botao-sair > img {
+.botao-sair>img {
     width: 1.5rem;
     height: 1.5rem;
 }
 
 .botao-responder {
+    background-color: #18AF91;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+    min-width: 150px;
+    transition: background-color 0.2s ease;
+    white-space: nowrap;
     margin-top: 5rem;
+}
+
+.botao-responder:hover {
+    background-color: #4bd3b8;
 }

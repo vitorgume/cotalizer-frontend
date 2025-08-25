@@ -81,6 +81,7 @@ export function FormsProdutoList({ onAddProduto }: FormsProdutoListProps) {
             onChange={(e) => setDescricao(e.target.value)}
             rows={3}
             required
+            maxLength={250}
           />
         </div>
 
@@ -93,6 +94,7 @@ export function FormsProdutoList({ onAddProduto }: FormsProdutoListProps) {
               onChange={setValor}
               inativo={false}
               senha={false}
+              limiteCaracteres={0}
             />
           </div>
 
@@ -104,6 +106,7 @@ export function FormsProdutoList({ onAddProduto }: FormsProdutoListProps) {
               onChange={setQuantidade}
               inativo={false}
               senha={false}
+              limiteCaracteres={0}
             />
           </div>
         </div>

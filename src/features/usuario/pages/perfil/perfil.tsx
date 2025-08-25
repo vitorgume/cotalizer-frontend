@@ -154,13 +154,48 @@ export default function Perfil() {
                 <h3>Seus dados</h3>
                 {usuario ? (
                     <div className="div-inputs">
-                        <InputPadrao placeholder="Nome" value={form.nome} onChange={handleChange('nome')} inativo={!isEditing} senha={false} />
-                        <InputPadrao placeholder="Email" value={form.email} onChange={handleChange('email')} inativo={!isEditing} senha={false} />
-                        <InputPadrao placeholder="Telefone" value={form.telefone} onChange={handleChange('telefone')} inativo={!isEditing} senha={false} />
+                        <InputPadrao 
+                            placeholder="Nome" 
+                            value={form.nome} 
+                            onChange={handleChange('nome')} 
+                            inativo={!isEditing} 
+                            senha={false} 
+                            limiteCaracteres={100}
+                        />
+                        <InputPadrao 
+                            placeholder="Email" 
+                            value={form.email} 
+                            onChange={handleChange('email')} 
+                            inativo={!isEditing} 
+                            senha={false} 
+                            limiteCaracteres={100}
+                        />
+                        <InputPadrao 
+                            placeholder="Telefone" 
+                            value={form.telefone} 
+                            onChange={handleChange('telefone')} 
+                            inativo={!isEditing} 
+                            senha={false} 
+                            limiteCaracteres={14}
+                        />
                         {form.cpf ? (
-                            <InputPadrao placeholder="CPF" value={form.cpf} onChange={handleChange('cpf')} inativo={!isEditing} senha={false} />
+                            <InputPadrao 
+                                placeholder="CPF" 
+                                value={form.cpf} 
+                                onChange={handleChange('cpf')} 
+                                inativo={!isEditing} 
+                                senha={false} 
+                                limiteCaracteres={10}
+                            />
                         ) : (
-                            <InputPadrao placeholder="CNPJ" value={form.cnpj} onChange={handleChange('cnpj')} inativo={!isEditing} senha={false} />
+                            <InputPadrao 
+                                placeholder="CNPJ" 
+                                value={form.cnpj} 
+                                onChange={handleChange('cnpj')} 
+                                inativo={!isEditing} 
+                                senha={false} 
+                                limiteCaracteres={14}
+                            />
                         )}
                     </div>
                 ) : <p>Usuário não encontrado</p>}

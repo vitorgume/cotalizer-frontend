@@ -51,6 +51,7 @@ export default function LoginUsuario() {
                             onChange={setEmail}
                             inativo={false}
                             senha={false}
+                            limiteCaracteres={100}
                         />
                     </div>
 
@@ -62,6 +63,7 @@ export default function LoginUsuario() {
                             onChange={setSenha}
                             inativo={false}
                             senha={true}
+                            limiteCaracteres={20}
                         />
                     </div>
 

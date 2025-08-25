@@ -76,24 +76,6 @@
 .botao-remover:hover {
   background-color: #DC2626;
 }
-
-.botao-gerar {
-  background-color: #3B82F6;
-  color: white;
-  border: none;
-  border-radius: 0.5rem;
-  padding: 0.8rem 1.5rem;
-  font-size: 1rem;
-  cursor: pointer;
-  min-width: 150px;
-  transition: background-color 0.2s ease;
-  white-space: nowrap;
-}
-
-.botao-gerar:hover {
-  background-color: #2563EB;
-}
-
 /* Container dos itens */
 .itens-orcamento {
   display: flex;

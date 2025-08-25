@@ -7,6 +7,7 @@ interface InputPadraoProps {
   onChange?: (value: string) => void;
   inativo: boolean;
   senha: boolean;
+  limiteCaracteres: number;
 }
 
 export default function InputPadrao({
@@ -14,7 +15,8 @@ export default function InputPadrao({
   value = '',
   onChange,
   inativo,
-  senha
+  senha,
+  limiteCaracteres
 }: InputPadraoProps) {
   const [mostrarSenha, setMostrarSenha] = useState(false);
 
@@ -37,6 +39,7 @@ export default function InputPadrao({
         onChange={handleChange}
         disabled={inativo}
         autoComplete={senha ? 'current-password' : 'off'}
+        maxLength={limiteCaracteres}
       />
 
       {senha && (

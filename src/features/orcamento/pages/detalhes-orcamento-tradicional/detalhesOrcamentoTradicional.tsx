@@ -7,7 +7,7 @@ import { atualizarOrcamentoTradicional, consultarTradicionalPorId, deletarTradic
 import { extrairNomeArquivo } from '../../../../utils/urlUtils';
 import { notificarSucesso } from '../../../../utils/notificacaoUtils';
 import ModalDelete from '../../componentes/modalDelete/modalDelete';
-import { Download, Trash2 } from 'lucide-react';
+import { Download, ExternalLink, Trash2 } from 'lucide-react';
 
 export default function DetalhesOrcamentoTradicional() {
   const { id } = useParams<{ id: string }>();
@@ -217,16 +217,17 @@ export default function DetalhesOrcamentoTradicional() {
               className="botao-dowload-pdf"
               title="Baixar PDF"
             >
-              <Download size={20} className="icon" color='var(--text)'/>
+              <Download size={20} className="icon" color='var(--text)' />
             </a>
 
             <a
               href={orcamento.urlArquivo}
               target="_blank"
               rel="noopener noreferrer"
-              className="botao-visualizar"
+              className="btn btn-secondary"
             >
               Abrir em nova aba
+              <ExternalLink size={16} className="icon-inline" />
             </a>
           </div>
         </section>

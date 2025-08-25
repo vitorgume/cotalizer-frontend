@@ -128,6 +128,7 @@ export default function FormDinamico({
                                         onChange={(valor) => atualizarItem(index, 'quantidade', valor)}
                                         inativo={!editado}
                                         senha={false}
+                                        limiteCaracteres={0}
                                     />
                                 </div>
                                 <div className="campo-valor">
@@ -138,6 +139,7 @@ export default function FormDinamico({
                                         onChange={(valor) => atualizarItem(index, 'valor_unit', valor)}
                                         inativo={!editado}
                                         senha={false}
+                                        limiteCaracteres={0}
                                     />
                                 </div>
                             </div>
@@ -179,6 +181,7 @@ export default function FormDinamico({
                                         }}
                                         inativo={!editado}
                                         senha={false}
+                                        limiteCaracteres={100}
                                     />
                                 )}
                         </div>
@@ -214,6 +217,7 @@ export default function FormDinamico({
                     }}
                     inativo={!editado}
                     senha={false}
+                    limiteCaracteres={100}
                 />
             </div>
         );

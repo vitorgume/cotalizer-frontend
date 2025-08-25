@@ -123,6 +123,7 @@ export default function CadastroOrcamentoTradicional() {
                                         onChange={setCliente}
                                         inativo={false}
                                         senha={false}
+                                        limiteCaracteres={100}
                                     />
                                 </div>
 
@@ -134,6 +135,7 @@ export default function CadastroOrcamentoTradicional() {
                                         onChange={setCnpjCpf}
                                         inativo={false}
                                         senha={false}
+                                        limiteCaracteres={14}
                                     />
                                 </div>
                             </div>
@@ -177,6 +179,7 @@ export default function CadastroOrcamentoTradicional() {
                                 placeholder="Condições de pagamento, prazos, garantia, etc."
                                 value={observacoes}
                                 onChange={(e) => setObservacoes(e.target.value)}
+                                maxLength={250}
                             />
                         </section>
 
@@ -198,6 +201,7 @@ export default function CadastroOrcamentoTradicional() {
                                             className="chip-input"
                                             value={field.titulo}
                                             onChange={(e) => updateCustomField(field.id, 'titulo', e.target.value)}
+                                            maxLength={100}
                                         />
                                         <input
                                             type="text"
@@ -205,6 +209,7 @@ export default function CadastroOrcamentoTradicional() {
                                             className="chip-input"
                                             value={field.valor}
                                             onChange={(e) => updateCustomField(field.id, 'valor', e.target.value)}
+                                            maxLength={100}
                                         />
                                         <button
                                             type="button"

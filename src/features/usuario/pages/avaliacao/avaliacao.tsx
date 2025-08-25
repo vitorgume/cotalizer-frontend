@@ -4,7 +4,7 @@ import Notas from '../../components/notas/notas';
 import { useNavigate, useParams } from 'react-router-dom';
 import { avaliar } from '../../usuario.service';
 import type Avaliacao from '../../../../models/avaliacao';
-import { notificarErro } from '../../../../utils/notificacaoUtils';
+import { notificarErro, notificarSucesso } from '../../../../utils/notificacaoUtils';
 import Loading from '../../../orcamento/componentes/loading/Loading';
 
 export default function AvaliacaoForms() {
@@ -16,24 +16,20 @@ export default function AvaliacaoForms() {
     const [erroNota, setErroNota] = useState<string | null>(null);
 
     const { id } = useParams<{ id: string }>();
-
     const navigate = useNavigate();
-
+    const MAX_CARACTERES = 500;
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-
         if (!id) return;
+
         if (nota === null) {
             setErroNota('Selecione uma nota de 0 a 10.');
-
             requestAnimationFrame(() => {
                 const first = document.querySelector<HTMLInputElement>('input[name="nota"]');
                 first?.focus();
                 first?.scrollIntoView({ behavior: 'smooth', block: 'center' });
             });
-
-
             return;
         }
 
@@ -41,13 +37,14 @@ export default function AvaliacaoForms() {
             idUsuario: id,
             nota,
             motivoNota: motivo,
-            sugestaoMelhoria: sugestao
+            sugestaoMelhoria: sugestao,
         };
 
         try {
             setLoading(true);
             setErroNota(null);
             await avaliar(novaAvaliacao);
+            notificarSucesso('Avaliação enviada! Obrigado ✨');
             setSucesso(true);
         } catch (err) {
             console.error('Erro ao avaliar: ', err);
@@ -58,75 +55,98 @@ export default function AvaliacaoForms() {
     }
 
     return (
-        <div className='avaliacao-page'>
+        <div className="avaliacao-page">
             {loading ? (
-                <Loading message='Enviando avaliação' />
+                <Loading message="Enviando avaliação" />
             ) : sucesso ? (
-                <div className='avaliacao-sucesso'>
-                    <h2>Obrigado pela sua avaliação!</h2>
-                    <button className='botao-gerar' onClick={() => navigate('/menu')}>Voltar</button>
+                <div className="avaliacao-sucesso glass-card">
+                    <h2>Obrigado pela sua avaliação! 🎉</h2>
+                    <button className="btn-primary" onClick={() => navigate('/menu')}>Voltar</button>
                 </div>
             ) : (
-                <form className='form-avaliacao' onSubmit={handleSubmit} noValidate>
+                <form className="avaliacao-card glass-card" onSubmit={handleSubmit} noValidate>
+                    <header className="avaliacao-header">
+                        <h1>Sua experiência</h1>
+                        <p className="subtitle">Nos ajude a melhorar — leva menos de 1 minuto.</p>
+                    </header>
 
-                    <section className='section-avaliacao'>
-                        <div className='enumciado-form-avaliacao'>
-                            <label className='label-form-avaliacao'>
-                                De <span className='acento'>0 a 10</span> qual a sua nota de <span className='acento'>experiência</span> com nosso site
+                    {/* Bloco da nota */}
+                    <section className="section-avaliacao">
+                        <div className="enunciado">
+                            <label className="label-form-avaliacao">
+                                De <span className="acento">0 a 10</span>, qual a sua nota de <span className="acento">experiência</span>?
                             </label>
-                            <label className='subenunciado'>Obrigatório</label>
+                            <span className="subenunciado">Obrigatório</span>
                         </div>
 
-                        <div aria-describedby={erroNota ? 'erro-nota' : undefined} aria-invalid={!!erroNota}>
+                        <div
+                            aria-describedby={erroNota ? 'erro-nota' : undefined}
+                            aria-invalid={!!erroNota}
+                            className="notas-wrapper"
+                        >
                             <Notas value={nota} onChange={(v) => { setNota(v); setErroNota(null); }} required />
                         </div>
                         {erroNota && <p id="erro-nota" className="msg-erro" role="alert">{erroNota}</p>}
 
                         {nota !== null && nota >= 9 && (
-                            <div className='avaliacao-google-container'>
-                                <label className='label-form-avaliacao'>Nos avalie também no <span className='acento'>Google</span></label>
-                                <button className='botao-gerar' type='button'>Avaliar</button>
+                            <div className="avaliacao-google-container">
+                                <label className="label-form-avaliacao">
+                                    Curtiu? Deixe também sua avaliação no <span className="acento">Google</span>
+                                </label>
+                                <a
+                                    className="btn-secondary"
+                                    href="https://www.google.com/search?q=avaliar+empresa"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    Avaliar no Google
+                                </a>
                             </div>
                         )}
                     </section>
 
-                    <section className='section-avaliacao'>
-                        <div className='enumciado-form-avaliacao'>
-                            <label className='label-form-avaliacao'>Motivo da sua <span className='acento'>nota</span> ?</label>
-                            <label className='subenunciado'>Opcional</label>
+                    {/* Motivo */}
+                    <section className="section-avaliacao">
+                        <div className="enunciado">
+                            <label className="label-form-avaliacao">Motivo da sua <span className="acento">nota</span></label>
+                            <span className="subenunciado">Opcional</span>
                         </div>
                         <textarea
-                            className='textarea-avaliacao'
+                            className="textarea-avaliacao"
                             name="avaliacao"
-                            cols={30}
-                            rows={10}
+                            placeholder="Conte um pouco sobre o que funcionou (ou não) para você…"
+                            rows={8}
                             value={motivo}
                             onChange={(e) => setMotivo(e.target.value)}
+                            maxLength={MAX_CARACTERES}
                         />
                     </section>
 
-                    <section className='section-avaliacao'>
-                        <div className='enumciado-form-avaliacao'>
-                            <label className='label-form-avaliacao'>Sugestão de <span className='acento'>melhoria</span></label>
-                            <label className='subenunciado'>Opcional</label>
+                    {/* Sugestão */}
+                    <section className="section-avaliacao">
+                        <div className="enunciado">
+                            <label className="label-form-avaliacao">Sugestão de <span className="acento">melhoria</span></label>
+                            <span className="subenunciado">Opcional</span>
                         </div>
                         <textarea
-                            className='textarea-avaliacao'
+                            className="textarea-avaliacao"
                             name="sugestao"
-                            cols={30}
-                            rows={10}
+                            placeholder="Tem alguma ideia específica que poderíamos implementar?"
+                            rows={8}
                             value={sugestao}
                             onChange={(e) => setSugestao(e.target.value)}
+                            maxLength={MAX_CARACTERES}
                         />
                     </section>
 
-                    <div className='botoes-form-avaliacao'>
-                        <button className='botao-cancelar' type='button' onClick={() => navigate('/menu')}>Cancelar</button>
-
-                        <button className='botao-gerar' type='submit' disabled={loading}>
+                    <footer className="botoes-form-avaliacao">
+                        <button className="btn-ghost" type="button" onClick={() => navigate('/menu')}>
+                            Cancelar
+                        </button>
+                        <button className="btn-primary" type="submit" disabled={loading}>
                             Enviar
                         </button>
-                    </div>
+                    </footer>
                 </form>
             )}
         </div>

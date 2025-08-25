@@ -115,6 +115,7 @@ export default function ListagemOrcamentos() {
                     onChange={setTermoBusca}
                     inativo={false}
                     senha={false}
+                    limiteCaracteres={100}
                 />
 
 

@@ -12,7 +12,7 @@
 }
 
 .modal-container {
-    background-color: white;
+    background-color: #2D4254;
     border-radius: 0.8rem;
     width: 90%;
     max-width: 500px;
@@ -21,6 +21,7 @@
     flex-direction: column;
     overflow: hidden;
     box-sizing: border-box;
+    color: white;
 }
 
 .modal-header {
@@ -28,13 +29,14 @@
     justify-content: space-between;
     align-items: center;
     padding: 1rem 1.5rem;
-    border-bottom: 1px solid #F3F4F6;
+    border-bottom: 1px solid #1e2d39;
 }
 
 .modal-header h2 {
     margin: 0;
     font-size: clamp(1.2rem, 3vw, 1.5rem);
     color: #111827;
+    color: white;
 }
 
 .close-button {
@@ -59,7 +61,7 @@
 }
 
 .modal-icon {
-    background-color: #FEE2E2;
+    background-color: #ffffff;
     border-radius: 50%;
     width: 70px;
     height: 70px;
@@ -75,7 +77,7 @@
 }
 
 .modal-content p {
-    color: #4B5563;
+    color: white;
     font-size: clamp(0.9rem, 2vw, 1.1rem);
     margin: 0;
 }
@@ -90,12 +92,12 @@
     justify-content: flex-end;
     padding: 1rem 1.5rem;
     gap: 1rem;
-    border-top: 1px solid #F3F4F6;
+    border-top: 1px solid #1e2d39;
 }
 
 .cancel-button {
-    background-color: white;
-    color: #6B7280;
+    background-color: #2D4254;
+    color: #ffffff;
     border: 1px solid #D1D5DB;
     padding: 0.6rem 1.2rem;
     border-radius: 0.5rem;
@@ -105,7 +107,7 @@
 }
 
 .cancel-button:hover {
-    background-color: #F9FAFB;
+    background-color: #4c6276;
 }
 
 .confirm-button {

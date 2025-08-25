@@ -88,7 +88,7 @@
 .textarea-ia{
   width:100%;
   min-height:18rem;
-  resize:vertical;
+  resize:none;
   background:var(--glass-slot);
   color:var(--text);
   border:1px solid var(--glass-brd);

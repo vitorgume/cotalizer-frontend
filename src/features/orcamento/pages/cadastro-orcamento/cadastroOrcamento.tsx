@@ -16,6 +16,8 @@ export default function CadastroOrcamento() {
     const [estruturaOrcamento, setEstruturaOrcamento] = useState<any | null>(null);
     const [urlPdf, setUrlPdf] = useState<string>('');
 
+    const MAX_CARACTERES = 1600;
+
     async function handleInterpretar() {
         const idUsuario = localStorage.getItem('id-usuario');
         if (!idUsuario) return;
@@ -97,6 +99,7 @@ export default function CadastroOrcamento() {
                 onChange={setTitulo}
                 inativo={orcamentoCriado !== null}
                 senha={false}
+                limiteCaracteres={100}
             />
 
 
@@ -114,7 +117,9 @@ export default function CadastroOrcamento() {
                                 value={conteudo}
                                 onChange={(e) => setConteudo(e.target.value)}
                                 className="textarea-ia"
+                                maxLength={MAX_CARACTERES}
                             />
+                            <p>{conteudo.length}/{MAX_CARACTERES}</p>
                             <div className="acoes">
                                 <button className="btn primary-solid" onClick={handleInterpretar} disabled={!titulo || !conteudo}>
                                     Interpretar orçamento

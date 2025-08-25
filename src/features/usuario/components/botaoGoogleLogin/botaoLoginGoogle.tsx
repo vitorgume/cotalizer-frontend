@@ -1,6 +1,5 @@
 import './botaoGoogleLogin.css';
 import GoogleIcon from '../../../../assets/google-icon.svg';
-import { useNavigate } from 'react-router-dom';
 
 interface GoogleLoginButtonProps {
   label: string

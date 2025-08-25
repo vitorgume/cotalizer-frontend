@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import IconeSair from '../../../../assets/icon-sair.png';
 import './modalAvaliar.css';
+import { X } from 'lucide-react';
 
 interface ModalAvaliarProps {
     fechar: () => void;
@@ -22,7 +22,7 @@ export default function ModalAvaliar({fechar}: ModalAvaliarProps) {
     return (
         <div className='modal-overlay'>
             <div className='modal-avaliar-content'>
-                <button className='botao-sair' onClick={() => fechar()}><img src={IconeSair} alt="Icone sair" /></button>
+                <button className='botao-sair' onClick={() => fechar()}><X color="#ffffff" size={30} /></button>
 
 
                 <div className='text-modal-avaliar'>
@@ -30,7 +30,7 @@ export default function ModalAvaliar({fechar}: ModalAvaliarProps) {
                     <p>E nos ajude a <span className='acento'>melhorar</span></p>
                 </div>    
 
-                <button className='botao-gerar botao-responder' onClick={responderAvaliacao}>Responder</button>
+                <button className='botao-responder' onClick={responderAvaliacao}>Responder</button>
             </div>
         </div>
     )
