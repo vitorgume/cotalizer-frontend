@@ -22,8 +22,6 @@ export default function LoginUsuario() {
         try {
             const usuarioLogado = await logarUsuario(email, senha);
             if (usuarioLogado.dado?.token) {
-                localStorage.setItem('id-usuario', usuarioLogado.dado.usuarioId);
-                localStorage.setItem('token', usuarioLogado.dado.token);
                 navigate('/menu');
             } else {
                 notificarErro('Credenciais incorretas. Tente novamente.');

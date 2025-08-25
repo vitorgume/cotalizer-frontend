@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import './modalAvaliar.css';
 import { X } from 'lucide-react';
+import { obterMe } from '../../usuario.service';
 
 interface ModalAvaliarProps {
     fechar: () => void;
@@ -10,8 +11,8 @@ export default function ModalAvaliar({fechar}: ModalAvaliarProps) {
 
     const navigate = useNavigate();
 
-    function responderAvaliacao() {
-        const idUsuario = localStorage.getItem('id-usuario');
+    async function responderAvaliacao() {
+        const idUsuario = await obterMe().then(resp => resp.dado?.usuarioId);
 
         if(idUsuario) {
             navigate(`/avaliacao/${idUsuario}`);

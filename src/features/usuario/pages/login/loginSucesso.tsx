@@ -1,35 +1,46 @@
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { getId } from '../../../../utils/idTokenUtil';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Loading from '../../../orcamento/componentes/loading/Loading';
+import { hydrateAccessToken, setAccessToken } from '../../../../utils/axios';
+import { obterMe } from '../../usuario.service';
 
 export default function LoginSucesso() {
     const navigate = useNavigate();
 
+    const location = useLocation();
+
     useEffect(() => {
-        const params = new URLSearchParams(window.location.search);
-        const token = params.get('token');
+        let alive = true;
 
-        if (token) {
-            localStorage.setItem('token', token);
+        (async () => {
+            try {
+                const params = new URLSearchParams(location.search);
+                const urlToken = params.get("token");
+                if (urlToken) {
+                    setAccessToken(urlToken);
+                    window.history.replaceState({}, "", location.pathname);
+                }
 
-            const idUsuario = getId(token);
-            if (idUsuario) {
-                localStorage.setItem('id-usuario', idUsuario);
+                await hydrateAccessToken();
+
+                const me = await obterMe();
+                const id = me.dado?.usuarioId;
+                if (!id) throw new Error("Usuário não identificado");
+
+                if (!alive) return;
+
+                navigate(`/usuario/cadastro/cpf-cnpj/${id}`, { replace: true });
+            } catch {
+                if (!alive) return;
+                navigate("/usuario/login", { replace: true });
             }
+        })();
 
-            navigate(`/usuario/cadastro/cpf-cnpj/${idUsuario}`, { replace: true });
-        } else {
-            const tokenExistente = localStorage.getItem('token');
-            if (!tokenExistente) {
-                navigate('/usuario/login');
-            } else {
-                const idUsuario = getId(tokenExistente);
-                
-                navigate(`/usuario/cadastro/cpf-cnpj/${idUsuario}`);
-            }
-        }
-    }, [navigate]);
+        return () => {
+            alive = false;
+        };
+    }, [location, navigate]);
+
 
     return <Loading message="Redirecionando..." />;
 }

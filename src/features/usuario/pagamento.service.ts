@@ -1,4 +1,4 @@
-import api from '../../utils/axios';
+import { api } from '../../utils/axios';
 import type Response from '../../models/response';
 import type Assinatura from '../../models/assinatura';
 

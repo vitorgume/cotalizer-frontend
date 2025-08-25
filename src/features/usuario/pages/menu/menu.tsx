@@ -6,7 +6,7 @@ import type Usuario from '../../../../models/usuario';
 import type Orcamento from '../../../../models/orcamento';
 import { Link, useNavigate } from 'react-router-dom';
 import Loading from '../../../orcamento/componentes/loading/Loading';
-import { consultarUsuarioPeloId } from '../../usuario.service';
+import { consultarUsuarioPeloId, obterMe } from '../../usuario.service';
 import { listarPorUsuario, listarTradicionaisPorUsuario } from '../../../orcamento/orcamento.service';
 import ModalAvaliar from '../../components/modalAvaliar/modalAvaliar';
 import { User } from 'lucide-react';
@@ -58,72 +58,79 @@ export default function Menu() {
     }
 
     useEffect(() => {
-        const usuarioId = localStorage.getItem('id-usuario');
-        if (!usuarioId) {
-            navigate('/menu');
-            return;
-        }
-        setLoading(true);
-
-        function abrirModalAvaliar(usuario: Usuario, orcamentos: any[]) {
-            if (usuario) {
-                if (!usuario.feedback && orcamentos.length === 3) {
-                    setModalAvaliar(true);
-                }
-            }
+        async function obterIdUsuario(): Promise<string | undefined> {
+            const resp = await obterMe();
+            return resp.dado?.usuarioId;
         }
 
-        async function carregarDados() {
-            try {
-                if (usuarioId) {
-                    const usuarioResponse = await consultarUsuarioPeloId(usuarioId);
-
-                    const [iaRes, tradRes] = await Promise.all([
-                        listarPorUsuario(usuarioId),
-                        listarTradicionaisPorUsuario(usuarioId)
-                    ]);
-
-                    if (!usuarioResponse.dado || !iaRes.dado || !tradRes.dado) {
-                        throw new Error('Falha ao carregar dados');
-                    }
-
-                    const iaList: Orcamento[] = iaRes.dado.content.map(o => ({
-                        ...o,
-                        tipoOrcamento: 'IA'
-                    }));
-
-                    const tradList: Orcamento[] = tradRes.dado.content.map(t => (
-                        {
-                            id: t.id,
-                            conteudoOriginal: '',
-                            orcamentoFormatado: { total: t.valorTotal },
-                            dataCriacao: t.dataCriacao,
-                            titulo: t.cliente,
-                            urlArquivo: t.urlArquivo,
-                            usuarioId: t.idUsuario,
-                            status: t.status,
-                            tipoOrcamento: 'TRADICIONAL'
-                        }
-                    ));
-
-                    const todos = [...iaList, ...tradList].sort(
-                        (a, b) => new Date(b.dataCriacao).getTime() - new Date(a.dataCriacao).getTime()
-                    );
-
-                    abrirModalAvaliar(usuarioResponse.dado, todos);
-
-                    setUsuario(usuarioResponse.dado);
-                    setOrcamentos(todos);
-                }
-            } catch (err) {
-                console.error('Erro ao carregar dados:', err);
+        (async () => {
+            const usuarioId = await obterIdUsuario();
+            if (!usuarioId) {
                 navigate('/menu');
-            } finally {
-                setLoading(false);
+                return;
             }
-        }
+            setLoading(true);
 
-        carregarDados();
+            function abrirModalAvaliar(usuario: Usuario, orcamentos: any[]) {
+                if (usuario) {
+                    if (!usuario.feedback && orcamentos.length === 3) {
+                        setModalAvaliar(true);
+                    }
+                }
+            }
+
+            async function carregarDados() {
+                try {
+                    if (usuarioId) {
+                        const usuarioResponse = await consultarUsuarioPeloId(usuarioId);
+
+                        const [iaRes, tradRes] = await Promise.all([
+                            listarPorUsuario(usuarioId),
+                            listarTradicionaisPorUsuario(usuarioId)
+                        ]);
+
+                        if (!usuarioResponse.dado || !iaRes.dado || !tradRes.dado) {
+                            throw new Error('Falha ao carregar dados');
+                        }
+
+                        const iaList: Orcamento[] = iaRes.dado.content.map(o => ({
+                            ...o,
+                            tipoOrcamento: 'IA'
+                        }));
+
+                        const tradList: Orcamento[] = tradRes.dado.content.map(t => (
+                            {
+                                id: t.id,
+                                conteudoOriginal: '',
+                                orcamentoFormatado: { total: t.valorTotal },
+                                dataCriacao: t.dataCriacao,
+                                titulo: t.cliente,
+                                urlArquivo: t.urlArquivo,
+                                usuarioId: t.idUsuario,
+                                status: t.status,
+                                tipoOrcamento: 'TRADICIONAL'
+                            }
+                        ));
+
+                        const todos = [...iaList, ...tradList].sort(
+                            (a, b) => new Date(b.dataCriacao).getTime() - new Date(a.dataCriacao).getTime()
+                        );
+
+                        abrirModalAvaliar(usuarioResponse.dado, todos);
+
+                        setUsuario(usuarioResponse.dado);
+                        setOrcamentos(todos);
+                    }
+                } catch (err) {
+                    console.error('Erro ao carregar dados:', err);
+                    navigate('/menu');
+                } finally {
+                    setLoading(false);
+                }
+            }
+
+            carregarDados();
+        })();
     }, []);
 
     return (
@@ -133,7 +140,7 @@ export default function Menu() {
                     <div className="menu-container">
                         <header className="header-menu">
                             {usuario ? <h1>Olá, {usuario.nome} !</h1> : <h1>Olá, visitante !</h1>}
-                            <User color="#ffffff" onClick={botaoPerfil} className='user-icon' size={35}/>
+                            <User color="#ffffff" onClick={botaoPerfil} className='user-icon' size={35} />
 
                         </header>
 

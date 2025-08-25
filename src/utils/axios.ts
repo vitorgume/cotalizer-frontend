@@ -1,37 +1,83 @@
-import axios from 'axios';
+import axios, { AxiosError, type InternalAxiosRequestConfig  } from 'axios';
 
-const api = axios.create({
+export const api = axios.create({
     baseURL: 'http://localhost:8080',
+    withCredentials: true, 
 });
 
-api.interceptors.request.use((config) => {
-    const token = localStorage.getItem('token');
+let accessToken: string | null = null;
 
-    const rotasPublicas = ['/usuarios/cadastro', '/login'];
+export function setAccessToken(token?: string) {
+  accessToken = token ?? null;
+  if (accessToken) {
+    api.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+  } else {
+    delete api.defaults.headers.common.Authorization;
+  }
+}
 
-    const isRotaPublica = rotasPublicas.some((rota) => config.url?.includes(rota));
-
-    if (token && !isRotaPublica) {
-        config.headers.Authorization = `Bearer ${token}`;
-    }
-
-    return config;
-}, (error) => {
-    return Promise.reject(error);
-});
-
+// —— Interceptor 401 → tenta refresh e repete a chamada uma vez ——
+let isRefreshing = false;
+let queue: Array<() => void> = [];
 
 api.interceptors.response.use(
-    response => response,
-    error => {
-        if (error.response && error.response.status === 401) {
-            // localStorage.removeItem("token");
-            // localStorage.removeItem("id-usuario");
-            // window.location.href = "/";
-        }
+  (res) => res,
+  async (error: AxiosError) => {
+    const status = error.response?.status;
+    const original = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
 
-        return Promise.reject(error);
+    if (status === 401 && !original?._retry) {
+      original._retry = true;
+
+      // garante 1 refresh por vez
+      if (!isRefreshing) {
+        isRefreshing = true;
+        try {
+          // seu backend retorna ResponseDto<AcessTokenResponseDto>
+          const r = await api.post("/auth/refresh");
+          const access =
+            // tenta achar o token em diferentes formatos
+            (r.data as any)?.dado?.accessToken ??
+            (r.data as any)?.accessToken;
+
+          if (access) setAccessToken(access);
+        } catch {
+          setAccessToken(undefined);
+          queue = [];
+          // opcional: redirecionar para /login aqui
+          return Promise.reject(error);
+        } finally {
+          isRefreshing = false;
+          queue.forEach((resume) => resume());
+          queue = [];
+        }
+      }
+
+      // espera o refresh terminar e re-tenta a request original
+      return new Promise((resolve, reject) => {
+        queue.push(async () => {
+          try {
+            resolve(api.request(original));
+          } catch (e) {
+            reject(e);
+          }
+        });
+      });
     }
+
+    return Promise.reject(error);
+  }
 );
 
-export default api;
+// —— Hidrata access token ao iniciar o app (chame em main.tsx) ——
+export async function hydrateAccessToken() {
+  try {
+    const r = await api.post("/auth/refresh");
+    const access =
+      (r.data as any)?.dado?.accessToken ??
+      (r.data as any)?.accessToken;
+    if (access) setAccessToken(access);
+  } catch {
+    setAccessToken(undefined);
+  }
+}

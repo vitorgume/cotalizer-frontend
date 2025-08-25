@@ -1,7 +1,7 @@
 import type Response from "../../models/response";
 import type Page from "../../models/page";
 import type Orcamento from "../../models/orcamento";
-import api from "../../utils/axios";
+import { api } from "../../utils/axios";
 import type { OrcamentoTradicional } from "../../models/orcamentoTradicional";
 import axios from "axios";
 

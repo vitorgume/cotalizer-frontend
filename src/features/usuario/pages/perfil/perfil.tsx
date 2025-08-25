@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import InputPadrao from '../../../orcamento/componentes/inputPadrao/inputPadrao'
 import UploadLogo from '../../components/uploadLogo/uploadLogo'
 import MetricaQuantidadeOrcamento from '../../components/metricaQuantidadeOrcamento/metricaQuantidadeOrcamento'
-import { consultarUsuarioPeloId, atualizarUsuario } from '../../usuario.service'
+import { consultarUsuarioPeloId, atualizarUsuario, obterMe } from '../../usuario.service'
 import { listarPorUsuario, listarTradicionaisPorUsuario } from '../../../orcamento/orcamento.service'
 import { cancelarAssinatura } from '../../pagamento.service'
 import { cadastrarLogoUsuario } from '../../usuario.service'
@@ -27,28 +27,46 @@ export default function Perfil() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const id = localStorage.getItem('id-usuario')!;
-        async function init() {
-            const respUser = await consultarUsuarioPeloId(id);
-            if (respUser.dado) {
-                const u = respUser.dado;
-                setUsuario(u);
-                setOriginalEmail(u.email);
-                setForm({
-                    nome: u.nome, email: u.email, telefone: u.telefone, cpf: u.cpf || '', cnpj: u.cnpj || ''
-                });
-            }
-            const respOrcs = await listarPorUsuario(id);
-            if (respOrcs.dado?.content) setOrcamentosIA(respOrcs.dado.content);
-
-            const respoOrcsTrad = await listarTradicionaisPorUsuario(id);
-            if (respoOrcsTrad.dado?.content) setOrcamentoTradicional(respoOrcsTrad.dado.content);
+        async function obterIdUsuario(): Promise<string | undefined> {
+            const resp = await obterMe();
+            return resp.dado?.usuarioId;
         }
-        init();
+
+        (async () => {
+            const id = await obterIdUsuario();
+            
+            if (!id) {
+                navigate('/menu');
+                return;
+            }
+            
+            async function init() {
+                const respUser = await consultarUsuarioPeloId(id || '');
+                if (respUser.dado) {
+                    const u = respUser.dado;
+                    setUsuario(u);
+                    setOriginalEmail(u.email);
+                    setForm({
+                        nome: u.nome, email: u.email, telefone: u.telefone, cpf: u.cpf || '', cnpj: u.cnpj || ''
+                    });
+                }
+                const respOrcs = await listarPorUsuario(id || '');
+                if (respOrcs.dado?.content) setOrcamentosIA(respOrcs.dado.content);
+
+                const respoOrcsTrad = await listarTradicionaisPorUsuario(id || '');
+                if (respoOrcsTrad.dado?.content) setOrcamentoTradicional(respoOrcsTrad.dado.content);
+            }
+            init();
+        })();
+
+
     }, [])
 
     async function recarregarUsuario() {
-        const id = localStorage.getItem('id-usuario')!;
+        const id = await obterMe().then(resp => resp.dado?.usuarioId);
+
+        if(!id) return;
+
         const resp = await consultarUsuarioPeloId(id);
         if (resp.dado) setUsuario(resp.dado);
     }
@@ -100,9 +118,8 @@ export default function Perfil() {
     const handleLogoChange = (file: File | null) => setLogoFile(file);
 
     async function cancelar() {
-        const idUsuario = localStorage.getItem('id-usuario');
-        if (idUsuario) {
-            await cancelarAssinatura(idUsuario);
+        if (usuario && usuario.id) {
+            await cancelarAssinatura(usuario.id);
             notificarSucesso('Assinatura cancelada com sucesso!');
         }
     }
@@ -154,46 +171,46 @@ export default function Perfil() {
                 <h3>Seus dados</h3>
                 {usuario ? (
                     <div className="div-inputs">
-                        <InputPadrao 
-                            placeholder="Nome" 
-                            value={form.nome} 
-                            onChange={handleChange('nome')} 
-                            inativo={!isEditing} 
-                            senha={false} 
+                        <InputPadrao
+                            placeholder="Nome"
+                            value={form.nome}
+                            onChange={handleChange('nome')}
+                            inativo={!isEditing}
+                            senha={false}
                             limiteCaracteres={100}
                         />
-                        <InputPadrao 
-                            placeholder="Email" 
-                            value={form.email} 
-                            onChange={handleChange('email')} 
-                            inativo={!isEditing} 
-                            senha={false} 
+                        <InputPadrao
+                            placeholder="Email"
+                            value={form.email}
+                            onChange={handleChange('email')}
+                            inativo={!isEditing}
+                            senha={false}
                             limiteCaracteres={100}
                         />
-                        <InputPadrao 
-                            placeholder="Telefone" 
-                            value={form.telefone} 
-                            onChange={handleChange('telefone')} 
-                            inativo={!isEditing} 
-                            senha={false} 
+                        <InputPadrao
+                            placeholder="Telefone"
+                            value={form.telefone}
+                            onChange={handleChange('telefone')}
+                            inativo={!isEditing}
+                            senha={false}
                             limiteCaracteres={14}
                         />
                         {form.cpf ? (
-                            <InputPadrao 
-                                placeholder="CPF" 
-                                value={form.cpf} 
-                                onChange={handleChange('cpf')} 
-                                inativo={!isEditing} 
-                                senha={false} 
+                            <InputPadrao
+                                placeholder="CPF"
+                                value={form.cpf}
+                                onChange={handleChange('cpf')}
+                                inativo={!isEditing}
+                                senha={false}
                                 limiteCaracteres={10}
                             />
                         ) : (
-                            <InputPadrao 
-                                placeholder="CNPJ" 
-                                value={form.cnpj} 
-                                onChange={handleChange('cnpj')} 
-                                inativo={!isEditing} 
-                                senha={false} 
+                            <InputPadrao
+                                placeholder="CNPJ"
+                                value={form.cnpj}
+                                onChange={handleChange('cnpj')}
+                                inativo={!isEditing}
+                                senha={false}
                                 limiteCaracteres={14}
                             />
                         )}

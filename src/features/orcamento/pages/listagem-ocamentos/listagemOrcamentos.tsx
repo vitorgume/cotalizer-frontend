@@ -7,6 +7,7 @@ import ModalDelete from "../../componentes/modalDelete/modalDelete";
 import './listagemOrcamentos.css';
 import Loading from "../../componentes/loading/Loading";
 import type { OrcamentoTradicional } from "../../../../models/orcamentoTradicional";
+import { obterMe } from "../../../usuario/usuario.service";
 
 type Tab = "IA" | "TRAD";
 
@@ -20,21 +21,37 @@ export default function ListagemOrcamentos() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const idUsu = localStorage.getItem("id-usuario");
-        if (!idUsu) return;
+        let alive = true;
 
-        setLoading(true);
-        Promise.all([
-            listarPorUsuario(idUsu),
-            listarTradicionaisPorUsuario(idUsu),
-        ])
-            .then(([iaRes, tradRes]) => {
+        async function obterIdUsuario(): Promise<string | undefined> {
+            const resp = await obterMe();
+            return resp.dado?.usuarioId;
+        }
+
+        (async () => {
+            const idUsu = await obterIdUsuario();
+            if (!idUsu || !alive) return;
+
+            setLoading(true);
+            try {
+                const [iaRes, tradRes] = await Promise.all([
+                    listarPorUsuario(idUsu),
+                    listarTradicionaisPorUsuario(idUsu),
+                ]);
+
+                if (!alive) return;
                 if (iaRes.dado) setIaOrcamentos(iaRes.dado.content);
                 if (tradRes.dado) setTradOrcamentos(tradRes.dado.content);
-            })
-            .catch(console.error)
-            .finally(() => setLoading(false));
+            } catch (err) {
+                console.error(err);
+            } finally {
+                if (alive) setLoading(false);
+            }
+        })();
+
+        return () => { alive = false; };
     }, []);
+
 
     const listaFiltrada = useMemo(() => {
         const base = selectedTab === "IA"

@@ -1,7 +1,7 @@
 import type Response from "../../models/response";
 import type Usuario from "../../models/usuario";
 import type Login from "../../models/login";
-import api from '../../utils/axios';
+import { api, setAccessToken } from '../../utils/axios';
 import type { VerificaoEmail } from "../../models/verificaoEmail";
 import type Avaliacao from "../../models/avaliacao";
 
@@ -29,16 +29,21 @@ export function cadastrarUsuario(usuario: Usuario): Promise<Response<Usuario>> {
         })
 }
 
-export function logarUsuario(email: string, senha: string): Promise<Response<Login>> {
-    return api.post<Response<Login>>(`/login`, { email, senha })
-        .then(response => response.data)
-        .catch(err => {
-            console.error("Erro ao logar usuario:", err);
-            return {
-                dado: {} as Login,
-                erro: err
-            }
-        })
+export async function logarUsuario(email: string, senha: string): Promise<Response<Login>> {
+  try {
+    const { data } = await api.post<Response<Login>>("/auth/login", { email, senha });
+    const access = data?.dado?.token;
+    if (access) setAccessToken(access); 
+    return data;
+  } catch (err) {
+    console.error("Erro ao logar usuario:", err);
+    return { dado: {} as Login, erro: err };
+  }
+}
+
+export async function obterMe(): Promise<Response<{ usuarioId: string }>> {
+  const { data } = await api.get<Response<{ usuarioId: string }>>("/auth/me");
+  return data;
 }
 
 export function verificarCodigo(dadosVerificacao: VerificaoEmail): Promise<Response<VerificaoEmail>> {

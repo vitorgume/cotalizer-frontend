@@ -7,6 +7,7 @@ import Loading from '../../componentes/loading/Loading';
 import type Orcamento from '../../../../models/orcamento';
 import FormDinamico from '../../componentes/formDinamico/formDinamico';
 import { notificarErro } from '../../../../utils/notificacaoUtils';
+import { obterMe } from '../../../usuario/usuario.service';
 
 export default function CadastroOrcamento() {
     const [titulo, setTitulo] = useState<string>('');
@@ -19,7 +20,7 @@ export default function CadastroOrcamento() {
     const MAX_CARACTERES = 1600;
 
     async function handleInterpretar() {
-        const idUsuario = localStorage.getItem('id-usuario');
+        const idUsuario = await obterMe().then(resp => resp.dado?.usuarioId);
         if (!idUsuario) return;
 
         const novoOrcamento: Orcamento = {

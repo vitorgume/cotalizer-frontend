@@ -10,6 +10,7 @@ import type { Produto } from '../../../../models/produto';
 import Loading from '../../componentes/loading/Loading';
 import { useNavigate } from 'react-router-dom';
 import { notificarErro } from '../../../../utils/notificacaoUtils';
+import { obterMe } from '../../../usuario/usuario.service';
 
 export default function CadastroOrcamentoTradicional() {
     const [cliente, setCliente] = useState('');
@@ -26,7 +27,7 @@ export default function CadastroOrcamentoTradicional() {
     }, [produtos]);
 
     const salvarOrcamento = async () => {
-        const idUsuario = localStorage.getItem('id-usuario');
+        const idUsuario = await obterMe().then(resp => resp.dado?.usuarioId);
         if (!idUsuario) {
             console.error('ID do usuário não encontrado');
             return;
