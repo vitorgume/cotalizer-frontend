@@ -48,6 +48,7 @@ export default function EsqueceuSenha() {
                                     inativo={false}
                                     senha={false}
                                     limiteCaracteres={100}
+                                    mascara=''
                                 />
                             </div>
 

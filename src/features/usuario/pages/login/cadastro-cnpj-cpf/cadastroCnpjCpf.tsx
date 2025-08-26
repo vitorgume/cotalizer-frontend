@@ -100,6 +100,7 @@ export default function CadastroCnpjCpf() {
                             inativo={loading}
                             senha={false}
                             limiteCaracteres={14}
+                            mascara={cpfCnpj.length > 11 ? 'cnpj' : 'cpf'}
                         />
                         <div className="hint-row">
                             <span className="small-info">

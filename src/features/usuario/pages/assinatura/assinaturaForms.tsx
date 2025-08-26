@@ -31,8 +31,8 @@ export default function AssinaturaForms({
     const stripe = useStripe();
     const elements = useElements();
 
-    const [email, setEmail] = useState(emailInicial);
-    const [nome, setNome] = useState(nomeInicial);
+    const [email] = useState(emailInicial);
+    const [nome] = useState(nomeInicial);
     const [loading, setLoading] = useState(false);
 
     const [okNumber, setOkNumber] = useState(false);
@@ -67,7 +67,10 @@ export default function AssinaturaForms({
         if (!stripe || !elements) return;
 
         const numberEl = elements.getElement(CardNumberElement);
-        if (!numberEl) return;
+        if (!numberEl) {
+            notificarErro('Campo de cartão não está disponível. Recarregue a página.');
+            return;
+        }
 
         try {
             setLoading(true);
@@ -100,7 +103,6 @@ export default function AssinaturaForms({
     }
 
     return (
-        // INLINE: card embutido no fluxo da página (sem backdrop / sem position: fixed)
         <section
             ref={panelRef}
             className="assinatura-panel glass-card"
@@ -114,44 +116,22 @@ export default function AssinaturaForms({
                         Preencha seus dados de pagamento para liberar o plano.
                     </p>
                 </div>
-                <button className="btn-ghost-sm" onClick={onClose} aria-label="Fechar">
+                <button
+                    className="btn-ghost-sm"
+                    onClick={() => { if (!loading) onClose(); }}
+                    aria-label="Fechar"
+                    disabled={loading}  // evita fechar durante o submit
+                >
                     Fechar
                 </button>
             </header>
 
-            {loading ? (
-                <div className="assinatura-panel__loading">
-                    <Loading message="Processando" />
-                </div>
-            ) : (
-                <form className="assinatura-panel__form" onSubmit={handleSubmit}>
-                    <div className="form-row">
-                        <label className="label-assinatura">E-mail</label>
-                        <input
-                            type="email"
-                            className="input-assinatura"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                            placeholder="seuemail@exemplo.com"
-                            maxLength={100}
-                        />
-                    </div>
+            <form className="assinatura-panel__form" onSubmit={handleSubmit}>
+                {/* desabilita todo o formulário, mas mantém os Elements montados */}
+                <fieldset disabled={loading} style={{ position: 'relative' }}>
+                    {/* ... seus inputs de e-mail e nome ... */}
 
-                    <div className="form-row">
-                        <label className="label-assinatura">Nome do portador</label>
-                        <input
-                            type="text"
-                            className="input-assinatura"
-                            value={nome}
-                            onChange={(e) => setNome(e.target.value)}
-                            required
-                            placeholder="João Silva"
-                            maxLength={100}
-                        />
-                    </div>
-
-                    {/* Stripe split elements */}
+                    {/* Stripe split elements (permanecem montados sempre) */}
                     <div className="form-row">
                         <label className="label-assinatura">Número do cartão</label>
                         <div className="card-element-wrapper">
@@ -216,15 +196,27 @@ export default function AssinaturaForms({
                     </div>
 
                     <footer className="assinatura-panel__actions">
-                        <button type="button" className="btn-ghost" onClick={onClose}>
+                        <button
+                            type="button"
+                            className="btn-ghost"
+                            onClick={() => { if (!loading) onClose(); }}
+                            disabled={loading}
+                        >
                             Cancelar
                         </button>
                         <button type="submit" className="btn-primary" disabled={!podeEnviar}>
                             Confirmar pagamento
                         </button>
                     </footer>
-                </form>
-            )}
+
+                    {/* Overlay de loading sem desmontar os Elements */}
+                    {loading && (
+                        <div className="assinatura-panel__loading-overlay">
+                            <Loading message="Processando" />
+                        </div>
+                    )}
+                </fieldset>
+            </form>
         </section>
     );
 }

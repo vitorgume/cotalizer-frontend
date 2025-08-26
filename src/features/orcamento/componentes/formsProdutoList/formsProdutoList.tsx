@@ -95,6 +95,7 @@ export function FormsProdutoList({ onAddProduto }: FormsProdutoListProps) {
               inativo={false}
               senha={false}
               limiteCaracteres={1000}
+              mascara=''
             />
           </div>
 
@@ -107,6 +108,7 @@ export function FormsProdutoList({ onAddProduto }: FormsProdutoListProps) {
               inativo={false}
               senha={false}
               limiteCaracteres={1000}
+              mascara=''
             />
           </div>
         </div>

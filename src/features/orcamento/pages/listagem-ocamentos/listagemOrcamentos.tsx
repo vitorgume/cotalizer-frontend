@@ -133,6 +133,7 @@ export default function ListagemOrcamentos() {
                     inativo={false}
                     senha={false}
                     limiteCaracteres={100}
+                    mascara=""
                 />
 
 

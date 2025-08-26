@@ -129,6 +129,7 @@ export default function FormDinamico({
                                         inativo={!editado}
                                         senha={false}
                                         limiteCaracteres={1000}
+                                        mascara=""
                                     />
                                 </div>
                                 <div className="campo-valor">
@@ -140,6 +141,7 @@ export default function FormDinamico({
                                         inativo={!editado}
                                         senha={false}
                                         limiteCaracteres={1000}
+                                        mascara=""
                                     />
                                 </div>
                             </div>
@@ -182,6 +184,7 @@ export default function FormDinamico({
                                         inativo={!editado}
                                         senha={false}
                                         limiteCaracteres={100}
+                                        mascara=""
                                     />
                                 )}
                         </div>
@@ -218,6 +221,7 @@ export default function FormDinamico({
                     inativo={!editado}
                     senha={false}
                     limiteCaracteres={100}
+                    mascara=""
                 />
             </div>
         );

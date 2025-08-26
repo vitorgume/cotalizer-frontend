@@ -28,7 +28,6 @@ export default function DetalhesOrcamentoTradicional() {
       try {
         const orcamentoData = await consultarTradicionalPorId(id);
         setOrcamento(orcamentoData.dado);
-
         if (orcamentoData.dado?.status === 'APROVADO') {
           setStatusOrcamento('aprovado');
         } else if (orcamentoData.dado?.status === 'REPROVADO') {
@@ -42,6 +41,7 @@ export default function DetalhesOrcamentoTradicional() {
     };
 
     carregarOrcamento();
+    
   }, [navigate]);
 
   const formatarData = (data: string) => new Date(data).toLocaleDateString('pt-BR');

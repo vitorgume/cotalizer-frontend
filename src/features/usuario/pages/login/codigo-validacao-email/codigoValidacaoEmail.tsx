@@ -77,6 +77,7 @@ export default function CodigoValidacaoEmail() {
               inativo={false}
               senha={false}
               limiteCaracteres={6}
+              mascara=''
             />
             <span className="small-info">Dica: verifique a caixa de spam.</span>
           </div>

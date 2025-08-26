@@ -101,6 +101,7 @@ export default function CadastroOrcamento() {
                 inativo={orcamentoCriado !== null}
                 senha={false}
                 limiteCaracteres={100}
+                mascara=''
             />
 
 

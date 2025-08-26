@@ -178,6 +178,7 @@ export default function Perfil() {
                             inativo={!isEditing}
                             senha={false}
                             limiteCaracteres={100}
+                            mascara=''
                         />
                         <InputPadrao
                             placeholder="Email"
@@ -186,6 +187,7 @@ export default function Perfil() {
                             inativo={!isEditing}
                             senha={false}
                             limiteCaracteres={100}
+                            mascara=''
                         />
                         <InputPadrao
                             placeholder="Telefone"
@@ -194,6 +196,7 @@ export default function Perfil() {
                             inativo={!isEditing}
                             senha={false}
                             limiteCaracteres={14}
+                            mascara='telefone'
                         />
                         {form.cpf ? (
                             <InputPadrao
@@ -203,6 +206,7 @@ export default function Perfil() {
                                 inativo={!isEditing}
                                 senha={false}
                                 limiteCaracteres={10}
+                                mascara='cpf'
                             />
                         ) : (
                             <InputPadrao
@@ -212,6 +216,7 @@ export default function Perfil() {
                                 inativo={!isEditing}
                                 senha={false}
                                 limiteCaracteres={14}
+                                mascara='cnpj'
                             />
                         )}
                     </div>

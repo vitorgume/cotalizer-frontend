@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useMemo, useEffect } from 'react';
+import { IMaskInput } from 'react-imask';
 import './inputPadrao.css';
 
 interface InputPadraoProps {
@@ -8,39 +9,99 @@ interface InputPadraoProps {
   inativo: boolean;
   senha: boolean;
   limiteCaracteres: number;
+  mascara: string;
 }
 
 export default function InputPadrao({
   placeholder,
-  value = '',
+  value,
   onChange,
   inativo,
   senha,
-  limiteCaracteres
+  limiteCaracteres,
+  mascara,
 }: InputPadraoProps) {
+
+  const isControlled = typeof value === 'string' && typeof onChange === 'function';
+  const [inner, setInner] = useState<string>('');
+  const val = isControlled ? (value as string) : inner;
+
+  useEffect(() => {
+    if (!isControlled) setInner('');
+  }, []);
+
   const [mostrarSenha, setMostrarSenha] = useState(false);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onChange?.(e.target.value);
-  };
-
   const alternarVisibilidade = () => setMostrarSenha((prev) => !prev);
 
+  const computedMask = useMemo(() => {
+    const digits = (val || '').replace(/\D/g, '');
+    switch (mascara) {
+      case 'telefone':
+        return digits.length > 10 ? '(00) 00000-0000' : '(00) 0000-0000';
+      case 'cpf':
+        return '000.000.000-00';
+      case 'cnpj':
+        return '00.000.000/0000-00';
+      default:
+        return ''; 
+    }
+  }, [mascara, val]);
+
+  const autoComplete =
+    mascara === 'telefone' ? 'tel' : senha ? 'current-password' : 'off';
+  const inputMode =
+    mascara === 'telefone' ? 'tel' :
+      mascara === 'cpf' || mascara === 'cnpj' ? 'numeric' :
+        undefined;
+
+  const handleAccept = (masked: string) => {
+    if (isControlled) {
+      onChange?.(masked);
+    } else {
+      setInner(masked);
+      onChange?.(masked); 
+    }
+  };
+
+  const handleChangePlain = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const next = e.target.value;
+    if (isControlled) {
+      onChange?.(next);
+    } else {
+      setInner(next);
+      onChange?.(next);
+    }
+  };
+
+  const isMasked = !!computedMask && !senha;
+
   return (
-    <div
-      className={`inputp-wrap ${inativo ? 'is-disabled' : ''}`}
-      aria-disabled={inativo}
-    >
-      <input
-        type={senha && !mostrarSenha ? 'password' : 'text'}
-        className="inputp-field"
-        placeholder={placeholder}
-        value={value}
-        onChange={handleChange}
-        disabled={inativo}
-        autoComplete={senha ? 'current-password' : 'off'}
-        maxLength={limiteCaracteres}
-      />
+    <div className={`inputp-wrap ${inativo ? 'is-disabled' : ''}`} aria-disabled={inativo}>
+      {isMasked ? (
+        <IMaskInput
+          key={computedMask}          
+          mask={computedMask}
+          value={val}
+          onAccept={handleAccept}
+          disabled={inativo}
+          className="inputp-field"
+          placeholder={placeholder}
+          inputMode={inputMode}
+          autoComplete={autoComplete}
+        />
+      ) : (
+        <input
+          type={senha && !mostrarSenha ? 'password' : 'text'}
+          className="inputp-field"
+          placeholder={placeholder}
+          value={val}
+          onChange={handleChangePlain}
+          disabled={inativo}
+          autoComplete={autoComplete}
+          inputMode={inputMode}
+          maxLength={limiteCaracteres}
+        />
+      )}
 
       {senha && (
         <button
