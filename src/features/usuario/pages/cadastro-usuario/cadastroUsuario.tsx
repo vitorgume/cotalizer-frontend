@@ -167,7 +167,7 @@ export default function CadastroUsuario() {
                                     inativo={false}
                                     senha={false}
                                     limiteCaracteres={14}
-                                    mascara={cpfCnpj.length > 11 ? 'cnpj' : 'cpf'}
+                                    mascara='cpfCnpj'
                                 />
                             </div>
 

@@ -137,8 +137,8 @@ export default function CadastroOrcamentoTradicional() {
                                         onChange={setCnpjCpf}
                                         inativo={false}
                                         senha={false}
-                                        limiteCaracteres={14}
-                                        mascara={cnpjCpf.length > 11 ? 'cnpj' : 'cpf'}
+                                        limiteCaracteres={17}
+                                        mascara='cpfCnpj'
                                     />
                                 </div>
                             </div>

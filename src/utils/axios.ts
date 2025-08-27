@@ -1,8 +1,13 @@
-import axios, { AxiosError, type InternalAxiosRequestConfig  } from 'axios';
+import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios';
+
+const API_URL = (import.meta as any)?.env?.VITE_API_URL ?? 'http://localhost:8080';
 
 export const api = axios.create({
-    baseURL: 'http://localhost:8080',
-    withCredentials: true, 
+  baseURL: API_URL,
+  withCredentials: true,
+  xsrfCookieName: 'XSRF-TOKEN',
+  xsrfHeaderName: 'X-XSRF-TOKEN',
+  headers: { 'X-Requested-With': 'XMLHttpRequest' },
 });
 
 let accessToken: string | null = null;
@@ -16,35 +21,66 @@ export function setAccessToken(token?: string) {
   }
 }
 
-// —— Interceptor 401 → tenta refresh e repete a chamada uma vez ——
 let isRefreshing = false;
 let queue: Array<() => void> = [];
 
+// ---------- helpers ----------
+function isMutating(method?: string) {
+  const m = (method || '').toLowerCase();
+  return m === 'post' || m === 'put' || m === 'patch' || m === 'delete';
+}
+
+function getCookie(name: string): string | null {
+  const m = document.cookie.match(new RegExp('(?:^|; )' + name.replace(/([$?*|{}\]\\^\[\]\+\-])/g, '\\$1') + '=([^;]*)'));
+  return m ? decodeURIComponent(m[1]) : null;
+}
+
+// Opcional: se você criar um endpoint GET /csrf no backend, isso “primará” o cookie XSRF-TOKEN
+async function primeCsrfCookie() {
+  try {
+    await api.get('/csrf', { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+  } catch {
+    // Se não existir /csrf, ignore silenciosamente
+  }
+}
+
+// ---------- request interceptor ----------
+api.interceptors.request.use(async (config) => {
+  if (accessToken && !config.headers?.Authorization) {
+    config.headers = config.headers ?? {};
+    (config.headers as any).Authorization = `Bearer ${accessToken}`;
+  }
+
+  if (isMutating(config.method)) {
+    const token = getCookie('XSRF-TOKEN');
+    if (token && !(config.headers as any)?.['X-XSRF-TOKEN']) {
+      config.headers = config.headers ?? {};
+      (config.headers as any)['X-XSRF-TOKEN'] = token;
+    }
+  }
+
+  return config;
+});
+
+// ---------- response interceptor ----------
 api.interceptors.response.use(
   (res) => res,
   async (error: AxiosError) => {
     const status = error.response?.status;
-    const original = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
+    const original = error.config as (InternalAxiosRequestConfig & { _retry?: boolean; _csrfRetry?: boolean });
 
     if (status === 401 && !original?._retry) {
       original._retry = true;
 
-      // garante 1 refresh por vez
       if (!isRefreshing) {
         isRefreshing = true;
         try {
-          // seu backend retorna ResponseDto<AcessTokenResponseDto>
-          const r = await api.post("/auth/refresh");
-          const access =
-            // tenta achar o token em diferentes formatos
-            (r.data as any)?.dado?.accessToken ??
-            (r.data as any)?.accessToken;
-
+          const r = await api.post('/auth/refresh');
+          const access = (r.data as any)?.dado?.accessToken ?? (r.data as any)?.accessToken;
           if (access) setAccessToken(access);
         } catch {
           setAccessToken(undefined);
           queue = [];
-          // opcional: redirecionar para /login aqui
           return Promise.reject(error);
         } finally {
           isRefreshing = false;
@@ -53,7 +89,6 @@ api.interceptors.response.use(
         }
       }
 
-      // espera o refresh terminar e re-tenta a request original
       return new Promise((resolve, reject) => {
         queue.push(async () => {
           try {
@@ -65,17 +100,43 @@ api.interceptors.response.use(
       });
     }
 
+    // 403 → provável CSRF ausente/expirado em métodos mutáveis
+    if (
+      status === 403 &&
+      isMutating(original?.method) &&
+      !original?._csrfRetry
+    ) {
+      const hasHeader = !!(original.headers as any)?.['X-XSRF-TOKEN'];
+      const hasCookie = !!getCookie('XSRF-TOKEN');
+
+      if (!hasCookie || !hasHeader) {
+        try {
+          await primeCsrfCookie(); 
+          original._csrfRetry = true;
+
+          const token = getCookie('XSRF-TOKEN');
+          if (token) {
+            original.headers = original.headers ?? {};
+            (original.headers as any)['X-XSRF-TOKEN'] = token;
+          }
+
+          return api.request(original);
+        } catch {
+          // cai para o reject padrão
+        }
+      }
+    }
+
     return Promise.reject(error);
   }
 );
 
-// —— Hidrata access token ao iniciar o app (chame em main.tsx) ——
+// Hydrate inicial do access token (via refresh em cookie)
 export async function hydrateAccessToken() {
   try {
-    const r = await api.post("/auth/refresh");
+    const r = await api.post('/auth/refresh');
     const access =
-      (r.data as any)?.dado?.accessToken ??
-      (r.data as any)?.accessToken;
+      (r.data as any)?.dado?.accessToken ?? (r.data as any)?.accessToken;
     if (access) setAccessToken(access);
   } catch {
     setAccessToken(undefined);

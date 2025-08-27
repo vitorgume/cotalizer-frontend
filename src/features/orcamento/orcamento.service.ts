@@ -66,7 +66,7 @@ export async function criarOrcamento(
 ): Promise<Response<Orcamento>> {
   try {
     const { data } = await api.post<Response<Orcamento>>(
-      `/arquivos`,
+      `/api/arquivos`,
       novoOrcamento
     );
     return data;
@@ -110,11 +110,12 @@ export async function gerarPdfOrcamentoTradicional(
 ): Promise<Response<OrcamentoTradicional>> {
   try {
     const { data } = await api.post<Response<OrcamentoTradicional>>(
-      "/arquivos/tradicional",
+      "/api/arquivos/tradicional",
       orcamento
     );
     return data;
   } catch (e) {
+    console.error('Erro', e);
     handleAxiosError(e, "Falha ao gerar PDF do orçamento.");
   }
 }

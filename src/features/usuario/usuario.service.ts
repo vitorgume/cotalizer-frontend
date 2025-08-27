@@ -111,7 +111,7 @@ export function cadastrarLogoUsuario(idUsuario: string, file: File): void {
     formData.append('logo', file);
     formData.append('idUsuario', idUsuario);
 
-    api.post('/arquivos/logo', formData, {headers: { 'Content-Type': 'multipart/form-data' }});
+    api.post('/api/arquivos/logo', formData, {headers: { 'Content-Type': 'multipart/form-data' }});
 }
 
 export function atualizarUsuario(idUsuario: string, novosDados: Usuario): Promise<Response<Usuario>> {

@@ -38,14 +38,20 @@ export default function InputPadrao({
     switch (mascara) {
       case 'telefone':
         return digits.length > 10 ? '(00) 00000-0000' : '(00) 0000-0000';
+      case 'cpfCnpj':
+        return [
+          { mask: '000.000.000-00' },
+          { mask: '00.000.000/0000-00' }
+        ];
       case 'cpf':
         return '000.000.000-00';
       case 'cnpj':
         return '00.000.000/0000-00';
       default:
-        return ''; 
+        return '';
     }
   }, [mascara, val]);
+
 
   const autoComplete =
     mascara === 'telefone' ? 'tel' : senha ? 'current-password' : 'off';
@@ -59,7 +65,7 @@ export default function InputPadrao({
       onChange?.(masked);
     } else {
       setInner(masked);
-      onChange?.(masked); 
+      onChange?.(masked);
     }
   };
 
@@ -79,8 +85,8 @@ export default function InputPadrao({
     <div className={`inputp-wrap ${inativo ? 'is-disabled' : ''}`} aria-disabled={inativo}>
       {isMasked ? (
         <IMaskInput
-          key={computedMask}          
-          mask={computedMask}
+          key={null}
+          mask={computedMask as any}
           value={val}
           onAccept={handleAccept}
           disabled={inativo}
