@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './FormsProdutoList.css';
+import './formsProdutoList.css';
 import InputPadrao from '../inputPadrao/inputPadrao';
 import type { Produto } from '../../../../models/produto';
 
