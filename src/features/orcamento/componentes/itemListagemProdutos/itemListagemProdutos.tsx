@@ -1,4 +1,4 @@
-import './ItemListagemProdutos.css';
+import './itemListagemProdutos.css';
 
 interface ItemProps {
   titulo: string;
