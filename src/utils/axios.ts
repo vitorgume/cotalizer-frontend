@@ -24,7 +24,6 @@ export function setAccessToken(token?: string) {
 let isRefreshing = false;
 let queue: Array<() => void> = [];
 
-// ---------- helpers ----------
 function isMutating(method?: string) {
   const m = (method || '').toLowerCase();
   return m === 'post' || m === 'put' || m === 'patch' || m === 'delete';
@@ -35,7 +34,6 @@ function getCookie(name: string): string | null {
   return m ? decodeURIComponent(m[1]) : null;
 }
 
-// Opcional: se você criar um endpoint GET /csrf no backend, isso “primará” o cookie XSRF-TOKEN
 async function primeCsrfCookie() {
   try {
     await api.get('/csrf', { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
@@ -44,7 +42,6 @@ async function primeCsrfCookie() {
   }
 }
 
-// ---------- request interceptor ----------
 api.interceptors.request.use(async (config) => {
   if (accessToken && !config.headers?.Authorization) {
     config.headers = config.headers ?? {};
@@ -62,7 +59,6 @@ api.interceptors.request.use(async (config) => {
   return config;
 });
 
-// ---------- response interceptor ----------
 api.interceptors.response.use(
   (res) => res,
   async (error: AxiosError) => {
@@ -100,7 +96,6 @@ api.interceptors.response.use(
       });
     }
 
-    // 403 → provável CSRF ausente/expirado em métodos mutáveis
     if (
       status === 403 &&
       isMutating(original?.method) &&
@@ -131,7 +126,6 @@ api.interceptors.response.use(
   }
 );
 
-// Hydrate inicial do access token (via refresh em cookie)
 export async function hydrateAccessToken() {
   try {
     const r = await api.post('/auth/refresh');
