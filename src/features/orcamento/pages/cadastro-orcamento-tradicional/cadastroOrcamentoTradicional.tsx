@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import './CadastroOrcamentoTradicional.css';
+import './cadastroOrcamentoTradicional.css';
 import InputPadrao from '../../componentes/inputPadrao/inputPadrao';
 import { ItemListagemProdutos } from '../../componentes/itemListagemProdutos/itemListagemProdutos';
 import { FormsProdutoList } from '../../componentes/formsProdutoList/formsProdutoList';
