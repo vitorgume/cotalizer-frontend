@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react';
 import InputPadrao from '../../../orcamento/componentes/inputPadrao/inputPadrao';
 import './alterarSenha.css';
-import Loading from '../../../orcamento/componentes/loading/loading';
 import { editarSenha } from '../../usuario.service';
 import { useNavigate, useParams } from 'react-router-dom';
-// (Opcional) se usar suas notificações:
-// import { notificarErro, notificarSucesso } from '../../../../utils/notificacaoUtils';
+import Loading from '../../../orcamento/componentes/loading/loading';
 
 export default function AlterarSenha() {
   const [novaSenha, setNovaSenha] = useState<string>('');
