@@ -18,10 +18,17 @@ import { loadStripe } from '@stripe/stripe-js';
 import CadastroOrcamentoTradicional from './features/orcamento/pages/cadastro-orcamento-tradicional/cadastroOrcamentoTradicional';
 import DetalhesOrcamentoTradicional from './features/orcamento/pages/detalhes-orcamento-tradicional/detalhesOrcamentoTradicional';
 import AvaliacaoForms from './features/usuario/pages/avaliacao/avaliacao';
+import { useEffect } from 'react';
+import { hydrateAccessToken, primeCsrfCookie } from './utils/axios';
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
 function App() {
+  useEffect(() => {
+    hydrateAccessToken();   // tenta restaurar sessão
+    primeCsrfCookie();      // opcional: já busca e guarda o CSRF
+  }, []);
+
   return (
     <Elements stripe={stripePromise} options={{ locale: 'pt-BR' }}>
       <Router>
