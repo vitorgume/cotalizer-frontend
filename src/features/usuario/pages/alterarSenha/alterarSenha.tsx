@@ -3,7 +3,7 @@ import InputPadrao from '../../../orcamento/componentes/inputPadrao/inputPadrao'
 import './alterarSenha.css';
 import { editarSenha } from '../../usuario.service';
 import { useNavigate, useParams } from 'react-router-dom';
-import Loading from '../../../orcamento/componentes/loading/Loading';
+import Loading from '../../../orcamento/componentes/loading/loading';
 
 export default function AlterarSenha() {
   const [novaSenha, setNovaSenha] = useState<string>('');

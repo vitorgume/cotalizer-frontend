@@ -5,7 +5,7 @@ import OrcamentoItem from "../../componentes/orcamentoItem/orcamentoItem";
 import type Orcamento from "../../../../models/orcamento";
 import ModalDelete from "../../componentes/modalDelete/modalDelete";
 import './listagemOrcamentos.css';
-import Loading from "../../componentes/loading/Loading";
+import Loading from "../../componentes/loading/loading";
 import type { OrcamentoTradicional } from "../../../../models/orcamentoTradicional";
 import { obterMe } from "../../../usuario/usuario.service";
 
