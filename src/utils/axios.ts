@@ -2,7 +2,6 @@ import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-
 export const api = axios.create({
   baseURL: API_URL,
   withCredentials: true,
@@ -11,8 +10,13 @@ export const api = axios.create({
   headers: { 'X-Requested-With': 'XMLHttpRequest' },
 });
 
-let accessToken: string | null = null;
+const refreshApi = axios.create({
+  baseURL: API_URL,
+  withCredentials: true,
+  headers: { 'X-Requested-With': 'XMLHttpRequest' },
+});
 
+let accessToken: string | null = null;
 export function setAccessToken(token?: string) {
   accessToken = token ?? null;
   if (accessToken) {
@@ -22,104 +26,78 @@ export function setAccessToken(token?: string) {
   }
 }
 
-let isRefreshing = false;
-let queue: Array<() => void> = [];
-
 function isMutating(method?: string) {
   const m = (method || '').toLowerCase();
   return m === 'post' || m === 'put' || m === 'patch' || m === 'delete';
 }
 
-function getCookie(name: string): string | null {
-  const m = document.cookie.match(new RegExp('(?:^|; )' + name.replace(/([$?*|{}\]\\^\[\]\+\-])/g, '\\$1') + '=([^;]*)'));
-  return m ? decodeURIComponent(m[1]) : null;
+// opcional: prime o cookie de CSRF no boot da app
+export async function primeCsrfCookie() {
+  try { await api.get('/csrf'); } catch {}
 }
 
-async function primeCsrfCookie() {
-  try {
-    await api.get('/csrf', { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
-  } catch {
-    // Se não existir /csrf, ignore silenciosamente
+// ÚNICA promise de refresh em andamento (evita corrida)
+let refreshPromise: Promise<string | undefined> | null = null;
+async function refreshAccessToken(): Promise<string | undefined> {
+  if (!refreshPromise) {
+    refreshPromise = (async () => {
+      const r = await refreshApi.post('/auth/refresh'); // se não tiver cookie → 401 aqui
+      const access =
+        (r.data as any)?.dado?.accessToken ?? (r.data as any)?.accessToken;
+      if (access) setAccessToken(access);
+      return access;
+    })().finally(() => {
+      refreshPromise = null;
+    });
   }
+  return refreshPromise;
 }
 
-api.interceptors.request.use(async (config) => {
+// Interceptor de request: injeta Authorization e header XSRF quando precisar
+api.interceptors.request.use((config) => {
   if (accessToken && !config.headers?.Authorization) {
     config.headers = config.headers ?? {};
     (config.headers as any).Authorization = `Bearer ${accessToken}`;
   }
 
-  if (isMutating(config.method)) {
-    const token = getCookie('XSRF-TOKEN');
-    if (token && !(config.headers as any)?.['X-XSRF-TOKEN']) {
-      config.headers = config.headers ?? {};
-      (config.headers as any)['X-XSRF-TOKEN'] = token;
-    }
-  }
-
+  // axios já usa xsrfCookieName/xsrfHeaderName, então isso é opcional
   return config;
 });
 
+// Interceptor de response: tenta refresh só quando apropriado
 api.interceptors.response.use(
   (res) => res,
   async (error: AxiosError) => {
     const status = error.response?.status;
-    const original = error.config as (InternalAxiosRequestConfig & { _retry?: boolean; _csrfRetry?: boolean });
+    const original = error.config as (InternalAxiosRequestConfig & { _retry?: boolean });
+    const url = (original?.url || '') as string;
 
-    if (status === 401 && !original?._retry) {
+    // Nunca tente refresh no próprio refresh/login/csrf
+    const isAuthRoute = url.includes('/auth/refresh') || url.includes('/auth/login') || url.includes('/csrf');
+
+    if (status === 401 && !original?._retry && !isAuthRoute) {
       original._retry = true;
-
-      if (!isRefreshing) {
-        isRefreshing = true;
-        try {
-          const r = await api.post('/auth/refresh');
-          const access = (r.data as any)?.dado?.accessToken ?? (r.data as any)?.accessToken;
-          if (access) setAccessToken(access);
-        } catch {
+      try {
+        const access = await refreshAccessToken(); // sem cookie → 401 → cai no catch
+        if (!access) {
           setAccessToken(undefined);
-          queue = [];
           return Promise.reject(error);
-        } finally {
-          isRefreshing = false;
-          queue.forEach((resume) => resume());
-          queue = [];
         }
+        return api.request(original);
+      } catch {
+        setAccessToken(undefined);
+        return Promise.reject(error);
       }
-
-      return new Promise((resolve, reject) => {
-        queue.push(async () => {
-          try {
-            resolve(api.request(original));
-          } catch (e) {
-            reject(e);
-          }
-        });
-      });
     }
 
-    if (
-      status === 403 &&
-      isMutating(original?.method) &&
-      !original?._csrfRetry
-    ) {
-      const hasHeader = !!(original.headers as any)?.['X-XSRF-TOKEN'];
-      const hasCookie = !!getCookie('XSRF-TOKEN');
-
-      if (!hasCookie || !hasHeader) {
-        try {
-          await primeCsrfCookie(); 
-          original._csrfRetry = true;
-
-          const token = getCookie('XSRF-TOKEN');
-          if (token) {
-            original.headers = original.headers ?? {};
-            (original.headers as any)['X-XSRF-TOKEN'] = token;
-          }
-
-          return api.request(original);
-        } catch {
-          // cai para o reject padrão
-        }
+    // CSRF: se deu 403 em mutação, busca cookie e repete UMA vez
+    if (status === 403 && isMutating(original?.method) && !original?._retry) {
+      try {
+        original._retry = true;
+        await primeCsrfCookie();
+        return api.request(original);
+      } catch {
+        // segue para o reject normal
       }
     }
 
@@ -127,12 +105,11 @@ api.interceptors.response.use(
   }
 );
 
+// No boot da app, você pode só *tentar* hidratar sem quebrar a UI:
 export async function hydrateAccessToken() {
   try {
-    const r = await api.post('/auth/refresh');
-    const access =
-      (r.data as any)?.dado?.accessToken ?? (r.data as any)?.accessToken;
-    if (access) setAccessToken(access);
+    const access = await refreshAccessToken(); // usa refreshApi (sem loops)
+    if (!access) setAccessToken(undefined);
   } catch {
     setAccessToken(undefined);
   }
