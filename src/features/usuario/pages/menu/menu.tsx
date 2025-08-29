@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import type Usuario from '../../../../models/usuario';
 import type Orcamento from '../../../../models/orcamento';
 import { Link, useNavigate } from 'react-router-dom';
-import Loading from '../../../orcamento/componentes/loading/loading';
+import Loading from '../../../orcamento/componentes/loading/Loading';
 import { consultarUsuarioPeloId, obterMe } from '../../usuario.service';
 import { listarPorUsuario, listarTradicionaisPorUsuario } from '../../../orcamento/orcamento.service';
 import ModalAvaliar from '../../components/modalAvaliar/modalAvaliar';

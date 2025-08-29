@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './detalhesOrcamentoTradicional.css';
 import type { OrcamentoTradicional } from '../../../../models/orcamentoTradicional';
-import Loading from '../../componentes/loading/loading';
+import Loading from '../../componentes/loading/Loading';
 import { atualizarOrcamentoTradicional, consultarTradicionalPorId, deletarTradicional } from '../../orcamento.service';
 import { extrairNomeArquivo } from '../../../../utils/urlUtils';
 import { notificarSucesso } from '../../../../utils/notificacaoUtils';

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import InputPadrao from '../../../../orcamento/componentes/inputPadrao/inputPadrao';
 import './esqueceuSenha.css';
 import { solicitarNovaSenha } from '../../../usuario.service';
-import Loading from '../../../../orcamento/componentes/loading/loading';
+import Loading from '../../../../orcamento/componentes/loading/Loading';
 import { notificarErro, notificarSucesso } from '../../../../../utils/notificacaoUtils';
 
 export default function EsqueceuSenha() {

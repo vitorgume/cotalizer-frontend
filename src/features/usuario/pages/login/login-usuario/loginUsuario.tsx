@@ -3,7 +3,7 @@ import InputPadrao from '../../../../orcamento/componentes/inputPadrao/inputPadr
 import HeaderForms from '../../../components/headerForms/headerForms';
 import './loginUsuario.css';
 import { logarUsuario } from '../../../usuario.service';
-import Loading from '../../../../orcamento/componentes/loading/loading';
+import Loading from '../../../../orcamento/componentes/loading/Loading';
 import { Link, useNavigate } from 'react-router-dom';
 import GoogleLoginButton from '../../../components/botaoGoogleLogin/botaoLoginGoogle';
 import { notificarErro } from '../../../../../utils/notificacaoUtils';

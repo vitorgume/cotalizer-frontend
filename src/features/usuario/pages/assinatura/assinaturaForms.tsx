@@ -1,7 +1,7 @@
 import './assinaturaForms.css';
 import { criarAssinatura } from '../../pagamento.service';
 import { useState, useRef, useEffect } from 'react';
-import Loading from '../../../orcamento/componentes/loading/loading';
+import Loading from '../../../orcamento/componentes/loading/Loading';
 import { notificarErro, notificarSucesso } from '../../../../utils/notificacaoUtils';
 import {
     CardNumberElement,

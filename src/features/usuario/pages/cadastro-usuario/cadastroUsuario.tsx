@@ -5,7 +5,7 @@ import './cadastroUsuario.css';
 import type Usuario from '../../../../models/usuario';
 import { cadastrarLogoUsuario, cadastrarUsuario } from '../../usuario.service';
 import { Link, useNavigate } from 'react-router-dom';
-import Loading from '../../../orcamento/componentes/loading/loading';
+import Loading from '../../../orcamento/componentes/loading/Loading';
 import HeaderForms from '../../components/headerForms/headerForms';
 import { identificarCpfOuCnpj } from '../../../../utils/identificarCpfCnpj';
 import GoogleLoginButton from '../../components/botaoGoogleLogin/botaoLoginGoogle';
