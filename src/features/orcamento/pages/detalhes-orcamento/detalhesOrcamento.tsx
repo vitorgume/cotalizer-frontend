@@ -2,7 +2,7 @@ import './detalhesOrcamento.css';
 import { useEffect, useState } from 'react';
 
 import ModalDelete from '../../componentes/modalDelete/modalDelete';
-import Loading from '../../componentes/loading/Loading';
+import Loading from '../../componentes/loading/loading';
 import { atualizarOrcamento, consultarPorId, deletar } from '../../orcamento.service';
 import { useNavigate, useParams } from 'react-router-dom';
 import { formatarData } from '../../../../utils/formataData';

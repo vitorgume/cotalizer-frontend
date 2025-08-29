@@ -3,7 +3,7 @@ import DowloadImage from '../../../../assets/flecha 1.png';
 import InputPadrao from '../../componentes/inputPadrao/inputPadrao';
 import './cadastroOrcamento.css';
 import { atualizarOrcamento, criarOrcamento, interpretarOrcamento } from '../../orcamento.service';
-import Loading from '../../componentes/loading/Loading';
+import Loading from '../../componentes/loading/loading';
 import type Orcamento from '../../../../models/orcamento';
 import FormDinamico from '../../componentes/formDinamico/formDinamico';
 import { notificarErro } from '../../../../utils/notificacaoUtils';

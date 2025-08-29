@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import InputPadrao from '../../../orcamento/componentes/inputPadrao/inputPadrao';
 import './alterarSenha.css';
-import Loading from '../../../orcamento/componentes/loading/Loading';
+import Loading from '../../../orcamento/componentes/loading/loading';
 import { editarSenha } from '../../usuario.service';
 import { useNavigate, useParams } from 'react-router-dom';
 // (Opcional) se usar suas notificações:

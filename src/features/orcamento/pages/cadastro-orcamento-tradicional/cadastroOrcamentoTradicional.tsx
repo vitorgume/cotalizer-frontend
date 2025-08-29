@@ -7,7 +7,7 @@ import { cadastrarOrcamento, gerarPdfOrcamentoTradicional } from '../../orcament
 import type { OrcamentoTradicional } from '../../../../models/orcamentoTradicional';
 import type { CampoPersonalizado } from '../../../../models/campoPersonalizado';
 import type { Produto } from '../../../../models/produto';
-import Loading from '../../componentes/loading/Loading';
+import Loading from '../../componentes/loading/loading';
 import { useNavigate } from 'react-router-dom';
 import { notificarErro } from '../../../../utils/notificacaoUtils';
 import { obterMe } from '../../../usuario/usuario.service';

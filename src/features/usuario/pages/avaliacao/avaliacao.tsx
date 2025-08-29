@@ -5,7 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { avaliar } from '../../usuario.service';
 import type Avaliacao from '../../../../models/avaliacao';
 import { notificarErro, notificarSucesso } from '../../../../utils/notificacaoUtils';
-import Loading from '../../../orcamento/componentes/loading/Loading';
+import Loading from '../../../orcamento/componentes/loading/loading';
 
 export default function AvaliacaoForms() {
     const [nota, setNota] = useState<number | null>(null);
