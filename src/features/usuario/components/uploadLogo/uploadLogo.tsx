@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import './UploadLogo.css';
+import './uploadLogo.css';
 
 interface UploadLogoProps {
     onLogoChange: (file: File | null) => void;
