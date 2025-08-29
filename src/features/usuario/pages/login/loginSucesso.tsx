@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import Loading from '../../../orcamento/componentes/loading/loading';
+import Loading from '../../../orcamento/componentes/loading/Loading';
 import { hydrateAccessToken, setAccessToken } from '../../../../utils/axios';
 import { obterMe } from '../../usuario.service';
 
