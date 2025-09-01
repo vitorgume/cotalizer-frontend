@@ -137,7 +137,7 @@ export default function DetalhesOrcamento() {
 
                     <div className="botoes-orcamento-group">
                         <a
-                            href={`http://localhost:8080/arquivos/download/${extrairNomeArquivo(orcamento.urlArquivo)}`}
+                            href={`https://cotalizer-backend.onrender.com/arquivos/download/${extrairNomeArquivo(orcamento.urlArquivo)}`}
                             download
                             target="_blank"
                             rel="noopener noreferrer"
