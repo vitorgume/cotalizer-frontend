@@ -133,7 +133,7 @@ export default function Perfil() {
                 <div className="perfil-identidade">
                     <div className="perfil-logo">
                         {usuario?.url_logo
-                            ? <img src={usuario.url_logo} alt="Logo do Usuário" />
+                            ? <img src={'https://cotalizer-backend.onrender.com' + usuario.url_logo} alt="Logo do Usuário" />
                             : <div className="placeholder-logo">Sem logo</div>}
                     </div>
                     <div className="perfil-titulos">
