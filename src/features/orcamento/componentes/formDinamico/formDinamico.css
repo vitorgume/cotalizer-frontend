@@ -244,6 +244,28 @@
   display: flex; justify-content: center; gap: .8rem; margin-top: 1rem; flex-wrap: wrap;
 }
 
+/* Espaçamento consistente entre cards de primeiro nível */
+.formulario-dinamico > .glass-card + .glass-card {
+  margin-top: 16px;
+}
+
+/* Mais respiro após o bloco de itens */
+.itens-orcamento.glass-card {
+  padding-bottom: 20px;
+  margin-bottom: 16px;
+}
+
+/* Quando há vários itens, dá um respiro entre um e outro */
+.item-container + .item-container {
+  margin-top: 12px;
+}
+
+/* Gaps um pouco maiores dentro do grid dos itens */
+.item-grid {
+  gap: 1.2rem; /* antes 1rem */
+  row-gap: 1.2rem; /* garante vertical tbm */
+}
+
 /* Responsividade */
 @media (max-width: 1024px) {
   .item-grid { grid-template-columns: 1.5fr 1fr 1fr; }
