@@ -1,35 +1,102 @@
-/* Base styles */
+/* ================== THEME (usa variáveis da landing com fallback) ================== */
 .formulario-dinamico {
+  --fd-base: var(--cotalizer-base, #2D4254);
+  --fd-primary: var(--cotalizer-primary, #18AF91);
+  --fd-secondary: var(--cotalizer-secondary, #2C8ABB);
+
+  --fd-text: rgba(255,255,255,0.92);
+  --fd-text-dim: rgba(255,255,255,0.75);
+  --fd-text-muted: rgba(255,255,255,0.6);
+
+  --fd-panel: rgba(255,255,255,0.06);
+  --fd-panel-strong: rgba(255,255,255,0.08);
+  --fd-border: rgba(255,255,255,0.12);
+  --fd-border-strong: rgba(255,255,255,0.2);
+
+  --fd-shadow: 0 10px 24px rgba(0,0,0,0.35);
+  --fd-radius-lg: 16px;
+  --fd-radius-md: 12px;
+
+  --fd-focus: 0 0 0 3px rgba(24,175,145,0.35);
+
+  position: relative;
+  color: var(--fd-text);
+  background:
+    radial-gradient(1200px 500px at 10% -10%, rgba(44,138,187,0.2) 0%, transparent 60%),
+    radial-gradient(900px 600px at 110% 0%, rgba(24,175,145,0.2) 0%, transparent 60%),
+    var(--fd-base);
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: var(--fd-shadow);
+  overflow: hidden;
+}
+
+/* header do formulário */
+.fd-head {
   display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
-  padding: 1.5rem;
-  background-color: white;
-  border-radius: 0.75rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  max-width: 1200px;
-  margin: 0 auto;
-  width: 100%;
-  box-sizing: border-box;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+.fd-title h2 {
+  margin: 6px 0 2px;
+  font-size: 1.4rem;
+  letter-spacing: -0.02em;
+}
+.fd-title p {
+  margin: 0;
+  color: var(--fd-text-muted);
+  font-size: 0.95rem;
+}
+.fd-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  background: linear-gradient(90deg, rgba(44,138,187,0.18), rgba(24,175,145,0.18));
+  color: var(--fd-text-dim);
+  border: 1px solid var(--fd-border);
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: .75rem;
 }
 
-/* Garantir que todos os elementos filhos respeitem o container */
-.formulario-dinamico * {
-  box-sizing: border-box;
+/* cartões de conteúdo com efeito glass como na landing */
+.glass-card {
+  background: var(--fd-panel);
+  border: 1px solid var(--fd-border);
+  border-radius: var(--fd-radius-lg);
+  padding: 16px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.glass-subcard {
+  background: var(--fd-panel-strong);
+  border: 1px solid var(--fd-border);
+  border-radius: var(--fd-radius-md);
+  padding: 14px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.glass-cta {
+  background: linear-gradient(90deg,
+              color-mix(in srgb, var(--fd-secondary) 22%, transparent),
+              color-mix(in srgb, var(--fd-primary) 22%, transparent));
+  border: 1px solid var(--fd-border);
+  border-radius: var(--fd-radius-lg);
+  box-shadow: 0 10px 30px rgba(0,0,0,.25);
 }
 
+/* Títulos internos */
 .formulario-dinamico h3 {
-  color: #374151;
-  font-size: 1.1rem;
-  margin: 0.5rem 0;
-  align-self: flex-start;
+  color: var(--fd-text);
+  font-size: 1.05rem;
+  margin: 0 0 .6rem;
   font-weight: 600;
 }
-
 .formulario-dinamico h4 {
-  color: #4B5563;
-  font-size: 0.95rem;
-  margin: 0 0 0.5rem 0; /* Removido margin-top para uniformizar */
+  color: var(--fd-text-dim);
+  font-size: .95rem;
+  margin: 0 0 .4rem;
   font-weight: 500;
 }
 
@@ -38,409 +105,179 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
-  margin-top: 0.5rem;
+  gap: .75rem;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  margin-bottom: .25rem;
 }
 
-/* Botões */
-.botao-adicionar {
-  background-color: #3B82F6;
-  color: white;
-  border: none;
-  border-radius: 0.5rem;
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
+/* Botões alinhados com a landing */
+.botao-primario,
+.botao-adicionar,
+.botao-remover {
+  appearance: none;
+  border: 1px solid var(--fd-border);
+  border-radius: 12px;
+  padding: .7rem 1.1rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease;
-  white-space: nowrap;
+  transition: transform .12s ease, box-shadow .12s ease, opacity .15s ease, background-color .15s ease;
+  will-change: transform;
 }
 
-.botao-adicionar:hover {
-  background-color: #059669;
+.botao-primario {
+  background: var(--fd-primary);
+  color: #0C2C25;
+  border-color: color-mix(in srgb, var(--fd-primary) 40%, #000 0%);
 }
+.botao-primario:hover { opacity: .95; transform: translateY(-1px); }
+.botao-primario:active { transform: translateY(0); }
+.botao-primario:focus-visible { outline: none; box-shadow: var(--fd-focus); }
+
+.botao-adicionar {
+  background: color-mix(in srgb, var(--fd-secondary) 35%, transparent);
+  color: var(--fd-text);
+}
+.botao-adicionar:hover { background: color-mix(in srgb, var(--fd-secondary) 50%, transparent); transform: translateY(-1px); }
+.botao-adicionar:focus-visible { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--fd-secondary) 55%, transparent); }
 
 .botao-remover {
-  background-color: #EF4444;
-  color: white;
-  border: none;
-  border-radius: 0.5rem;
-  padding: 0.3rem 0.8rem;
-  font-size: 0.8rem;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  white-space: nowrap;
+  background: color-mix(in srgb, #EF4444 35%, transparent);
+  color: var(--fd-text);
 }
+.botao-remover:hover { background: color-mix(in srgb, #EF4444 52%, transparent); transform: translateY(-1px); }
+.botao-remover:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(239,68,68,.4); }
 
-.botao-remover:hover {
-  background-color: #DC2626;
-}
-/* Container dos itens */
-.itens-orcamento {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  width: 100%;
-}
+/* Container itens */
+.itens-orcamento { display: flex; flex-direction: column; gap: 1rem; }
 
-.item-container {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding: 1.2rem;
-  background-color: #F9FAFB;
-  border-radius: 0.5rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-  border: 1px solid #E5E7EB;
-}
+/* Cada item */
+.item-container { display: flex; flex-direction: column; gap: .8rem; }
+.item-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: .5rem; }
 
-.item-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.5rem;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-/* Grid dos campos do item - Desktop - CORRIGIDO */
+/* Grid dos campos (desktop) */
 .item-grid {
   display: grid;
   gap: 1rem;
   width: 100%;
   grid-template-columns: 2fr 1fr 1fr;
   grid-template-areas: "descricao quantidade valor";
-  align-items: start; /* Alinha itens no topo */
+  align-items: start;
 }
 
-.campo-descricao {
-  grid-area: descricao;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  min-width: 0;
-}
+/* Áreas */
+.campo-descricao { grid-area: descricao; display: flex; flex-direction: column; gap: .5rem; min-width: 0; }
+.campo-quantidade { grid-area: quantidade; display: flex; flex-direction: column; gap: .5rem; min-width: 0; }
+.campo-valor { grid-area: valor; display: flex; flex-direction: column; gap: .5rem; min-width: 0; }
 
-.campo-quantidade {
-  grid-area: quantidade;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  min-width: 0;
-}
-
-.campo-valor {
-  grid-area: valor;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  min-width: 0;
-  /* Removido height: 6rem que causava o desalinhamento */
-}
-
-/* Estilização do textarea para ficar alinhado com os inputs */
-.textarea-podruto {
+/* Textarea e inputs com estética da landing */
+/* O InputPadrao deve renderizar um <input>; aqui estilizamos generico */
+.formulario-dinamico input,
+.formulario-dinamico textarea {
   width: 100%;
-  min-height: 2.5rem; /* Mesma altura base dos inputs */
-  max-height: 8rem; /* Altura máxima reduzida */
-  background-color: #F9FAFB;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
-  padding: 0.7rem;
-  font-size: 1rem;
-  resize: vertical;
-  overflow: auto;
-  box-sizing: border-box;
-  border: 1px solid #D1D5DB;
-  border-radius: 0.375rem;
-  font-family: inherit;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--fd-border);
+  color: var(--fd-text);
+  border-radius: 10px;
+  padding: .7rem .85rem;
+  font-size: 0.98rem;
+  outline: none;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+  transition: border-color .15s ease, box-shadow .15s ease, background-color .15s ease;
+}
+.formulario-dinamico input::placeholder,
+.formulario-dinamico textarea::placeholder { color: var(--fd-text-muted); }
+.formulario-dinamico input:focus,
+.formulario-dinamico textarea:focus {
+  border-color: color-mix(in srgb, var(--fd-primary) 50%, #fff 0%);
+  box-shadow: var(--fd-focus);
+  background: rgba(255,255,255,0.08);
 }
 
-/* Garantir que todos os inputs tenham a mesma altura base */
-.campo-quantidade input,
-.campo-valor input {
-  height: 2.5rem; /* Altura consistente */
+/* Textarea altura & aparência */
+.textarea-podruto {
+  min-height: 2.6rem;
+  max-height: 10rem;
+  resize: vertical;
 }
+
+/* equal height nos inputs principais */
+.campo-quantidade input,
+.campo-valor input { height: 2.6rem; }
 
 /* Subtotal do item */
 .subtotal-item {
   display: flex;
   justify-content: flex-end;
-  margin-top: 0.5rem;
-  padding-top: 0.5rem;
-  border-top: 1px solid #E5E7EB;
+  margin-top: .25rem;
+  padding-top: .5rem;
+  border-top: 1px dashed var(--fd-border);
 }
+.subtotal-item span { font-size: .9rem; color: var(--fd-text-muted); }
 
-.subtotal-item span {
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: #6B7280;
-}
-
-/* Separador entre itens */
+/* Separador */
 .item-container hr {
   border: none;
-  border-top: 1px solid #E5E7EB;
-  margin: 0.5rem 0 0 0;
+  border-top: 1px solid var(--fd-border);
+  margin: .5rem 0 0 0;
 }
 
-/* Total do orçamento */
+/* Total do orçamento com visual CTA */
 .total-orcamento {
   display: flex;
   justify-content: flex-end;
   margin: 1rem 0;
   padding: 1rem;
-  background-color: #F3F4F6;
-  border-radius: 0.5rem;
+  border-radius: var(--fd-radius-lg);
 }
-
-.detalhes-total {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  min-width: 200px;
-}
-
-.linha-total {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.linha-total span {
-  font-size: 0.95rem;
-  color: #6B7280;
-}
-
-.linha-total.desconto span {
-  color: #EF4444;
-  font-weight: 500;
-}
-
+.detalhes-total { display: flex; flex-direction: column; gap: .45rem; min-width: 240px; }
+.linha-total { display: flex; justify-content: space-between; align-items: center; color: var(--fd-text-dim); }
+.linha-total strong, .linha-total h3 { color: var(--fd-text); margin: 0; }
+.linha-total.desconto { color: #ffb4b4; }
 .linha-total.total-final {
-  border-top: 2px solid #D1D5DB;
-  padding-top: 0.5rem;
-  margin-top: 0.3rem;
+  border-top: 2px solid var(--fd-border-strong);
+  padding-top: .6rem; margin-top: .3rem;
 }
+.total-orcamento h3 { font-size: 1.15rem; }
 
-.total-orcamento h3 {
-  color: #1F2937;
-  font-size: 1.2rem;
-  margin: 0;
-  font-weight: bold;
-}
-
-/* Container dos botões de ação */
+/* Botões (container) */
 .botoes-forms-orcamento {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 1rem;
-  flex-wrap: wrap;
+  display: flex; justify-content: center; gap: .8rem; margin-top: 1rem; flex-wrap: wrap;
 }
 
-/* Media Queries - Responsividade */
-/* Tablets - até 1024px */
+/* Responsividade */
 @media (max-width: 1024px) {
-  .formulario-dinamico {
-    max-width: 100%;
-    padding: 1.3rem;
-  }
-
-  .item-grid {
-    grid-template-columns: 1.5fr 1fr 1fr;
-  }
+  .item-grid { grid-template-columns: 1.5fr 1fr 1fr; }
 }
-
-/* Tablets pequenos - até 768px */
 @media (max-width: 768px) {
-  .formulario-dinamico {
-    padding: 1rem;
-    gap: 1rem;
-  }
-
-  /* Garantir que inputs não ultrapassem os containers */
-  .campo-descricao, .campo-quantidade, .campo-valor {
-    width: 100%;
-    overflow: hidden;
-  }
-
-  .formulario-dinamico h3 {
-    font-size: 1rem;
-  }
-
   .item-grid {
     grid-template-columns: 1fr;
-    grid-template-areas: 
-      "descricao" 
-      "quantidade" 
-      "valor";
-    gap: 0.8rem;
+    grid-template-areas: "descricao" "quantidade" "valor";
+    gap: .9rem;
   }
-
-  .item-container {
-    padding: 1rem;
-    gap: 0.8rem;
-  }
-
-  .botao-gerar {
-    padding: 0.7rem 1.2rem;
-    font-size: 0.95rem;
-    min-width: 120px;
-  }
-
-  .botoes-forms-orcamento {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .total-orcamento {
-    justify-content: center;
-    text-align: center;
-  }
-
-  .detalhes-total {
-    width: 100%;
-    min-width: auto;
-  }
-
-  .linha-total {
-    justify-content: space-between;
-  }
-
-  .itens-header {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.8rem;
-  }
-
-  .itens-header h3 {
-    text-align: center;
-  }
+  .botoes-forms-orcamento { flex-direction: column; align-items: stretch; }
 }
-
-/* Mobile - até 480px */
 @media (max-width: 480px) {
-  .formulario-dinamico {
-    padding: 0.8rem;
-    gap: 0.8rem;
-    margin: 0.5rem;
-    border-radius: 0.5rem;
-  }
-
-  .formulario-dinamico h3 {
-    font-size: 0.95rem;
-  }
-
-  .formulario-dinamico h4 {
-    font-size: 0.85rem;
-  }
-
-  .item-container {
-    padding: 0.8rem;
-    gap: 0.7rem;
-  }
-
-  .item-header {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.5rem;
-  }
-
-  .item-header h4 {
-    text-align: center;
-    margin-bottom: 0.3rem;
-  }
-
-  .botao-adicionar, .botao-remover {
-    padding: 0.4rem 0.8rem;
-    font-size: 0.8rem;
-    width: 100%;
-    text-align: center;
-  }
-
-  .botao-gerar {
-    padding: 0.7rem 1rem;
-    font-size: 0.9rem;
-    width: 100%;
-    min-width: auto;
-  }
-
-  .total-orcamento {
-    padding: 0.8rem;
-    margin: 0.8rem 0;
-  }
-
-  .total-orcamento h3 {
-    font-size: 1.1rem;
-  }
+  .formulario-dinamico { padding: 18px; border-radius: 18px; }
+  .botao-primario, .botao-adicionar, .botao-remover { width: 100%; }
 }
 
-/* Mobile pequeno - até 375px */
-@media (max-width: 375px) {
-  .formulario-dinamico {
-    padding: 0.6rem;
-    margin: 0.3rem;
-  }
-
-  .formulario-dinamico h3 {
-    font-size: 0.9rem;
-  }
-
-  .item-container {
-    padding: 0.6rem;
-  }
-
-  .botao-adicionar, .botao-remover, .botao-gerar {
-    font-size: 0.8rem;
-    padding: 0.6rem;
-  }
-
-  .total-orcamento h3 {
-    font-size: 1rem;
-  }
-}
-
-/* Ajustes para melhor acessibilidade */
+/* Acessibilidade */
 @media (prefers-reduced-motion: reduce) {
-  .botao-adicionar, .botao-remover, .botao-gerar {
-    transition: none;
-  }
+  .botao-primario, .botao-adicionar, .botao-remover { transition: none; }
 }
 
-/* Ajustes para modo escuro (caso implementem futuramente) */
-@media (prefers-color-scheme: dark) {
-  .formulario-dinamico {
-    background-color: #1F2937;
-    color: #F9FAFB;
-  }
-
-  .formulario-dinamico h3, .formulario-dinamico h4 {
-    color: #F9FAFB;
-  }
-
-  .item-container {
-    background-color: #374151;
-    border-color: #4B5563;
-  }
-
-  .total-orcamento {
-    background-color: #374151;
-  }
-}
-
-/* Print styles */
+/* Print */
 @media print {
   .formulario-dinamico {
+    background: #fff !important;
+    color: #111 !important;
     box-shadow: none;
     border: 1px solid #ccc;
   }
-
-  .botao-adicionar, .botao-remover, .botao-gerar {
-    display: none;
+  .glass-card, .glass-subcard, .glass-cta {
+    background: #fff !important;
+    border: 1px solid #ddd !important;
+    backdrop-filter: none;
   }
-
-  .botoes-forms-orcamento {
-    display: none;
-  }
+  .botao-primario, .botao-adicionar, .botao-remover, .botoes-forms-orcamento { display: none; }
 }
