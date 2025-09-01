@@ -127,7 +127,7 @@ export default function DetalhesOrcamento() {
 
                     <div className="pdf-card card-glass">
                         <iframe
-                            src={'https://cotalizer-backend.onrender.com/' + orcamento.urlArquivo}
+                            src={'https://cotalizer-backend.onrender.com' + orcamento.urlArquivo}
                             width="100%"
                             height="600"
                             className="pdf-frame"
@@ -149,7 +149,7 @@ export default function DetalhesOrcamento() {
                         </a>
 
                         <a
-                            href={'https://cotalizer-backend.onrender.com/' + orcamento.urlArquivo}
+                            href={'https://cotalizer-backend.onrender.com' + orcamento.urlArquivo}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="btn btn-secondary"
