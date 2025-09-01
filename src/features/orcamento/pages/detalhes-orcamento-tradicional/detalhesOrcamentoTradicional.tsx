@@ -204,7 +204,7 @@ export default function DetalhesOrcamentoTradicional() {
 
           <iframe
             className="orcamento-iframe"
-            src={orcamento.urlArquivo}
+            src={'https://cotalizer-backend.onrender.com/' + orcamento.urlArquivo}
             title="Visualização do Orçamento"
           ></iframe>
 
@@ -221,7 +221,7 @@ export default function DetalhesOrcamentoTradicional() {
             </a>
 
             <a
-              href={orcamento.urlArquivo}
+              href={'https://cotalizer-backend.onrender.com/' + orcamento.urlArquivo}
               target="_blank"
               rel="noopener noreferrer"
               className="btn btn-secondary"
