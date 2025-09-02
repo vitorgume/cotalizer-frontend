@@ -15,37 +15,6 @@ function digitsOnly(v: string) {
     return v.replace(/\D/g, '');
 }
 
-function formatPhone(v: string) {
-    const d = digitsOnly(v).slice(0, 11);
-    if (d.length <= 10) {
-        // (00) 0000-0000
-        return d
-            .replace(/^(\d{2})(\d)/, '($1) $2')
-            .replace(/(\d{4})(\d)/, '$1-$2');
-    }
-    // (00) 00000-0000
-    return d
-        .replace(/^(\d{2})(\d)/, '($1) $2')
-        .replace(/(\d{5})(\d)/, '$1-$2');
-}
-
-function formatCpfCnpj(v: string) {
-    const d = digitsOnly(v).slice(0, 14);
-    if (d.length <= 11) {
-        // CPF: 000.000.000-00
-        return d
-            .replace(/^(\d{3})(\d)/, '$1.$2')
-            .replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3')
-            .replace(/^(\d{3})\.(\d{3})\.(\d{3})(\d{1,2})$/, '$1.$2.$3-$4');
-    }
-    // CNPJ: 00.000.000/0000-00
-    return d
-        .replace(/^(\d{2})(\d)/, '$1.$2')
-        .replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3')
-        .replace(/^(\d{2})\.(\d{3})\.(\d{3})(\d)/, '$1.$2.$3/$4')
-        .replace(/^(\d{2})\.(\d{3})\.(\d{3})\/(\d{4})(\d{1,2})$/, '$1.$2.$3/$4-$5');
-}
-
 export default function CadastroUsuario() {
     const [nome, setNome] = useState<string>('');
     const [email, setEmail] = useState<string>('');
@@ -101,7 +70,8 @@ export default function CadastroUsuario() {
             }
 
             notificarSucesso('Cadastro realizado! Confirme seu e-mail.');
-            navigate(`/validacao/email/${email}`);
+            // navigate(`/validacao/email/${email}`);
+            navigate('/usuario/login');
         } catch (error) {
             console.error('Erro ao cadastrar usuário.', error);
             notificarErro('Não foi possível cadastrar. Tente novamente.');
@@ -150,7 +120,7 @@ export default function CadastroUsuario() {
                                 <InputPadrao
                                     placeholder="(00) 00000-0000"
                                     value={telefone}
-                                    onChange={(v) => setTelefone(formatPhone(v))}
+                                    onChange={setTelefone}
                                     inativo={false}
                                     senha={false}
                                     limiteCaracteres={14}
@@ -163,7 +133,7 @@ export default function CadastroUsuario() {
                                 <InputPadrao
                                     placeholder="000.000.000-00 ou 00.000.000/0000-00"
                                     value={cpfCnpj}
-                                    onChange={(v) => setCpfCnpj(formatCpfCnpj(v))}
+                                    onChange={setCpfCnpj}
                                     inativo={false}
                                     senha={false}
                                     limiteCaracteres={14}

@@ -8,7 +8,7 @@ interface GoogleLoginButtonProps {
 export default function GoogleLoginButton({label} : GoogleLoginButtonProps) {
 
   const handleLogin = () => {
-    window.location.href = 'http://localhost:8080/oauth2/authorization/google';
+    window.location.href = 'https://cotalizer-backend.onrender.com/oauth2/authorization/google';
   };
 
   return (
