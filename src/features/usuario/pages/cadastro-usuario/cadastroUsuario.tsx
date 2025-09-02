@@ -123,7 +123,7 @@ export default function CadastroUsuario() {
                                     onChange={setTelefone}
                                     inativo={false}
                                     senha={false}
-                                    limiteCaracteres={14}
+                                    limiteCaracteres={15}
                                     mascara="telefone"
                                 />
                             </div>

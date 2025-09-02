@@ -34,10 +34,9 @@ export default function InputPadrao({
   const alternarVisibilidade = () => setMostrarSenha((prev) => !prev);
 
   const computedMask = useMemo(() => {
-    const digits = (val || '').replace(/\D/g, '');
     switch (mascara) {
       case 'telefone':
-        return digits.length > 10 ? '(00) 00000-0000' : '(00) 0000-0000';
+        return '(00) 00000-0000';
       case 'cpfCnpj':
         return [
           { mask: '000.000.000-00' },
