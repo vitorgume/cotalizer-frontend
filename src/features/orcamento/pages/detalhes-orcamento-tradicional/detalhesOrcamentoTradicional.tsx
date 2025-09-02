@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import './detalhesOrcamentoTradicional.css';
 import type { OrcamentoTradicional } from '../../../../models/orcamentoTradicional';
 import Loading from '../../componentes/loading/loading';
-import { atualizarOrcamentoTradicional, consultarTradicionalPorId, deletarTradicional } from '../../orcamento.service';
+import { atualizarOrcamentoTradicional, consultarTradicionalPorId, deletarArquivo, deletarTradicional } from '../../orcamento.service';
 import { extrairNomeArquivo } from '../../../../utils/urlUtils';
 import { notificarSucesso } from '../../../../utils/notificacaoUtils';
 import ModalDelete from '../../componentes/modalDelete/modalDelete';
@@ -41,7 +41,7 @@ export default function DetalhesOrcamentoTradicional() {
     };
 
     carregarOrcamento();
-    
+
   }, [navigate]);
 
   const formatarData = (data: string) => new Date(data).toLocaleDateString('pt-BR');
@@ -85,12 +85,20 @@ export default function DetalhesOrcamentoTradicional() {
 
   const handleDelete = async () => {
     try {
-      if (orcamento.id) {
-        await deletarTradicional(orcamento.id);
-        navigate('/menu');
+      if (orcamento.urlArquivo) {
+        await deletarArquivo(orcamento.urlArquivo);
       }
     } catch (error) {
-      console.error('Erro ao deletar orçamento:', error);
+      console.error('Erro ao deletar arquivo:', error);
+    } finally {
+      try {
+        if (orcamento.id) {
+          await deletarTradicional(orcamento.id);
+          navigate('/menu');
+        }
+      } catch (error) {
+        console.error('Erro ao deletar orçamento:', error);
+      }
     }
   };
 
