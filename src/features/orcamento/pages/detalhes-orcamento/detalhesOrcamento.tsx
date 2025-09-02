@@ -3,14 +3,13 @@ import { useEffect, useState } from 'react';
 
 import ModalDelete from '../../componentes/modalDelete/modalDelete';
 import Loading from '../../componentes/loading/loading';
-import { atualizarOrcamento, consultarPorId, deletar } from '../../orcamento.service';
+import { atualizarOrcamento, consultarPorId, deletar, deletarArquivo } from '../../orcamento.service';
 import { useNavigate, useParams } from 'react-router-dom';
 import { formatarData } from '../../../../utils/formataData';
 import type Orcamento from '../../../../models/orcamento';
 import { extrairNomeArquivo } from '../../../../utils/urlUtils';
 import { notificarSucesso } from '../../../../utils/notificacaoUtils';
 
-// Ícones Lucide
 import { Trash2, Download, ExternalLink } from 'lucide-react';
 
 export default function DetalhesOrcamento() {
@@ -23,13 +22,22 @@ export default function DetalhesOrcamento() {
     const { id } = useParams<{ id: string }>();
 
     const handleDelete = async () => {
+
         try {
-            if (orcamento?.id) {
-                await deletar(orcamento.id);
-                navigate('/menu');
+            if (orcamento?.urlArquivo) {
+                await deletarArquivo(orcamento.urlArquivo);
             }
         } catch (error) {
-            console.error('Erro ao deletar orçamento:', error);
+            console.error('Erro ao deletar arquivo:', error);
+        } finally {
+            try {
+                if (orcamento?.id) {
+                    await deletar(orcamento.id);
+                    navigate('/menu');
+                }
+            } catch (error) {
+                console.error('Erro ao deletar orçamento:', error);
+            }
         }
     };
 
