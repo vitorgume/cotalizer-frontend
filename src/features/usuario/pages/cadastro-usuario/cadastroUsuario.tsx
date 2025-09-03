@@ -9,6 +9,7 @@ import Loading from '../../../orcamento/componentes/loading/loading';
 import HeaderForms from '../../components/headerForms/headerForms';
 import { identificarCpfOuCnpj } from '../../../../utils/identificarCpfCnpj';
 import { notificarErro, notificarSucesso } from '../../../../utils/notificacaoUtils';
+import GoogleLoginButton from '../../components/botaoGoogleLogin/botaoLoginGoogle';
 
 function digitsOnly(v: string) {
     return v.replace(/\D/g, '');
@@ -61,17 +62,14 @@ export default function CadastroUsuario() {
         try {
             setLoading(true);
 
-            // 1) Cadastra usuário
             const usuarioSalvo = await cadastrarUsuario(novoUsuario);
 
-            // 2) Se houver logo, envia depois de ter o id
             if (usuarioSalvo?.dado?.id && logoFile) {
                 await cadastrarLogoUsuario(usuarioSalvo.dado.id, logoFile);
             }
 
             notificarSucesso('Cadastro realizado!');
-            // navigate(`/validacao/email/${email}`);
-            navigate('/usuario/login');
+            navigate(`/validacao/email/${email}`);
         } catch (error) {
             console.error('Erro ao cadastrar usuário.', error);
             notificarErro('Não foi possível cadastrar. Tente novamente.');
@@ -168,9 +166,9 @@ export default function CadastroUsuario() {
                         <span>ou</span>
                     </div>
 
-                    {/* <div className="auth-alt">
+                    <div className="auth-alt">
                         <GoogleLoginButton label="Continue com o Google" />
-                    </div> */}
+                    </div> 
 
                     <div className="auth-footer">
                         <span>Já possui uma conta?</span>

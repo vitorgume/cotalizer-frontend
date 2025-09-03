@@ -7,8 +7,10 @@ interface GoogleLoginButtonProps {
 
 export default function GoogleLoginButton({label} : GoogleLoginButtonProps) {
 
+  const API_URL = import.meta.env.VITE_API_URL;
+
   const handleLogin = () => {
-    window.location.href = 'https://cotalizer-backend.onrender.com/oauth2/authorization/google';
+    window.location.href = `${API_URL}/oauth2/authorization/google`;
   };
 
   return (

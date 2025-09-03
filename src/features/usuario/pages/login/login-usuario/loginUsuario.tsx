@@ -6,6 +6,7 @@ import { logarUsuario } from '../../../usuario.service';
 import Loading from '../../../../orcamento/componentes/loading/loading';
 import { Link, useNavigate } from 'react-router-dom';
 import { notificarErro } from '../../../../../utils/notificacaoUtils';
+import GoogleLoginButton from '../../../components/botaoGoogleLogin/botaoLoginGoogle';
 
 export default function LoginUsuario() {
     const [email, setEmail] = useState<string | ''>('');
@@ -78,9 +79,9 @@ export default function LoginUsuario() {
                         <span>ou</span>
                     </div>
 
-                    {/* <div className="google-wrapper">
+                    <div className="google-wrapper">
                         <GoogleLoginButton label="Entrar com o Google" />
-                    </div> */}
+                    </div> 
                 </form>
             </div>
         </div>
