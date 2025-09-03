@@ -21,11 +21,13 @@ export default function DetalhesOrcamento() {
     const navigate = useNavigate();
     const { id } = useParams<{ id: string }>();
 
+    const API_URL = import.meta.env.VITE_API_URL;
+
     const handleDelete = async () => {
 
         try {
             if (orcamento?.urlArquivo) {
-                await deletarArquivo(orcamento.urlArquivo);
+                await deletarArquivo(extrairNomeArquivo(orcamento.urlArquivo));
             }
         } catch (error) {
             console.error('Erro ao deletar arquivo:', error);
@@ -135,7 +137,7 @@ export default function DetalhesOrcamento() {
 
                     <div className="pdf-card card-glass">
                         <iframe
-                            src={'https://cotalizer-backend.onrender.com' + orcamento.urlArquivo}
+                            src={orcamento.urlArquivo}
                             width="100%"
                             height="600"
                             className="pdf-frame"
@@ -145,7 +147,7 @@ export default function DetalhesOrcamento() {
 
                     <div className="botoes-orcamento-group">
                         <a
-                            href={`https://cotalizer-backend.onrender.com/arquivos/download/${extrairNomeArquivo(orcamento.urlArquivo)}`}
+                            href={`${API_URL}/arquivos/download/${extrairNomeArquivo(orcamento.urlArquivo)}`}
                             download
                             target="_blank"
                             rel="noopener noreferrer"
@@ -157,7 +159,7 @@ export default function DetalhesOrcamento() {
                         </a>
 
                         <a
-                            href={'https://cotalizer-backend.onrender.com' + orcamento.urlArquivo}
+                            href={orcamento.urlArquivo}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="btn btn-secondary"

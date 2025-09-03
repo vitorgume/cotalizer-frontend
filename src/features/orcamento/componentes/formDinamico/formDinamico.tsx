@@ -153,7 +153,7 @@ export default function FormDinamico({
                                     <h4>Quantidade</h4>
                                     <InputPadrao
                                         placeholder="Quantidade"
-                                        value={String(item.quantidade ?? "")}   // << aqui
+                                        value={String(item.quantidade ?? "")}  
                                         onChange={(v: any) => atualizarItem(index, "quantidade", v)}
                                         inativo={!editado}
                                         senha={false}
@@ -165,12 +165,12 @@ export default function FormDinamico({
                                     <h4>Valor unitário</h4>
                                     <InputPadrao
                                         placeholder="Valor Unitário"
-                                        value={String(item.valor_unit ?? "")}   // << aqui
+                                        value={String(item.valor_unit ?? "")}   
                                         onChange={(v: any) => atualizarItem(index, "valor_unit", v)}
                                         inativo={!editado}
                                         senha={false}
                                         limiteCaracteres={1000}
-                                        mascara=""
+                                        mascara="numeroDecimal"
                                     />
                                 </div>
                             </div>

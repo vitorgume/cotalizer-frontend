@@ -55,6 +55,7 @@ export default function CadastroUsuario() {
             idAssinatura: '',
             url_logo: '',
             feedback: false,
+            quantidade_orcamentos: 0
         };
 
         try {
@@ -68,7 +69,7 @@ export default function CadastroUsuario() {
                 await cadastrarLogoUsuario(usuarioSalvo.dado.id, logoFile);
             }
 
-            notificarSucesso('Cadastro realizado! Confirme seu e-mail.');
+            notificarSucesso('Cadastro realizado!');
             // navigate(`/validacao/email/${email}`);
             navigate('/usuario/login');
         } catch (error) {

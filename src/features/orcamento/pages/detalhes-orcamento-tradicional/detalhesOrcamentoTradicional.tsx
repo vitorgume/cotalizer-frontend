@@ -17,6 +17,8 @@ export default function DetalhesOrcamentoTradicional() {
   const [statusOrcamento, setStatusOrcamento] = useState<'aprovado' | 'reprovado' | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
+  const API_URL = import.meta.env.VITE_API_URL;
+
   useEffect(() => {
     const carregarOrcamento = async () => {
       if (!id) {
@@ -86,20 +88,21 @@ export default function DetalhesOrcamentoTradicional() {
   const handleDelete = async () => {
     try {
       if (orcamento.urlArquivo) {
-        await deletarArquivo(orcamento.urlArquivo);
+        await deletarArquivo(extrairNomeArquivo(orcamento.urlArquivo));
       }
     } catch (error) {
       console.error('Erro ao deletar arquivo:', error);
-    } finally {
-      try {
-        if (orcamento.id) {
-          await deletarTradicional(orcamento.id);
-          navigate('/menu');
-        }
-      } catch (error) {
-        console.error('Erro ao deletar orçamento:', error);
-      }
     }
+
+    try {
+      if (orcamento.id) {
+        await deletarTradicional(orcamento.id);
+        navigate('/menu');
+      }
+    } catch (error) {
+      console.error('Erro ao deletar orçamento:', error);
+    }
+
   };
 
   return (
@@ -212,13 +215,13 @@ export default function DetalhesOrcamentoTradicional() {
 
           <iframe
             className="orcamento-iframe"
-            src={'https://cotalizer-backend.onrender.com' + orcamento.urlArquivo}
+            src={orcamento.urlArquivo}
             title="Visualização do Orçamento"
           ></iframe>
 
           <div className="botoes-orcamento-group">
             <a
-              href={`https://cotalizer-backend.onrender.com/arquivos/download/${extrairNomeArquivo(orcamento.urlArquivo)}`}
+              href={`${API_URL}/arquivos/download/${extrairNomeArquivo(extrairNomeArquivo(orcamento.urlArquivo))}`}
               download
               target="_blank"
               rel="noopener noreferrer"
@@ -229,7 +232,7 @@ export default function DetalhesOrcamentoTradicional() {
             </a>
 
             <a
-              href={'https://cotalizer-backend.onrender.com' + orcamento.urlArquivo}
+              href={orcamento.urlArquivo}
               target="_blank"
               rel="noopener noreferrer"
               className="btn btn-secondary"

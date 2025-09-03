@@ -11,4 +11,5 @@ export default interface Usuario {
     idAssinatura: string;
     url_logo: string;
     feedback: boolean;
+    quantidade_orcamentos: number;
 }

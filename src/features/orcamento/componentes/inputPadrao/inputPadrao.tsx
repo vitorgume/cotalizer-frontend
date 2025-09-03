@@ -46,6 +46,14 @@ export default function InputPadrao({
         return '000.000.000-00';
       case 'cnpj':
         return '00.000.000/0000-00';
+      case 'numeroDecimal':
+        return {
+          mask: Number,
+          scale: 2, 
+          thousandsSeparator: '.',
+          radix: ',', 
+          mapToRadix: ['.'], 
+        };
       default:
         return '';
     }

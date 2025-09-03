@@ -191,7 +191,7 @@ export async function deletarArquivo(
   nomeArquivo: string
 ): Promise<void> {
   try {
-    await api.delete(`/api/arquivos/${nomeArquivo}`);
+    await api.delete(`/api/arquivos/arquivo/${nomeArquivo}`);
   } catch (e) {
     handleAxiosError(e, "Falha ao deletar arquivo.");
   }

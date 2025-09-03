@@ -1,23 +1,17 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import InputPadrao from '../../../orcamento/componentes/inputPadrao/inputPadrao'
-import UploadLogo from '../../components/uploadLogo/uploadLogo'
-import MetricaQuantidadeOrcamento from '../../components/metricaQuantidadeOrcamento/metricaQuantidadeOrcamento'
-import { consultarUsuarioPeloId, atualizarUsuario, obterMe } from '../../usuario.service'
-import { listarPorUsuario, listarTradicionaisPorUsuario } from '../../../orcamento/orcamento.service'
-import { cancelarAssinatura } from '../../pagamento.service'
-import { cadastrarLogoUsuario } from '../../usuario.service'
-import { notificarSucesso } from '../../../../utils/notificacaoUtils'
 import type Usuario from '../../../../models/usuario'
-import type Orcamento from '../../../../models/orcamento'
-import './perfil.css'
-import type { OrcamentoTradicional } from '../../../../models/orcamentoTradicional'
+import { notificarSucesso } from '../../../../utils/notificacaoUtils'
+import InputPadrao from '../../../orcamento/componentes/inputPadrao/inputPadrao'
+import MetricaQuantidadeOrcamento from '../../components/metricaQuantidadeOrcamento/metricaQuantidadeOrcamento'
+import UploadLogo from '../../components/uploadLogo/uploadLogo'
+import { cancelarAssinatura } from '../../pagamento.service'
+import { atualizarUsuario, cadastrarLogoUsuario, consultarUsuarioPeloId, obterMe } from '../../usuario.service'
 import AssinaturaForms from '../assinatura/assinaturaForms'
+import './perfil.css'
 
 export default function Perfil() {
     const [usuario, setUsuario] = useState<Usuario | null>(null);
-    const [orcamentosIA, setOrcamentosIA] = useState<Orcamento[]>([]);
-    const [orcamentosTradicional, setOrcamentoTradicional] = useState<OrcamentoTradicional[]>([])
     const [isEditing, setIsEditing] = useState(false);
     const [form, setForm] = useState({ nome: '', email: '', telefone: '', cpf: '', cnpj: '' });
     const [logoFile, setLogoFile] = useState<File | null>(null);
@@ -50,11 +44,6 @@ export default function Perfil() {
                         nome: u.nome, email: u.email, telefone: u.telefone, cpf: u.cpf || '', cnpj: u.cnpj || ''
                     });
                 }
-                const respOrcs = await listarPorUsuario(id || '');
-                if (respOrcs.dado?.content) setOrcamentosIA(respOrcs.dado.content);
-
-                const respoOrcsTrad = await listarTradicionaisPorUsuario(id || '');
-                if (respoOrcsTrad.dado?.content) setOrcamentoTradicional(respoOrcsTrad.dado.content);
             }
             init();
         })();
@@ -88,7 +77,7 @@ export default function Perfil() {
             await atualizarUsuario(usuario.id, {
                 nome: form.nome, email: form.email, telefone: form.telefone, cpf: form.cpf, cnpj: form.cnpj,
                 senha: usuario.senha, plano: usuario.plano, idCustomer: usuario.idCustomer, idAssinatura: usuario.idAssinatura,
-                url_logo: usuario.url_logo, feedback: usuario.feedback
+                url_logo: usuario.url_logo, feedback: usuario.feedback, quantidade_orcamentos: usuario.quantidade_orcamentos
             });
         }
 
@@ -124,7 +113,6 @@ export default function Perfil() {
         }
     }
 
-    const usados = orcamentosIA.length + orcamentosTradicional.length;
     const limite = usuario?.plano === 'GRATIS' ? 5 : 100;
 
     return (
@@ -235,9 +223,9 @@ export default function Perfil() {
                     <div className="metricas-sec-assinatura">
                         <div className="metricas-head">
                             <p>Limite de orçamentos</p>
-                            <span className="pill-usage">{usados}/{limite}</span>
+                            <span className="pill-usage">{usuario.quantidade_orcamentos}/{limite}</span>
                         </div>
-                        <MetricaQuantidadeOrcamento usado={usados} limite={limite} />
+                        <MetricaQuantidadeOrcamento usado={usuario.quantidade_orcamentos} limite={limite} />
                     </div>
 
                     {usuario.plano === 'GRATIS' ? (
