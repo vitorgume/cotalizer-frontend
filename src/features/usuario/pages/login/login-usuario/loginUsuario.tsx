@@ -5,7 +5,6 @@ import './loginUsuario.css';
 import { logarUsuario } from '../../../usuario.service';
 import Loading from '../../../../orcamento/componentes/loading/loading';
 import { Link, useNavigate } from 'react-router-dom';
-import GoogleLoginButton from '../../../components/botaoGoogleLogin/botaoLoginGoogle';
 import { notificarErro } from '../../../../../utils/notificacaoUtils';
 
 export default function LoginUsuario() {
@@ -79,9 +78,9 @@ export default function LoginUsuario() {
                         <span>ou</span>
                     </div>
 
-                    <div className="google-wrapper">
+                    {/* <div className="google-wrapper">
                         <GoogleLoginButton label="Entrar com o Google" />
-                    </div>
+                    </div> */}
                 </form>
             </div>
         </div>

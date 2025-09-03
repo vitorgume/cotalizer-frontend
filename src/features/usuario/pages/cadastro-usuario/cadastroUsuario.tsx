@@ -8,7 +8,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import Loading from '../../../orcamento/componentes/loading/loading';
 import HeaderForms from '../../components/headerForms/headerForms';
 import { identificarCpfOuCnpj } from '../../../../utils/identificarCpfCnpj';
-import GoogleLoginButton from '../../components/botaoGoogleLogin/botaoLoginGoogle';
 import { notificarErro, notificarSucesso } from '../../../../utils/notificacaoUtils';
 
 function digitsOnly(v: string) {
@@ -168,9 +167,9 @@ export default function CadastroUsuario() {
                         <span>ou</span>
                     </div>
 
-                    <div className="auth-alt">
+                    {/* <div className="auth-alt">
                         <GoogleLoginButton label="Continue com o Google" />
-                    </div>
+                    </div> */}
 
                     <div className="auth-footer">
                         <span>Já possui uma conta?</span>
