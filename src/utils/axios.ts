@@ -1,5 +1,5 @@
 // api.ts
-import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios';
+import axios, { AxiosError, AxiosHeaders, type InternalAxiosRequestConfig } from 'axios';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -14,12 +14,21 @@ export const api = axios.create({
 });
 
 // Cliente “limpo” para o refresh, evitando interceptors em loop
-const refreshApi = axios.create({
-  baseURL: API_URL,
-  withCredentials: true,
-  headers: { 'X-Requested-With': 'XMLHttpRequest' },
+export const refreshApi = axios.create({
+  baseURL: import.meta.env.VITE_API_URL, 
+  withCredentials: true, 
 });
 
+refreshApi.interceptors.request.use((cfg: InternalAxiosRequestConfig) => {
+  const rt = getRefreshToken();
+  if (rt) {
+    // garante uma instância válida
+    if (!cfg.headers) cfg.headers = new AxiosHeaders();
+    // seta o header de forma tipada
+    (cfg.headers as AxiosHeaders).set('X-Refresh-Token', rt);
+  }
+  return cfg;
+});
 /** ===== Access Token ===== */
 let accessToken: string | null = null;
 
@@ -69,9 +78,16 @@ async function refreshAccessToken(): Promise<string | undefined> {
   if (!refreshPromise) {
     refreshPromise = (async () => {
       const r = await refreshApi.post('/auth/refresh'); // CSRF ignorado no backend
+      const data = (r.data as any)?.dado ?? r.data;
+
       const access =
-        (r.data as any)?.dado?.accessToken ?? (r.data as any)?.accessToken;
+        data?.accessToken ?? data?.token; // suporte a ambos
+      const newRt =
+        data?.refreshToken ?? data?.novoRefreshToken; // suporte se mudar o nome
+
       if (access) setAccessToken(access);
+      if (newRt)  setRefreshToken(newRt);
+
       return access;
     })().finally(() => {
       refreshPromise = null;
@@ -164,4 +180,15 @@ export async function hydrateAccessToken() {
 // Opcional: aquecer o CSRF logo no boot
 export async function primeCsrfCookie() {
   await fetchCsrfToken();
+}
+
+
+const RT_KEY = 'rt';
+
+export function getRefreshToken(): string | null {
+  return localStorage.getItem(RT_KEY);
+}
+export function setRefreshToken(t?: string) {
+  if (t && t.length) localStorage.setItem(RT_KEY, t);
+  else localStorage.removeItem(RT_KEY);
 }

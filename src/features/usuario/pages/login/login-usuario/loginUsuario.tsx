@@ -7,6 +7,7 @@ import Loading from '../../../../orcamento/componentes/loading/loading';
 import { Link, useNavigate } from 'react-router-dom';
 import { notificarErro } from '../../../../../utils/notificacaoUtils';
 import GoogleLoginButton from '../../../components/botaoGoogleLogin/botaoLoginGoogle';
+import { setAccessToken, setRefreshToken } from '../../../../../utils/axios';
 
 export default function LoginUsuario() {
     const [email, setEmail] = useState<string | ''>('');
@@ -22,6 +23,11 @@ export default function LoginUsuario() {
         try {
             const usuarioLogado = await logarUsuario(email, senha);
             if (usuarioLogado.dado?.token) {
+                const access = usuarioLogado.dado.token ?? usuarioLogado.dado.refreshToken;
+                const rt = usuarioLogado.dado.refreshToken;
+
+                if (access) setAccessToken(access);
+                if (rt) setRefreshToken(rt);
                 navigate('/menu');
             } else {
                 notificarErro('Credenciais incorretas. Tente novamente.');
@@ -81,7 +87,7 @@ export default function LoginUsuario() {
 
                     <div className="google-wrapper">
                         <GoogleLoginButton label="Entrar com o Google" />
-                    </div> 
+                    </div>
                 </form>
             </div>
         </div>
