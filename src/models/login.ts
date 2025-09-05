@@ -3,5 +3,4 @@ export default interface Login {
     senha: string;
     token: string;
     usuarioId: string;
-    refreshToken: string;
 }
