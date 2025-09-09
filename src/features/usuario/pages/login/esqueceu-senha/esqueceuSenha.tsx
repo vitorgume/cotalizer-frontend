@@ -49,6 +49,7 @@ export default function EsqueceuSenha() {
                                     senha={false}
                                     limiteCaracteres={100}
                                     mascara=''
+                                    upperCase={false}
                                 />
                             </div>
 

@@ -97,6 +97,7 @@ export default function CadastroUsuario() {
                                     senha={false}
                                     limiteCaracteres={100}
                                     mascara=""
+                                    upperCase={true}
                                 />
                             </div>
 
@@ -110,6 +111,7 @@ export default function CadastroUsuario() {
                                     senha={false}
                                     limiteCaracteres={100}
                                     mascara=""
+                                    upperCase={false}
                                 />
                             </div>
 
@@ -123,6 +125,7 @@ export default function CadastroUsuario() {
                                     senha={false}
                                     limiteCaracteres={15}
                                     mascara="telefone"
+                                    upperCase={true}
                                 />
                             </div>
 
@@ -136,6 +139,7 @@ export default function CadastroUsuario() {
                                     senha={false}
                                     limiteCaracteres={14}
                                     mascara='cpfCnpj'
+                                    upperCase={true}
                                 />
                             </div>
 
@@ -149,6 +153,7 @@ export default function CadastroUsuario() {
                                     senha={true}
                                     limiteCaracteres={20}
                                     mascara=''
+                                    upperCase={true}
                                 />
                             </div>
                         </div>

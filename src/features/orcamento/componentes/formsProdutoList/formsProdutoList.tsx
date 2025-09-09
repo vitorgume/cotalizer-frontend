@@ -96,6 +96,7 @@ export function FormsProdutoList({ onAddProduto }: FormsProdutoListProps) {
               senha={false}
               limiteCaracteres={1000}
               mascara='numeroDecimal'
+               upperCase={true}
             />
           </div>
 
@@ -109,6 +110,7 @@ export function FormsProdutoList({ onAddProduto }: FormsProdutoListProps) {
               senha={false}
               limiteCaracteres={1000}
               mascara=''
+              upperCase={true}
             />
           </div>
         </div>

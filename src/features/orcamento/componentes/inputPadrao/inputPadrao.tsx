@@ -10,6 +10,7 @@ interface InputPadraoProps {
   senha: boolean;
   limiteCaracteres: number;
   mascara: string;
+  upperCase: boolean;
 }
 
 export default function InputPadrao({
@@ -20,6 +21,7 @@ export default function InputPadrao({
   senha,
   limiteCaracteres,
   mascara,
+  upperCase
 }: InputPadraoProps) {
 
   const isControlled = typeof value === 'string' && typeof onChange === 'function';
@@ -59,6 +61,7 @@ export default function InputPadrao({
     }
   }, [mascara, val]);
 
+  const autoCapitalize = upperCase ? undefined : 'none';
 
   const autoComplete =
     mascara === 'telefone' ? 'tel' : senha ? 'current-password' : 'off';
@@ -113,6 +116,7 @@ export default function InputPadrao({
           autoComplete={autoComplete}
           inputMode={inputMode}
           maxLength={limiteCaracteres}
+          autoCapitalize={autoCapitalize}
         />
       )}
 

@@ -183,6 +183,7 @@ export default function FormDinamico({
                     senha={false}
                     limiteCaracteres={1000}
                     mascara=""
+                    upperCase={true}
                   />
                 </div>
 
@@ -196,6 +197,7 @@ export default function FormDinamico({
                     senha={false}
                     limiteCaracteres={1000}
                     mascara="numeroDecimal"
+                    upperCase={true}
                   />
                 </div>
               </div>
@@ -240,6 +242,7 @@ export default function FormDinamico({
                   senha={false}
                   limiteCaracteres={100}
                   mascara=""
+                  upperCase={true}
                 />
               )}
             </div>
@@ -284,7 +287,8 @@ export default function FormDinamico({
           inativo={!editado}
           senha={false}
           limiteCaracteres={100}
-          mascara="" // pode pôr "numeroDecimal" se quiser só números; aí armazene como número
+          mascara=""
+           upperCase={true}
         />
       </div>
     );

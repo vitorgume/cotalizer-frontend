@@ -102,6 +102,7 @@ export default function CadastroOrcamento() {
                 senha={false}
                 limiteCaracteres={100}
                 mascara=''
+                upperCase={true}
             />
 
 

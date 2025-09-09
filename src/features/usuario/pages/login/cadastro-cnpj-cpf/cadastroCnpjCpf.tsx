@@ -101,6 +101,7 @@ export default function CadastroCnpjCpf() {
                             senha={false}
                             limiteCaracteres={14}
                             mascara='cpfCnpj'
+                            upperCase={true}
                         />
                         <div className="hint-row">
                             <span className="small-info">

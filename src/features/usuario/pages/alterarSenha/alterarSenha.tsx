@@ -81,6 +81,7 @@ export default function AlterarSenha() {
               senha={true}
               limiteCaracteres={20}
               mascara=""
+              upperCase={true}
             />
             <small className="senha-hint">Mínimo de 6 caracteres.</small>
             {erro && <p className="msg-erro" role="alert">{erro}</p>}

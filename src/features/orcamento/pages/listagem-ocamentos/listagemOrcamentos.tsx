@@ -134,6 +134,7 @@ export default function ListagemOrcamentos() {
                     senha={false}
                     limiteCaracteres={100}
                     mascara=""
+                    upperCase={true}
                 />
 
 

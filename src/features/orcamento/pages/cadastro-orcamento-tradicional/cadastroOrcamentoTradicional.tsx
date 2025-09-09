@@ -126,6 +126,7 @@ export default function CadastroOrcamentoTradicional() {
                                         senha={false}
                                         limiteCaracteres={100}
                                         mascara=''
+                                        upperCase={true}
                                     />
                                 </div>
 
@@ -139,6 +140,7 @@ export default function CadastroOrcamentoTradicional() {
                                         senha={false}
                                         limiteCaracteres={17}
                                         mascara='cpfCnpj'
+                                        upperCase={true}
                                     />
                                 </div>
                             </div>

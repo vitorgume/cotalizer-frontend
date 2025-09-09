@@ -51,6 +51,7 @@ export default function LoginUsuario() {
                             senha={false}
                             limiteCaracteres={100}
                             mascara=''
+                            upperCase={false}
                         />
                     </div>
 
@@ -64,6 +65,7 @@ export default function LoginUsuario() {
                             senha={true}
                             limiteCaracteres={20}
                             mascara=''
+                            upperCase={true}
                         />
                     </div>
 
