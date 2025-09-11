@@ -28,7 +28,9 @@ Imagens:
 Principais domínios: **Orçamento** e **Usuário**.
 
 > Dica visual rápida:
-> 
+>
+
+![arquitetura](docs/arquitetura.jpg)
 
 **Diretrizes:**
 
