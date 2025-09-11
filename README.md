@@ -34,7 +34,6 @@ Principais domínios: **Orçamento** e **Usuário**.
 
 **Diretrizes:**
 
-- Componentes compartilhados em `src/shared` (ex.: `<InputPadrao />`).
 - Cada feature contém páginas, componentes próprios, hooks e serviços de API.
 
 ---
