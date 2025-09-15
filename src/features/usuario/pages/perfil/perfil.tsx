@@ -17,6 +17,7 @@ import { serverLogout } from '../../../../utils/axios'
 
 import AssinaturaForms from '../assinatura/assinaturaForms'
 import './perfil.css'
+import { BotaoVoltar } from '../../components/botaoVoltar/botaoVoltar'
 
 export default function Perfil() {
     const [usuario, setUsuario] = useState<Usuario | null>(null);
@@ -166,6 +167,8 @@ export default function Perfil() {
                         </>
                     )}
                 </div>
+
+                <BotaoVoltar absolute={true} />
 
                 {/* Botão fixo no canto superior direito */}
                 <button

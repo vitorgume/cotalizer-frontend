@@ -8,6 +8,7 @@ import type Orcamento from '../../../../models/orcamento';
 import FormDinamico from '../../componentes/formDinamico/formDinamico';
 import { notificarErro } from '../../../../utils/notificacaoUtils';
 import { obterMe } from '../../../usuario/usuario.service';
+import { BotaoVoltar } from '../../../usuario/components/botaoVoltar/botaoVoltar';
 
 export default function CadastroOrcamento() {
     const [titulo, setTitulo] = useState<string>('');
@@ -84,6 +85,7 @@ export default function CadastroOrcamento() {
             <div className="text-cadastro-tradicional glass-card">
                 <p>Prefere montar item a item?</p>
                 <a href="/orcamento/tradicional/cadastro" className="text-clique-aqui">Clique aqui</a>
+                <BotaoVoltar absolute={true} />
             </div>
 
             {/* Título */}

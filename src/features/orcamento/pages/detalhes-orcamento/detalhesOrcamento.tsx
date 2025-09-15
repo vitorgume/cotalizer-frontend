@@ -11,6 +11,7 @@ import { extrairNomeArquivo } from '../../../../utils/urlUtils';
 import { notificarSucesso } from '../../../../utils/notificacaoUtils';
 
 import { Trash2, Download, ExternalLink } from 'lucide-react';
+import { BotaoVoltar } from '../../../usuario/components/botaoVoltar/botaoVoltar';
 
 export default function DetalhesOrcamento() {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -96,7 +97,9 @@ export default function DetalhesOrcamento() {
         <div className="orc-details-page">
             <div className="detalhes-orcamento card-shell">
                 <header className="header-detalhes-orc">
+                
                     <div className="titulo-header">
+                        <BotaoVoltar absolute={false}/>
                         <h1>{orcamento.titulo}</h1>
                         <p>{formatarData(orcamento.dataCriacao)}</p>
                     </div>

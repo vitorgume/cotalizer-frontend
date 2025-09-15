@@ -8,6 +8,7 @@ import { extrairNomeArquivo } from '../../../../utils/urlUtils';
 import { notificarSucesso } from '../../../../utils/notificacaoUtils';
 import ModalDelete from '../../componentes/modalDelete/modalDelete';
 import { Download, ExternalLink, Trash2 } from 'lucide-react';
+import { BotaoVoltar } from '../../../usuario/components/botaoVoltar/botaoVoltar';
 
 export default function DetalhesOrcamentoTradicional() {
   const { id } = useParams<{ id: string }>();
@@ -108,7 +109,9 @@ export default function DetalhesOrcamentoTradicional() {
   return (
     <div className="visualizacao-container cotalizer-theme">
       <header className="visualizacao-header">
+      
         <div className="vh-title">
+          <BotaoVoltar absolute={false} />
           <h1>Visualizar Orçamento</h1>
           <p className="vh-sub">
             {orcamento.cliente} • {formatarData(orcamento.dataCriacao)} • {orcamento.tipoOrcamento}
