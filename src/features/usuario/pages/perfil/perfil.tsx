@@ -1,3 +1,4 @@
+// Perfil.tsx
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import type Usuario from '../../../../models/usuario'
@@ -7,6 +8,13 @@ import MetricaQuantidadeOrcamento from '../../components/metricaQuantidadeOrcame
 import UploadLogo from '../../components/uploadLogo/uploadLogo'
 import { cancelarAssinatura } from '../../pagamento.service'
 import { atualizarUsuario, cadastrarLogoUsuario, consultarUsuarioPeloId, obterMe } from '../../usuario.service'
+
+// ⬇️ importe o helper de logout (ajuste o path)
+// Opção A: direto da api.ts
+import { serverLogout } from '../../../../utils/axios'
+// Opção B (se criou auth.service.ts): 
+// import { fazerLogout as serverLogout } from '../../auth.service'
+
 import AssinaturaForms from '../assinatura/assinaturaForms'
 import './perfil.css'
 
@@ -28,12 +36,10 @@ export default function Perfil() {
 
         (async () => {
             const id = await obterIdUsuario();
-            
             if (!id) {
                 navigate('/menu');
                 return;
             }
-            
             async function init() {
                 const respUser = await consultarUsuarioPeloId(id || '');
                 if (respUser.dado) {
@@ -47,15 +53,11 @@ export default function Perfil() {
             }
             init();
         })();
-
-
-    }, [])
+    }, []);
 
     async function recarregarUsuario() {
         const id = await obterMe().then(resp => resp.dado?.usuarioId);
-
-        if(!id) return;
-
+        if (!id) return;
         const resp = await consultarUsuarioPeloId(id);
         if (resp.dado) setUsuario(resp.dado);
     }
@@ -113,6 +115,21 @@ export default function Perfil() {
         }
     }
 
+    // ⬇️ Handler de logout
+    async function onLogout() {
+        try {
+            await serverLogout();
+        } finally {
+            // Limpa estados locais e vai para login
+            setUsuario(null);
+            setForm({ nome: '', email: '', telefone: '', cpf: '', cnpj: '' });
+            setLogoFile(null);
+            setIsEditing(false);
+            notificarSucesso('Você saiu da sua conta.');
+            window.location.href = 'https://cotalizer.com'
+        }
+    }
+
     const limite = usuario?.plano === 'GRATIS' ? 5 : 100;
 
     return (
@@ -139,7 +156,9 @@ export default function Perfil() {
 
                 <div className="perfil-acoes">
                     {!isEditing ? (
-                        <button onClick={onEdit} className="btn primary-outline">Editar</button>
+                        <>
+                            <button onClick={onEdit} className="btn primary-outline">Editar</button>
+                        </>
                     ) : (
                         <>
                             <button onClick={onSave} className="btn primary-solid">Salvar</button>
@@ -147,7 +166,18 @@ export default function Perfil() {
                         </>
                     )}
                 </div>
+
+                {/* Botão fixo no canto superior direito */}
+                <button
+                    onClick={onLogout}
+                    className="btn danger-ghost btn-logout-topright btn-sair"
+                    aria-label="Sair da conta"
+                    title="Sair"
+                >
+                    Sair
+                </button>
             </header>
+
 
             {isEditing && (
                 <div className="upload-logo-container glass-card">

@@ -192,3 +192,12 @@ export function setRefreshToken(t?: string) {
   if (t && t.length) localStorage.setItem(RT_KEY, t);
   else localStorage.removeItem(RT_KEY);
 }
+
+// api.ts
+// ...código existente acima...
+
+export async function serverLogout() { 
+  setAccessToken(undefined);
+  setRefreshToken(undefined);
+}
+
