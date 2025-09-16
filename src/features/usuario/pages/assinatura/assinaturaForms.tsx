@@ -50,12 +50,7 @@ export default function AssinaturaForms({
                 const el = panelRef.current;
                 if (!el) return;
 
-                // respeita o scroll-margin-top do CSS
                 el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-                // fallback (se quiser forçar um offset manual):
-                // const y = el.getBoundingClientRect().top + window.scrollY - 84;
-                // window.scrollTo({ top: y, behavior: 'smooth' });
             });
         }
     }, [open]);

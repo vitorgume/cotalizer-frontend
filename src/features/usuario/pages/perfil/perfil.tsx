@@ -9,15 +9,12 @@ import UploadLogo from '../../components/uploadLogo/uploadLogo'
 import { cancelarAssinatura } from '../../pagamento.service'
 import { atualizarUsuario, cadastrarLogoUsuario, consultarUsuarioPeloId, obterMe } from '../../usuario.service'
 
-// ⬇️ importe o helper de logout (ajuste o path)
-// Opção A: direto da api.ts
 import { serverLogout } from '../../../../utils/axios'
-// Opção B (se criou auth.service.ts): 
-// import { fazerLogout as serverLogout } from '../../auth.service'
 
 import AssinaturaForms from '../assinatura/assinaturaForms'
 import './perfil.css'
 import { BotaoVoltar } from '../../components/botaoVoltar/botaoVoltar'
+import Planos from '../../components/planos/planos'
 
 export default function Perfil() {
     const [usuario, setUsuario] = useState<Usuario | null>(null);
@@ -26,6 +23,7 @@ export default function Perfil() {
     const [logoFile, setLogoFile] = useState<File | null>(null);
     const [originalEmail, setOriginalEmail] = useState<string>('');
     const [abrirAssinatura, setAbrirAssinatura] = useState(false);
+    const [planos, setPlanos] = useState<boolean>(false);
 
     const navigate = useNavigate();
 
@@ -262,7 +260,9 @@ export default function Perfil() {
                     </div>
 
                     {usuario.plano === 'GRATIS' ? (
-                        <button onClick={() => setAbrirAssinatura(true)} className="btn primary-solid">Obter Plus</button>
+                        planos 
+                            ? (<button onClick={() => setPlanos(false)} className="btn primary-solid">Fechar</button>)
+                            : (<button onClick={() => setPlanos(true)} className="btn primary-solid">Obter Plus</button>) 
                     ) : (
                         <div className="div-botoes-assinatura">
                             <button
@@ -278,6 +278,13 @@ export default function Perfil() {
                     )}
                 </section>
             )}
+
+            {planos && 
+                <Planos
+                    onAssinar={() => setAbrirAssinatura(true)}
+                    open={planos}
+                />
+            }
 
             {usuario && (
                 <AssinaturaForms
