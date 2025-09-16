@@ -97,11 +97,13 @@ export default function DetalhesOrcamento() {
         <div className="orc-details-page">
             <div className="detalhes-orcamento card-shell">
                 <header className="header-detalhes-orc">
-                
+
                     <div className="titulo-header">
-                        <BotaoVoltar absolute={false}/>
-                        <h1>{orcamento.titulo}</h1>
-                        <p>{formatarData(orcamento.dataCriacao)}</p>
+                        <BotaoVoltar absolute={false} />
+                        <div>
+                            <h1>{orcamento.titulo}</h1>
+                            <p>{formatarData(orcamento.dataCriacao)}</p>
+                        </div>
                     </div>
 
                     <div className="botoes-header">

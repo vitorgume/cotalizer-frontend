@@ -109,13 +109,15 @@ export default function DetalhesOrcamentoTradicional() {
   return (
     <div className="visualizacao-container cotalizer-theme">
       <header className="visualizacao-header">
-      
+
         <div className="vh-title">
           <BotaoVoltar absolute={false} />
-          <h1>Visualizar Orçamento</h1>
-          <p className="vh-sub">
-            {orcamento.cliente} • {formatarData(orcamento.dataCriacao)} • {orcamento.tipoOrcamento}
-          </p>
+          <div>
+            <h1>Visualizar Orçamento</h1>
+            <p className="vh-sub">
+              {orcamento.cliente} • {formatarData(orcamento.dataCriacao)} • {orcamento.tipoOrcamento}
+            </p>
+          </div>
         </div>
 
         <div className="botoes-header">
