@@ -1,6 +1,6 @@
 // Perfil.tsx
-import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useEffect, useState, useRef } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import type Usuario from '../../../../models/usuario'
 import { notificarSucesso } from '../../../../utils/notificacaoUtils'
 import InputPadrao from '../../../orcamento/componentes/inputPadrao/inputPadrao'
@@ -26,6 +26,16 @@ export default function Perfil() {
     const [planos, setPlanos] = useState<boolean>(false);
 
     const navigate = useNavigate();
+    const location = useLocation();
+
+    const planosRef = useRef<HTMLDivElement | null>(null);
+
+    useEffect(() => {
+        const sp = new URLSearchParams(location.search);
+        if (sp.get('tab') === 'planos') {
+            setPlanos(true);
+        }
+    }, [location.search]);
 
     useEffect(() => {
         async function obterIdUsuario(): Promise<string | undefined> {
@@ -260,9 +270,9 @@ export default function Perfil() {
                     </div>
 
                     {usuario.plano === 'GRATIS' ? (
-                        planos 
+                        planos
                             ? (<button onClick={() => setPlanos(false)} className="btn primary-solid">Fechar</button>)
-                            : (<button onClick={() => setPlanos(true)} className="btn primary-solid">Obter Plus</button>) 
+                            : (<button onClick={() => setPlanos(true)} className="btn primary-solid">Obter Plus</button>)
                     ) : (
                         <div className="div-botoes-assinatura">
                             <button
@@ -279,11 +289,13 @@ export default function Perfil() {
                 </section>
             )}
 
-            {planos && 
-                <Planos
-                    onAssinar={() => setAbrirAssinatura(true)}
-                    open={planos}
-                />
+            {planos &&
+                <div id="planos" ref={planosRef} className="ancora-planos">
+                    <Planos
+                        onAssinar={() => setAbrirAssinatura(true)}
+                        open={planos}
+                    />
+                </div>
             }
 
             {usuario && (

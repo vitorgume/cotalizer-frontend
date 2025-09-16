@@ -22,7 +22,7 @@ export default function Planos({ onAssinar, open }: PlanosProps) {
     }, [open]);
 
     return (
-        <div>
+        <div ref={panelRef} className="planos-scope">
             <header>
                 <div className="kicker"><span className="dot"></span>Planos e preços</div>
                 <h1 id="heading">Escolha o plano que acompanha o seu volume de orçamentos</h1>

@@ -10,6 +10,7 @@ import { consultarUsuarioPeloId, obterMe } from '../../usuario.service';
 import { listarPorUsuario, listarTradicionaisPorUsuario } from '../../../orcamento/orcamento.service';
 import ModalAvaliar from '../../components/modalAvaliar/modalAvaliar';
 import { User } from 'lucide-react';
+import ModalPlanos from '../../components/planos/modal/modalPlanos';
 
 
 export default function Menu() {
@@ -17,6 +18,7 @@ export default function Menu() {
     const [orcamentos, setOrcamentos] = useState<any[] | []>([]);
     const [loading, setLoading] = useState(false);
     const [modalAvaliar, setModalAvaliar] = useState<boolean>(false);
+    const [modalPlanos, setModalPlanos] = useState<boolean>(false);
 
 
     const navigate = useNavigate();
@@ -79,6 +81,14 @@ export default function Menu() {
                 }
             }
 
+            function abrirModalPlanos(usuario: Usuario) {
+                if(usuario) {
+                    if(usuario.quantidade_orcamentos === 5) {
+                        setModalPlanos(true);
+                    }
+                }
+            }
+
             async function carregarDados() {
                 try {
                     if (usuarioId) {
@@ -117,7 +127,7 @@ export default function Menu() {
                         );
 
                         abrirModalAvaliar(usuarioResponse.dado, todos);
-
+                        abrirModalPlanos(usuarioResponse.dado);
                         setUsuario(usuarioResponse.dado);
                         setOrcamentos(todos);
                     }
@@ -185,6 +195,7 @@ export default function Menu() {
                         </div>
 
                         {modalAvaliar && <ModalAvaliar fechar={() => setModalAvaliar(false)} />}
+                        {modalPlanos && <ModalPlanos open={modalPlanos} fechar={() => setModalPlanos(false)} />}
                     </div>
                 </div>
             ) : (
