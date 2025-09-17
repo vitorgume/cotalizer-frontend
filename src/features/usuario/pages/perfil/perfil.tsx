@@ -24,18 +24,51 @@ export default function Perfil() {
     const [originalEmail, setOriginalEmail] = useState<string>('');
     const [abrirAssinatura, setAbrirAssinatura] = useState(false);
     const [planos, setPlanos] = useState<boolean>(false);
+    const [shouldScrollPlanos, setShouldScrollPlanos] = useState<boolean>(false);
+    const planosRef = useRef<HTMLDivElement | null>(null);
 
     const navigate = useNavigate();
     const location = useLocation();
 
-    const planosRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
         const sp = new URLSearchParams(location.search);
-        if (sp.get('tab') === 'planos') {
-            setPlanos(true);
-        }
+        if (sp.get('tab') === 'planos') setPlanos(true);
+        if (sp.get('scroll') === '1') setShouldScrollPlanos(true);
     }, [location.search]);
+
+    useEffect(() => {
+        if (!planos || !shouldScrollPlanos) return;
+
+        const doScroll = () => {
+            planosRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+        };
+
+        // 2 RAFs para esperar layout pintar…
+        const raf1 = requestAnimationFrame(() => {
+            const raf2 = requestAnimationFrame(() => {
+                doScroll();
+            });
+            // fallback adicional se algo subir a página depois
+            const t1 = setTimeout(doScroll, 120);
+            const t2 = setTimeout(doScroll, 320);
+
+            // cleanup
+            return () => {
+                cancelAnimationFrame(raf2);
+                clearTimeout(t1);
+                clearTimeout(t2);
+            };
+        });
+
+        // zera a flag (evita tentar de novo em updates menores)
+        const clearFlag = setTimeout(() => setShouldScrollPlanos(false), 400);
+
+        return () => {
+            cancelAnimationFrame(raf1);
+            clearTimeout(clearFlag);
+        };
+    }, [planos, shouldScrollPlanos]);
 
     useEffect(() => {
         async function obterIdUsuario(): Promise<string | undefined> {
