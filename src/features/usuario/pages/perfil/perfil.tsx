@@ -25,6 +25,8 @@ export default function Perfil() {
     const [abrirAssinatura, setAbrirAssinatura] = useState(false);
     const [planos, setPlanos] = useState<boolean>(false);
     const [shouldScrollPlanos, setShouldScrollPlanos] = useState<boolean>(false);
+    const [planoSelecionado, setPlanoSelecionado] = useState<string>('');
+
     const planosRef = useRef<HTMLDivElement | null>(null);
 
     const navigate = useNavigate();
@@ -307,6 +309,7 @@ export default function Perfil() {
                     <Planos
                         onAssinar={() => setAbrirAssinatura(true)}
                         open={planos}
+                        onPlanoSelecionado={setPlanoSelecionado}
                     />
                 </div>
             }
@@ -319,6 +322,7 @@ export default function Perfil() {
                     emailInicial={usuario.email}
                     nomeInicial={usuario.nome}
                     onAssinou={recarregarUsuario}
+                    plano={planoSelecionado}
                 />
             )}
         </div>

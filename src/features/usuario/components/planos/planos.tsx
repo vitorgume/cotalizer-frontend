@@ -4,9 +4,10 @@ import './planos.css';
 interface PlanosProps {
     onAssinar: () => void;
     open: boolean;
+    onPlanoSelecionado: (plano: string) => void;
 }
 
-export default function Planos({ onAssinar, open }: PlanosProps) {
+export default function Planos({ onAssinar, open, onPlanoSelecionado}: PlanosProps) {
 
     const panelRef = useRef<HTMLDivElement | null>(null);
 
@@ -56,7 +57,10 @@ export default function Planos({ onAssinar, open }: PlanosProps) {
                         <li>Templates básicos de orçamento</li>
                     </ul>
                     <div className="actions">
-                        <button className="btn btn-primary" aria-label="Assinar plano Plus" onClick={onAssinar}>Assinar</button>
+                        <button className="btn btn-primary" aria-label="Assinar plano Plus" onClick={() => {
+                            onAssinar();
+                            onPlanoSelecionado('Plus');
+                        }}>Assinar</button>
                     </div>
                     <div className="note">Cancele quando quiser. Sem fidelidade.</div>
                 </article>
@@ -71,7 +75,10 @@ export default function Planos({ onAssinar, open }: PlanosProps) {
                         <li>Templates básicos de orçamento</li>
                     </ul>
                     <div className="actions">
-                        <button className="btn btn-primary" aria-label="Assinar plano Plus" onClick={onAssinar}>Assinar</button>
+                        <button className="btn btn-primary" aria-label="Assinar plano Enterprise" onClick={() => {
+                            onAssinar();
+                            onPlanoSelecionado('Enterprise');
+                        }}>Assinar</button>
                     </div>
                     <div className="note">Projetado para times que precisam de escala e governança.</div>
                 </article>
