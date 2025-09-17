@@ -1,62 +1,200 @@
-.modal-overlay {
-    position: fixed;
-    inset: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
+/* ===== Escopo do modal de avaliação ===== */
+.modal-avaliar {
+  --base: var(--cotalizer-base, #2D4254);
+  --primary: var(--cotalizer-primary, #18AF91);
+  --secondary: var(--cotalizer-secondary, #2C8ABB);
+
+  --text: rgba(255, 255, 255, 0.95);
+  --muted: rgba(255, 255, 255, 0.78);
+  --glass-bg: rgba(255, 255, 255, 0.06);
+  --glass-brd: rgba(255, 255, 255, 0.14);
+  --shadow: 0 18px 36px rgba(0, 0, 0, 0.22);
+  --radius: 16px;
+
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding:
+    max(16px, env(safe-area-inset-top))
+    max(16px, env(safe-area-inset-right))
+    max(16px, env(safe-area-inset-bottom))
+    max(16px, env(safe-area-inset-left));
+}
+
+/* Backdrop */
+.modal-avaliar .modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 18, 24, 0.6);
+  backdrop-filter: blur(4px);
+  animation: ma-fade 0.25s ease both;
+}
+
+/* Caixa */
+.modal-avaliar .modal__dialog {
+  position: relative;
+  width: min(640px, 96vw);
+  border-radius: var(--radius);
+  border: 1px solid var(--glass-brd);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02)),
+    var(--base);
+  box-shadow: var(--shadow);
+  color: var(--text);
+  padding: 22px 22px 20px;
+  animation: ma-pop 0.28s cubic-bezier(0.2, 0.7, 0.2, 1.1) both;
+  max-height: 88dvh;
+  overflow: auto;
+}
+
+/* Acento superior */
+.modal-avaliar .modal__dialog::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  border-top-left-radius: var(--radius);
+  border-top-right-radius: var(--radius);
+  background: linear-gradient(90deg, var(--secondary), var(--primary));
+}
+
+/* Botão fechar */
+.modal-avaliar .modal__close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+.modal-avaliar .modal__close:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+}
+
+/* Cabeçalho */
+.modal-avaliar .ma-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 10px;
+}
+.modal-avaliar .ma-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  background: conic-gradient(from 140deg, var(--secondary), var(--primary));
+  box-shadow: 0 8px 18px rgba(24, 175, 145, 0.32);
+  color: #fff;
+}
+.modal-avaliar .ma-titles h2 {
+  margin: 0;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  font-size: clamp(20px, 2.2vw, 26px);
+}
+.modal-avaliar .ma-titles p {
+  margin: 4px 0 0 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+/* Lista de benefícios */
+.modal-avaliar .ma-benefits {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 0 0;
+  display: grid;
+  gap: 10px;
+}
+.modal-avaliar .ma-benefits li {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  color: #d9e6ee;
+}
+.modal-avaliar .ma-benefits li::before {
+  content: "";
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  flex: 0 0 18px;
+  border-radius: 4px;
+  background: conic-gradient(from 140deg, var(--primary), var(--secondary));
+  -webkit-mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="white" viewBox="0 0 24 24"><path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>')
+    no-repeat center/16px 16px;
+  mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="white" viewBox="0 0 24 24"><path d="M9 16.17 4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>')
+    no-repeat center/16px 16px;
+}
+
+/* Ações */
+.modal-avaliar .ma-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+/* Botões (escopo local) */
+.modal-avaliar .btn {
+  appearance: none;
+  border: 1px solid transparent;
+  cursor: pointer;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-weight: 800;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+.modal-avaliar .btn:active {
+  transform: translateY(1px);
+}
+.modal-avaliar .btn-primary {
+  color: #0c2c25;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  box-shadow: 0 12px 26px rgba(24, 175, 145, 0.28), inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+}
+.modal-avaliar .btn-primary:hover {
+  filter: brightness(1.05);
+}
+.modal-avaliar .btn-outline {
+  color: var(--text);
+  border-color: rgba(255, 255, 255, 0.22);
+  background: transparent;
+}
+.modal-avaliar .btn-outline:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* Responsivo */
+@media (max-width: 560px) {
+  .modal-avaliar .modal__dialog {
+    width: 96vw;
+    padding: 18px;
+    border-radius: 14px;
+  }
+  .modal-avaliar .ma-actions .btn {
+    width: 100%;
     justify-content: center;
-    padding: 20px;
-    z-index: 1000;
-    overflow-y: auto;
-    height: 100%;
+  }
 }
 
-.modal-avaliar-content {
-    background-color: #2D4254;
-    display: flex;
-    flex-direction: column;
-    width: 40%;
-    height: 60%;
-    border-radius: 1rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
-    align-items: center;
-    gap: 1rem;
-    padding: 2.5rem;
+/* Animações */
+@keyframes ma-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
-
-.text-modal-avaliar {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-size: 1.6rem;
-}
-
-.botao-sair {
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    align-self: flex-end;
-}
-
-.botao-sair>img {
-    width: 1.5rem;
-    height: 1.5rem;
-}
-
-.botao-responder {
-    background-color: #18AF91;
-    color: white;
-    border: none;
-    border-radius: 0.5rem;
-    padding: 0.8rem 1.5rem;
-    font-size: 1rem;
-    cursor: pointer;
-    min-width: 150px;
-    transition: background-color 0.2s ease;
-    white-space: nowrap;
-    margin-top: 5rem;
-}
-
-.botao-responder:hover {
-    background-color: #4bd3b8;
+@keyframes ma-pop {
+  from { opacity: 0; transform: translateY(10px) scale(.98); }
+  to   { opacity: 1; transform: none; }
 }
