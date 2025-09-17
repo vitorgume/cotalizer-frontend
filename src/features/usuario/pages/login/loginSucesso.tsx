@@ -20,7 +20,7 @@ export default function LoginSucesso() {
 
                 if (!alive) return;
 
-                navigate(`/usuario/cadastro/cpf-cnpj/${id}`, { replace: true });
+                navigate('/menu');
             } catch {
                 if (!alive) return;
                 navigate('/usuario/login', { replace: true });

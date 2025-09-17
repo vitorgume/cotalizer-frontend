@@ -19,7 +19,7 @@ import Planos from '../../components/planos/planos'
 export default function Perfil() {
     const [usuario, setUsuario] = useState<Usuario | null>(null);
     const [isEditing, setIsEditing] = useState(false);
-    const [form, setForm] = useState({ nome: '', email: '', telefone: '', cpf: '', cnpj: '' });
+    const [form, setForm] = useState({ nome: '', email: '', telefone: ''});
     const [logoFile, setLogoFile] = useState<File | null>(null);
     const [originalEmail, setOriginalEmail] = useState<string>('');
     const [abrirAssinatura, setAbrirAssinatura] = useState(false);
@@ -35,6 +35,7 @@ export default function Perfil() {
         const sp = new URLSearchParams(location.search);
         if (sp.get('tab') === 'planos') setPlanos(true);
         if (sp.get('scroll') === '1') setShouldScrollPlanos(true);
+        if (sp.get('tab') === 'logo') setIsEditing(true);
     }, [location.search]);
 
     useEffect(() => {
@@ -89,7 +90,7 @@ export default function Perfil() {
                     setUsuario(u);
                     setOriginalEmail(u.email);
                     setForm({
-                        nome: u.nome, email: u.email, telefone: u.telefone, cpf: u.cpf || '', cnpj: u.cnpj || ''
+                        nome: u.nome, email: u.email, telefone: u.telefone
                     });
                 }
             }
@@ -107,7 +108,7 @@ export default function Perfil() {
     function onEdit() { setIsEditing(true); }
     function onCancel() {
         if (usuario) {
-            setForm({ nome: usuario.nome, email: usuario.email, telefone: usuario.telefone, cpf: usuario.cpf || '', cnpj: usuario.cnpj || '' });
+            setForm({ nome: usuario.nome, email: usuario.email, telefone: usuario.telefone });
             setLogoFile(null);
         }
         setIsEditing(false);
@@ -119,9 +120,10 @@ export default function Perfil() {
 
         if (usuario.id) {
             await atualizarUsuario(usuario.id, {
-                nome: form.nome, email: form.email, telefone: form.telefone, cpf: form.cpf, cnpj: form.cnpj,
+                nome: form.nome, email: form.email, telefone: form.telefone,
                 senha: usuario.senha, plano: usuario.plano, idCustomer: usuario.idCustomer, idAssinatura: usuario.idAssinatura,
-                url_logo: usuario.url_logo, feedback: usuario.feedback, quantidade_orcamentos: usuario.quantidade_orcamentos
+                url_logo: usuario.url_logo, feedback: usuario.feedback, quantidade_orcamentos: usuario.quantidade_orcamentos,
+                tipo_cadastro: usuario.tipo_cadastro
             });
         }
 
@@ -137,8 +139,7 @@ export default function Perfil() {
             if (resp.dado) {
                 setUsuario(resp.dado);
                 setForm({
-                    nome: resp.dado.nome, email: resp.dado.email, telefone: resp.dado.telefone,
-                    cpf: resp.dado.cpf || '', cnpj: resp.dado.cnpj || ''
+                    nome: resp.dado.nome, email: resp.dado.email, telefone: resp.dado.telefone
                 });
             }
         }
@@ -164,7 +165,7 @@ export default function Perfil() {
         } finally {
             // Limpa estados locais e vai para login
             setUsuario(null);
-            setForm({ nome: '', email: '', telefone: '', cpf: '', cnpj: '' });
+            setForm({ nome: '', email: '', telefone: ''});
             setLogoFile(null);
             setIsEditing(false);
             notificarSucesso('Você saiu da sua conta.');
@@ -260,27 +261,6 @@ export default function Perfil() {
                             limiteCaracteres={14}
                             mascara='telefone'
                         />
-                        {form.cpf ? (
-                            <InputPadrao
-                                placeholder="CPF"
-                                value={form.cpf}
-                                onChange={handleChange('cpf')}
-                                inativo={!isEditing}
-                                senha={false}
-                                limiteCaracteres={10}
-                                mascara='cpf'
-                            />
-                        ) : (
-                            <InputPadrao
-                                placeholder="CNPJ"
-                                value={form.cnpj}
-                                onChange={handleChange('cnpj')}
-                                inativo={!isEditing}
-                                senha={false}
-                                limiteCaracteres={14}
-                                mascara='cnpj'
-                            />
-                        )}
                     </div>
                 ) : <p>Usuário não encontrado</p>}
             </section>
