@@ -95,7 +95,7 @@ export default function Planos({ onAssinar, open, onPlanoSelecionado, usuario }:
           <div className="subtitle">Negociável — para alto volume</div>
           <div className="price">R$ 59,90 <span className="per">/ mês</span></div>
           <ul className="features">
-            <li>Orçamentos ilimitados</li>
+            <li>Até <strong>500 orçamentos/mês</strong></li>
             <li>Geração de PDF com o seu logo</li>
             <li>Templates básicos de orçamento</li>
           </ul>

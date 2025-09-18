@@ -15,10 +15,7 @@ export default function MetricaQuantidadeOrcamento({ usado, limite }: MetricaQua
             </div>
             <div className="valores">
                 <span>{usado}</span>
-                {limite === 5000
-                    ? <span>Ilimitado</span>
-                    : <span>{limite}</span>
-                }
+                <span>{limite}</span>
             </div>
         </div>
     );
