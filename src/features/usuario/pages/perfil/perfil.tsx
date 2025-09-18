@@ -19,13 +19,14 @@ import Planos from '../../components/planos/planos'
 export default function Perfil() {
     const [usuario, setUsuario] = useState<Usuario | null>(null);
     const [isEditing, setIsEditing] = useState(false);
-    const [form, setForm] = useState({ nome: '', email: '', telefone: ''});
+    const [form, setForm] = useState({ nome: '', email: '', telefone: '' });
     const [logoFile, setLogoFile] = useState<File | null>(null);
     const [originalEmail, setOriginalEmail] = useState<string>('');
     const [abrirAssinatura, setAbrirAssinatura] = useState(false);
     const [planos, setPlanos] = useState<boolean>(false);
     const [shouldScrollPlanos, setShouldScrollPlanos] = useState<boolean>(false);
     const [planoSelecionado, setPlanoSelecionado] = useState<string>('');
+    const [limite, setLimite] = useState<number>(0);
 
     const planosRef = useRef<HTMLDivElement | null>(null);
 
@@ -79,6 +80,25 @@ export default function Perfil() {
             return resp.dado?.usuarioId;
         }
 
+        function carregarLimite(usuario: Usuario) {
+            if (usuario) {
+                switch (usuario.plano) {
+                    case 'GRATIS': {
+                        setLimite(5);
+                        break;
+                    }
+                    case 'PLUS': {
+                        setLimite(100);
+                        break;
+                    }
+                    case 'ENTERPRISE': {
+                        setLimite(5000);
+                        break;
+                    }
+                }
+            }
+        }
+
         (async () => {
             const id = await obterIdUsuario();
             if (!id) {
@@ -89,6 +109,7 @@ export default function Perfil() {
                 const respUser = await consultarUsuarioPeloId(id || '');
                 if (respUser.dado) {
                     const u = respUser.dado;
+                    carregarLimite(u);
                     setUsuario(u);
                     setOriginalEmail(u.email);
                     setForm({
@@ -167,15 +188,13 @@ export default function Perfil() {
         } finally {
             // Limpa estados locais e vai para login
             setUsuario(null);
-            setForm({ nome: '', email: '', telefone: ''});
+            setForm({ nome: '', email: '', telefone: '' });
             setLogoFile(null);
             setIsEditing(false);
             notificarSucesso('Você saiu da sua conta.');
             window.location.href = 'https://cotalizer.com'
         }
     }
-
-    const limite = usuario?.plano === 'GRATIS' ? 5 : 100;
 
     return (
         <div className="page-perfil cotalizer-theme">
@@ -284,32 +303,57 @@ export default function Perfil() {
                         <MetricaQuantidadeOrcamento usado={usuario.quantidade_orcamentos} limite={limite} />
                     </div>
 
-                    {usuario.plano === 'GRATIS' ? (
-                        planos
-                            ? (<button onClick={() => setPlanos(false)} className="btn primary-solid">Fechar</button>)
-                            : (<button onClick={() => setPlanos(true)} className="btn primary-solid">Obter Plus</button>)
+
+                    {planos ? (
+                        <button onClick={() => setPlanos(false)} className="btn primary-solid">
+                            Fechar
+                        </button>
                     ) : (
-                        <div className="div-botoes-assinatura">
-                            <button
-                                onClick={() => window.location.href = "https://wa.me/554391899898"}
-                                className="btn primary-outline"
-                            >
-                                Plano personalizado
-                            </button>
-                            <button onClick={cancelar} className="btn danger-ghost">
-                                Cancelar assinatura
-                            </button>
-                        </div>
+                        (() => {
+                            switch (usuario.plano) {
+                                case "GRATIS":
+                                    return (
+                                        <button onClick={() => setPlanos(true)} className="btn primary-solid">
+                                            Obter Plus
+                                        </button>
+                                    );
+                                case "PLUS":
+                                    return (
+                                        <>
+                                            <button onClick={() => setPlanos(true)} className="btn primary-solid">
+                                                Obter Enterprise
+                                            </button>
+                                            <button onClick={cancelar} className="btn danger-ghost">
+                                                Cancelar assinatura
+                                            </button>
+                                        </>
+                                    );
+                                case "ENTERPRISE":
+                                    return (
+                                        <>
+                                            <button onClick={() => setPlanos(true)} className="btn primary-solid">
+                                                Ver planos
+                                            </button>
+                                            <button onClick={cancelar} className="btn danger-ghost">
+                                                Cancelar assinatura
+                                            </button>
+                                        </>
+                                    );
+                                default:
+                                    return null;
+                            }
+                        })()
                     )}
                 </section>
             )}
 
-            {planos &&
+            {planos && usuario &&
                 <div id="planos" ref={planosRef} className="ancora-planos">
                     <Planos
                         onAssinar={() => setAbrirAssinatura(true)}
                         open={planos}
                         onPlanoSelecionado={setPlanoSelecionado}
+                        usuario={usuario}
                     />
                 </div>
             }

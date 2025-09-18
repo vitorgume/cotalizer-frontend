@@ -89,7 +89,7 @@ export default function AssinaturaForms({
 
             const { error, paymentMethod } = await stripe.createPaymentMethod({
                 type: 'card',
-                card: numberEl, // split elements: usar CardNumberElement
+                card: numberEl, 
                 billing_details: { name: nome, email }
             });
 

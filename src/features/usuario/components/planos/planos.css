@@ -152,3 +152,42 @@
   outline: 3px solid rgba(18,184,134,.55);
   outline-offset: 2px;
 }
+
+/* badge informando o plano atual */
+.planos-scope .badge-atual{
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #0C2C25;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--primary), var(--primary-700));
+  box-shadow: 0 10px 20px rgba(18,184,134,.28);
+}
+
+/* aparência do card quando é o plano atual */
+.planos-scope .card.is-current{
+  outline: 2px dashed rgba(24,175,145,.55);
+  outline-offset: 3px;
+  opacity: .9;                    /* leve desfoque visual */
+}
+
+/* desabilita só as ações, mantendo leitura do conteúdo */
+.planos-scope .card.is-current .actions .btn{
+  pointer-events: none;
+  opacity: .7;
+  filter: saturate(.7);
+}
+
+/* acessibilidade: botão desabilitado ainda visível no foco por teclado */
+.planos-scope .card.is-current .actions .btn:focus{
+  outline: 3px solid rgba(18,184,134,.45);
+  outline-offset: 2px;
+}
+

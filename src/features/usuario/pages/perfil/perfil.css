@@ -166,7 +166,12 @@
 
 /* Botões da seção assinatura */
 .div-botoes-assinatura{
-  display:flex; flex-direction:column; gap:.6rem; width:100%; max-width:420px; align-self:flex-end;
+  display:flex; 
+  flex-direction:column; 
+  gap:.6rem; 
+  width:100%; 
+  max-width:420px; 
+  align-self:flex-start;
 }
 
 .btn-sair {
