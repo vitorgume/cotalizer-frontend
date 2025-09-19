@@ -11,6 +11,7 @@ import Loading from '../../componentes/loading/loading';
 import { useNavigate } from 'react-router-dom';
 import { notificarErro } from '../../../../utils/notificacaoUtils';
 import { obterMe } from '../../../usuario/usuario.service';
+import { BotaoVoltar } from '../../../usuario/components/botaoVoltar/botaoVoltar';
 
 export default function CadastroOrcamentoTradicional() {
     const [cliente, setCliente] = useState('');
@@ -103,11 +104,13 @@ export default function CadastroOrcamentoTradicional() {
                 <div className="cadastro-container cotalizer-theme">
                     {/* HEADER */}
                     <header className="cadastro-header glass-card">
+                        <BotaoVoltar absolute={true} />
                         <div className="header-top">
                             <h1>Novo orçamento tradicional</h1>
-                            <span className="badge-variant">Manual</span>
+                            <p className="header-sub">Monte itens, adicione observações e gere o PDF.</p>
                         </div>
-                        <p className="header-sub">Monte itens, adicione observações e gere o PDF.</p>
+                        {/* <span className="badge-variant">Manual</span> */}
+                        
                     </header>
 
                     {/* MAIN */}

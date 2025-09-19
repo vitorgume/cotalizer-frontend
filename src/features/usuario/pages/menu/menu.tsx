@@ -10,6 +10,8 @@ import { consultarUsuarioPeloId, obterMe } from '../../usuario.service';
 import { listarPorUsuario, listarTradicionaisPorUsuario } from '../../../orcamento/orcamento.service';
 import ModalAvaliar from '../../components/modalAvaliar/modalAvaliar';
 import { User } from 'lucide-react';
+import ModalPlanos from '../../components/planos/modal/modalPlanos';
+import ModalLogo from '../../components/modalLogo/modalLogo';
 
 
 export default function Menu() {
@@ -17,6 +19,8 @@ export default function Menu() {
     const [orcamentos, setOrcamentos] = useState<any[] | []>([]);
     const [loading, setLoading] = useState(false);
     const [modalAvaliar, setModalAvaliar] = useState<boolean>(false);
+    const [modalPlanos, setModalPlanos] = useState<boolean>(false);
+    const [modalLogo, setModalLogo] = useState<boolean>(false);
 
 
     const navigate = useNavigate();
@@ -79,6 +83,39 @@ export default function Menu() {
                 }
             }
 
+            function abrirModalPlanos(usuario: Usuario) {
+                if (usuario) {
+                    switch(usuario.plano) {
+                        case 'GRATIS':
+                            if(usuario.quantidade_orcamentos === 5) {
+                                setModalPlanos(true);
+                            }
+                            break;
+                        case 'PLUS':
+                            if(usuario.quantidade_orcamentos === 100) {
+                                setModalPlanos(true);
+                            }
+                            break;
+                        default: {
+                            if(usuario.quantidade_orcamentos === 500) {
+                                setModalPlanos(true);
+                            }
+                        }
+                    }
+                }
+            }
+
+            function abrirModalLogo(usuario: Usuario) {
+                if (!usuario?.url_logo) {
+                    const key = `logoPromptShown:${usuario.id}`;
+                    const already = localStorage.getItem(key);
+                    if (!already) {
+                        setModalLogo(true);
+                        localStorage.setItem(key, '1');
+                    }
+                }
+            }
+
             async function carregarDados() {
                 try {
                     if (usuarioId) {
@@ -117,7 +154,8 @@ export default function Menu() {
                         );
 
                         abrirModalAvaliar(usuarioResponse.dado, todos);
-
+                        abrirModalPlanos(usuarioResponse.dado);
+                        abrirModalLogo(usuarioResponse.dado);
                         setUsuario(usuarioResponse.dado);
                         setOrcamentos(todos);
                     }
@@ -185,6 +223,8 @@ export default function Menu() {
                         </div>
 
                         {modalAvaliar && <ModalAvaliar fechar={() => setModalAvaliar(false)} />}
+                        {modalPlanos && usuario && <ModalPlanos plano={usuario.plano} open={modalPlanos} fechar={() => setModalPlanos(false)} />}
+                        {modalLogo && <ModalLogo open={modalLogo} fechar={() => setModalLogo(false)} />}
                     </div>
                 </div>
             ) : (

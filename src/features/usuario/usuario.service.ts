@@ -127,6 +127,8 @@ export function atualizarUsuario(idUsuario: string, novosDados: Usuario): Promis
 }
 
 export function avaliar(avaliacao: Avaliacao): Promise<Response<Avaliacao>> {
+    console.log('AValiando');
+
     return api.post<Response<Avaliacao>>('/avaliacoes', avaliacao)
         .then(response => response.data)
         .catch(err => {

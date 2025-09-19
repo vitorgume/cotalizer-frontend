@@ -20,17 +20,19 @@ import DetalhesOrcamentoTradicional from './features/orcamento/pages/detalhes-or
 import AvaliacaoForms from './features/usuario/pages/avaliacao/avaliacao';
 import { useEffect } from 'react';
 import { hydrateAccessToken, primeCsrfCookie } from './utils/axios';
+import DisableScrollRestoration from './utils/disableScrollRstoration';
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
 function App() {
   useEffect(() => {
-    hydrateAccessToken();   // tenta restaurar sessão
-    primeCsrfCookie();      // opcional: já busca e guarda o CSRF
+    hydrateAccessToken();   
+    primeCsrfCookie();     
   }, []);
 
   return (
     <Elements stripe={stripePromise} options={{ locale: 'pt-BR' }}>
+      <DisableScrollRestoration />
       <Router>
         <ToastContainer position="top-right" autoClose={3000} />
         <Routes>

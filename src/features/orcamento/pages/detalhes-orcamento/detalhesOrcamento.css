@@ -50,7 +50,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
-  align-items: center;
+  align-items: end;
   justify-content: space-between;
   border-bottom: 1px solid var(--glass-brd);
   padding-bottom: .8rem;
@@ -59,7 +59,7 @@
 .titulo-header {
   display: flex;
   flex-direction: column;
-  gap: .25rem;
+  gap: 3rem;
   min-width: 0;
 }
 
@@ -80,6 +80,7 @@
   display: flex;
   align-items: center;
   gap: .6rem;
+  margin-bottom: 1.5rem;
 }
 
 /* ====== Botões (coerentes com landing) ====== */

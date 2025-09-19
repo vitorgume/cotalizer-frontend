@@ -8,6 +8,7 @@ import './listagemOrcamentos.css';
 import Loading from "../../componentes/loading/loading";
 import type { OrcamentoTradicional } from "../../../../models/orcamentoTradicional";
 import { obterMe } from "../../../usuario/usuario.service";
+import { BotaoVoltar } from "../../../usuario/components/botaoVoltar/botaoVoltar";
 
 type Tab = "IA" | "TRAD";
 
@@ -103,6 +104,7 @@ export default function ListagemOrcamentos() {
         <div className="listagem-page">
             <div className="listagem-card card-shell">
                 <header className="listagem-header">
+                    <BotaoVoltar absolute={true} />
                     <div className="titulo-wrap">
                         <h1>Seus orçamentos</h1>
                         <p>Gerencie seus orçamentos por tipo e pesquise rapidamente.</p>

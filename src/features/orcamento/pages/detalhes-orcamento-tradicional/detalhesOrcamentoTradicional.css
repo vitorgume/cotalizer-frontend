@@ -41,9 +41,16 @@
 .visualizacao-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: end;
   padding-bottom: 1rem;
   border-bottom: 1px solid rgba(255,255,255,0.12);
+  gap: 6rem;
+}
+
+.vh-title {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
 
 .vh-title h1 {

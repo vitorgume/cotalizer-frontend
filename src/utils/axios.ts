@@ -165,3 +165,22 @@ export async function hydrateAccessToken() {
 export async function primeCsrfCookie() {
   await fetchCsrfToken();
 }
+
+
+const RT_KEY = 'rt';
+
+export function getRefreshToken(): string | null {
+  return localStorage.getItem(RT_KEY);
+}
+export function setRefreshToken(t?: string) {
+  if (t && t.length) localStorage.setItem(RT_KEY, t);
+  else localStorage.removeItem(RT_KEY);
+}
+
+// api.ts
+// ...código existente acima...
+
+export async function serverLogout() { 
+  setAccessToken(undefined);
+  setRefreshToken(undefined);
+}

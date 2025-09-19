@@ -3,8 +3,6 @@ export default interface Usuario {
     nome: string;
     email: string;
     telefone: string;
-    cpf: string;
-    cnpj: string;
     senha: string;
     plano: string;
     idCustomer: string;
@@ -12,4 +10,5 @@ export default interface Usuario {
     url_logo: string;
     feedback: boolean;
     quantidade_orcamentos: number;
+    tipo_cadastro: string;
 }

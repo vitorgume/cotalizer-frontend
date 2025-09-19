@@ -1,11 +1,11 @@
 import './metricaQuantidadeOrcamento.css';
 
 interface MetricaQuantidadeOrcamentoProps {
-  usado: number;
-  limite: number;
+    usado: number;
+    limite: number;
 }
 
-export default function MetricaQuantidadeOrcamento({usado, limite}: MetricaQuantidadeOrcamentoProps) {
+export default function MetricaQuantidadeOrcamento({ usado, limite }: MetricaQuantidadeOrcamentoProps) {
     const percentual = Math.min((usado / limite) * 100, 100);
 
     return (

@@ -18,6 +18,7 @@ type Props = {
     emailInicial?: string;
     nomeInicial?: string;
     onAssinou?: () => Promise<void> | void;
+    plano: string;
 };
 
 export default function AssinaturaForms({
@@ -26,7 +27,8 @@ export default function AssinaturaForms({
     idUsuario,
     emailInicial = '',
     nomeInicial = '',
-    onAssinou
+    onAssinou,
+    plano
 }: Props) {
     const stripe = useStripe();
     const elements = useElements();
@@ -38,6 +40,8 @@ export default function AssinaturaForms({
     const [okNumber, setOkNumber] = useState(false);
     const [okExpiry, setOkExpiry] = useState(false);
     const [okCvc, setOkCvc] = useState(false);
+    
+    const [planoSelecionado, setPlanoSelecionado] = useState<string>('');
 
     const stripeReady = !!stripe && !!elements;
     const podeEnviar = stripeReady && okNumber && okExpiry && okCvc && !loading;
@@ -50,14 +54,22 @@ export default function AssinaturaForms({
                 const el = panelRef.current;
                 if (!el) return;
 
-                // respeita o scroll-margin-top do CSS
                 el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-                // fallback (se quiser forçar um offset manual):
-                // const y = el.getBoundingClientRect().top + window.scrollY - 84;
-                // window.scrollTo({ top: y, behavior: 'smooth' });
             });
         }
+
+        switch (plano) {
+            case 'Plus':
+                setPlanoSelecionado('PLUS');
+                break;
+            case 'Enterprise':
+                setPlanoSelecionado('ENTERPRISE');
+                break;
+            default:
+                setPlanoSelecionado(plano);
+                break;
+        }
+
     }, [open]);
 
     if (!open) return null;
@@ -77,7 +89,7 @@ export default function AssinaturaForms({
 
             const { error, paymentMethod } = await stripe.createPaymentMethod({
                 type: 'card',
-                card: numberEl, // split elements: usar CardNumberElement
+                card: numberEl, 
                 billing_details: { name: nome, email }
             });
 
@@ -89,7 +101,8 @@ export default function AssinaturaForms({
             await criarAssinatura({
                 paymentMethodId: paymentMethod!.id,
                 customerEmail: email,
-                idUsuario
+                idUsuario,
+                plano: planoSelecionado
             });
 
             notificarSucesso('Assinatura criada com sucesso!');
@@ -111,7 +124,7 @@ export default function AssinaturaForms({
         >
             <header className="assinatura-panel__header">
                 <div>
-                    <h2>Obter Plus</h2>
+                    <h2>Obter {plano}</h2>
                     <p className="assinatura-panel__subtitle">
                         Preencha seus dados de pagamento para liberar o plano.
                     </p>
