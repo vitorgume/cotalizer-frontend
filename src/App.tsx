@@ -9,7 +9,6 @@ import CadastroUsuario from './features/usuario/pages/cadastro-usuario/cadastroU
 import LoginUsuario from './features/usuario/pages/login/login-usuario/loginUsuario';
 import LoginSucesso from './features/usuario/pages/login/loginSucesso';
 import CodigoValidacaoEmail from './features/usuario/pages/login/codigo-validacao-email/codigoValidacaoEmail';
-import CadastroCnpjCpf from './features/usuario/pages/login/cadastro-cnpj-cpf/cadastroCnpjCpf';
 import AlterarSenha from './features/usuario/pages/alterarSenha/alterarSenha';
 import EsqueceuSenha from './features/usuario/pages/login/esqueceu-senha/esqueceuSenha';
 import Perfil from './features/usuario/pages/perfil/perfil';
@@ -45,7 +44,6 @@ function App() {
           <Route path='/usuario/login' element={<LoginUsuario />} />
           <Route path='/login/sucesso' element={<LoginSucesso />} />
           <Route path='/validacao/email/:email' element={<CodigoValidacaoEmail />} />
-          <Route path='/usuario/cadastro/cpf-cnpj/:id' element={<CadastroCnpjCpf />} />
           <Route path='/usuario/alterar/senha/:token' element={<AlterarSenha />} />
           <Route path='/usuario/esqueceu-senha' element={<EsqueceuSenha />} />
           <Route path='/usuario/perfil' element={<Perfil />} />
