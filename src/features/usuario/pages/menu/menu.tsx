@@ -85,8 +85,22 @@ export default function Menu() {
 
             function abrirModalPlanos(usuario: Usuario) {
                 if (usuario) {
-                    if (usuario.quantidade_orcamentos === 5) {
-                        setModalPlanos(true);
+                    switch(usuario.plano) {
+                        case 'GRATIS':
+                            if(usuario.quantidade_orcamentos === 5) {
+                                setModalPlanos(true);
+                            }
+                            break;
+                        case 'PLUS':
+                            if(usuario.quantidade_orcamentos === 100) {
+                                setModalPlanos(true);
+                            }
+                            break;
+                        default: {
+                            if(usuario.quantidade_orcamentos === 500) {
+                                setModalPlanos(true);
+                            }
+                        }
                     }
                 }
             }
@@ -209,7 +223,7 @@ export default function Menu() {
                         </div>
 
                         {modalAvaliar && <ModalAvaliar fechar={() => setModalAvaliar(false)} />}
-                        {modalPlanos && <ModalPlanos open={modalPlanos} fechar={() => setModalPlanos(false)} />}
+                        {modalPlanos && usuario && <ModalPlanos plano={usuario.plano} open={modalPlanos} fechar={() => setModalPlanos(false)} />}
                         {modalLogo && <ModalLogo open={modalLogo} fechar={() => setModalLogo(false)} />}
                     </div>
                 </div>

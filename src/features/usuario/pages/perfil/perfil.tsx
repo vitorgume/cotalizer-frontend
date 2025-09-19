@@ -27,6 +27,7 @@ export default function Perfil() {
     const [shouldScrollPlanos, setShouldScrollPlanos] = useState<boolean>(false);
     const [planoSelecionado, setPlanoSelecionado] = useState<string>('');
     const [limite, setLimite] = useState<number>(0);
+    const [planoFormatado, setPlanoFormatado] = useState<string>('');
 
     const planosRef = useRef<HTMLDivElement | null>(null);
 
@@ -84,14 +85,17 @@ export default function Perfil() {
             if (usuario) {
                 switch (usuario.plano) {
                     case 'GRATIS': {
+                        setPlanoFormatado('Plano Gratuito');
                         setLimite(5);
                         break;
                     }
                     case 'PLUS': {
+                        setPlanoFormatado('Plano Plus');
                         setLimite(100);
                         break;
                     }
                     case 'ENTERPRISE': {
+                        setPlanoFormatado('Plano Enterprise');
                         setLimite(5000);
                         break;
                     }
@@ -212,7 +216,7 @@ export default function Perfil() {
                         )}
                         {usuario && (
                             <span className={`badge-plano ${usuario.plano === 'GRATIS' ? 'badge-free' : 'badge-plus'}`}>
-                                {usuario.plano === 'GRATIS' ? 'Plano Grátis' : 'Assinatura Plus'}
+                                {planoFormatado}
                             </span>
                         )}
                     </div>
@@ -291,7 +295,7 @@ export default function Perfil() {
                     <div className="header-sec-assinatura">
                         <h3>Assinatura</h3>
                         <p className={usuario.plano === 'GRATIS' ? 'plano-free' : 'text-assinatura-plus'}>
-                            {usuario.plano === 'GRATIS' ? 'Gratuito' : 'Assinatura Plus'}
+                            {planoFormatado}
                         </p>
                     </div>
 
