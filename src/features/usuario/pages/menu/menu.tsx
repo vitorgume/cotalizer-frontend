@@ -6,12 +6,14 @@ import type Usuario from '../../../../models/usuario';
 import type Orcamento from '../../../../models/orcamento';
 import { Link, useNavigate } from 'react-router-dom';
 import Loading from '../../../orcamento/componentes/loading/loading';
-import { consultarUsuarioPeloId, obterMe } from '../../usuario.service';
+import { atualizarUsuario, consultarUsuarioPeloId, obterMe } from '../../usuario.service';
 import { listarPorUsuario, listarTradicionaisPorUsuario } from '../../../orcamento/orcamento.service';
 import ModalAvaliar from '../../components/modalAvaliar/modalAvaliar';
 import { User } from 'lucide-react';
 import ModalPlanos from '../../components/planos/modal/modalPlanos';
 import ModalLogo from '../../components/modalLogo/modalLogo';
+import OnboardingCarousel from '../../components/tutorialUsuario/onboarding';
+import { notificarErro } from '../../../../utils/notificacaoUtils';
 
 
 export default function Menu() {
@@ -21,6 +23,7 @@ export default function Menu() {
     const [modalAvaliar, setModalAvaliar] = useState<boolean>(false);
     const [modalPlanos, setModalPlanos] = useState<boolean>(false);
     const [modalLogo, setModalLogo] = useState<boolean>(false);
+    const [modalOnboarding, setModalOnboarding] = useState<boolean>(false);
 
 
     const navigate = useNavigate();
@@ -61,6 +64,29 @@ export default function Menu() {
         navigate('/usuario/perfil');
     }
 
+    function finalizarOnboarding() {
+        if (usuario && usuario.id) {
+            usuario.onboarding = true;
+            try {
+                atualizarUsuario(usuario.id, usuario);
+            } catch (error) {
+                notificarErro("Erro ao atualizar usuário");
+            } finally {
+                setModalOnboarding(false);
+            }
+        } else {
+            setModalOnboarding(false);
+        }
+    }
+
+    useEffect(() => {
+        if (modalOnboarding) {
+            const prev = document.body.style.overflow;
+            document.body.style.overflow = 'hidden';
+            return () => { document.body.style.overflow = prev; };
+        }
+    }, [modalOnboarding]);
+
     useEffect(() => {
         async function obterIdUsuario(): Promise<string | undefined> {
             const resp = await obterMe();
@@ -85,19 +111,19 @@ export default function Menu() {
 
             function abrirModalPlanos(usuario: Usuario) {
                 if (usuario) {
-                    switch(usuario.plano) {
+                    switch (usuario.plano) {
                         case 'GRATIS':
-                            if(usuario.quantidade_orcamentos === 5) {
+                            if (usuario.quantidade_orcamentos === 5) {
                                 setModalPlanos(true);
                             }
                             break;
                         case 'PLUS':
-                            if(usuario.quantidade_orcamentos === 100) {
+                            if (usuario.quantidade_orcamentos === 100) {
                                 setModalPlanos(true);
                             }
                             break;
                         default: {
-                            if(usuario.quantidade_orcamentos === 500) {
+                            if (usuario.quantidade_orcamentos === 500) {
                                 setModalPlanos(true);
                             }
                         }
@@ -112,6 +138,14 @@ export default function Menu() {
                     if (!already) {
                         setModalLogo(true);
                         localStorage.setItem(key, '1');
+                    }
+                }
+            }
+
+            function abrirModalOnboarding(usuario: Usuario) {
+                if (usuario) {
+                    if (!usuario.onboarding && !modalLogo) {
+                        setModalOnboarding(true);
                     }
                 }
             }
@@ -158,6 +192,7 @@ export default function Menu() {
                         abrirModalLogo(usuarioResponse.dado);
                         setUsuario(usuarioResponse.dado);
                         setOrcamentos(todos);
+                        abrirModalOnboarding(usuarioResponse.dado);
                     }
                 } catch (err) {
                     console.error('Erro ao carregar dados:', err);
@@ -225,6 +260,17 @@ export default function Menu() {
                         {modalAvaliar && <ModalAvaliar fechar={() => setModalAvaliar(false)} />}
                         {modalPlanos && usuario && <ModalPlanos plano={usuario.plano} open={modalPlanos} fechar={() => setModalPlanos(false)} />}
                         {modalLogo && <ModalLogo open={modalLogo} fechar={() => setModalLogo(false)} />}
+                        {modalOnboarding && (
+                            <div className="onb-overlay" onClick={finalizarOnboarding}>
+                                <div className="onb-center" onClick={(e) => e.stopPropagation()}>
+                                    <OnboardingCarousel
+                                        className="onb-as-modal"
+                                        onClose={finalizarOnboarding}
+                                        onFinish={finalizarOnboarding}
+                                    />
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
             ) : (

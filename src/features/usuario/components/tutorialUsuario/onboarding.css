@@ -1,0 +1,243 @@
+:root {
+  --onb-bg: #2D4254;        /* fundo principal */
+  --onb-surface: #1f2f3b;   /* reserva */
+  --onb-text: #e6f0f4;
+  --onb-muted: #9fb3bf;
+  --onb-accent: #18AF91;    /* botões / barra / dot ativo */
+  --onb-accent-2: #2C8ABB;  /* detalhes (opcional) */
+  --onb-shadow: 0 10px 30px rgba(0,0,0,.25);
+  --onb-radius: 14px;
+  --onb-gap: 24px;
+}
+
+/* Utilitário para esconder scrollbars (mantém a rolagem) */
+.hide-scrollbar {
+  /* Firefox */
+  scrollbar-width: none;
+  /* IE/Edge Legacy */
+  -ms-overflow-style: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  /* Chrome, Safari, Edge (Blink/WebKit) */
+  width: 0;
+  height: 0;
+}
+
+/* Aplique no slide ativo */
+.onb-slide.is-active {
+  overflow-y: hidden;       
+  overflow-x: hidden;        
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Esconde visualmente a barra do slide ativo */
+.onb-slide.is-active.hide-scrollbar { /* opcional, ou aplique direto em .onb-slide.is-active */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.onb-slide.is-active.hide-scrollbar::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+
+/* ===== Overlay de Modal ===== */
+.onb-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(9,16,22,.65);
+  backdrop-filter: blur(2px);
+  display: grid;
+  place-items: center;
+  z-index: 9999;
+}
+.onb-center {
+  width: 100%;
+  max-width: 1160px;
+  padding: 16px;
+}
+
+/* ===== Card raiz ===== */
+.onb-root {
+  background: var(--onb-bg);
+  color: var(--onb-text);
+  border-radius: var(--onb-radius);
+  padding: 20px 20px 16px;
+  box-shadow: var(--onb-shadow);
+
+  width: 100%;
+  max-width: 1100px;
+  height: min(90vh, 680px);
+
+  margin: 0 auto;
+  display: grid;
+  grid-template-rows: auto 6px 1fr auto;
+  gap: 14px;
+
+  /* evita barras extras */
+  overflow: hidden;
+}
+
+/* ===== Header ===== */
+.onb-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.onb-title {
+  font-weight: 600;
+  letter-spacing: .2px;
+}
+.onb-skip {
+  background: transparent;
+  color: #cfe0e7;
+  border: 1px solid rgba(255,255,255,.25);
+  padding: 8px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.onb-skip:hover { border-color: rgba(255,255,255,.5); }
+
+/* ===== Barra de Progresso ===== */
+.onb-progress {
+  position: relative;
+  width: 100%;
+  height: 6px;
+  background: rgba(255,255,255,.08);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.onb-progress-bar {
+  height: 100%;
+  background: var(--onb-accent);
+  transition: width .35s ease;
+}
+
+/* ===== Área dos slides ===== */
+/* Empilhamos slides um sobre o outro para não criar largura N×100% */
+.onb-body {
+  position: relative; /* âncora para os slides absolutos */
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;   /* nada de scroll aqui */
+}
+
+.onb-slide {
+  position: absolute;
+  inset: 0;
+  padding: 32px 24px;
+
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  gap: 12px;
+
+  opacity: 0;
+  transform: translateX(20px);
+  transition: opacity .25s ease, transform .25s ease;
+
+  /* só o ativo recebe eventos/scroll */
+  pointer-events: none;
+  overflow: hidden; /* evita barra horizontal nos inativos */
+}
+
+.onb-slide.is-active {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;               
+  -webkit-overflow-scrolling: touch;
+  overflow-x: hidden;          
+}
+
+/* ===== Tipografia e elementos internos ===== */
+.onb-step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--onb-muted);
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: .8px;
+}
+.onb-step-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--onb-accent);
+  display: inline-block;
+}
+.onb-step-text { opacity: .95; }
+
+.onb-h2 {
+  font-size: clamp(20px, 3.2vw, 40px);
+  font-weight: 700;
+  margin: 0;
+}
+.onb-sub {
+  color: var(--onb-text);
+  opacity: .9;
+  line-height: 1.5;
+  max-width: 60rem;
+}
+
+.onb-illust-wrapper {
+  display: grid;
+  place-items: center;
+}
+.onb-illust {
+  width: min(540px, 90%);
+  max-height: 36vh;
+  height: auto;
+}
+
+/* ===== Footer / Ações ===== */
+.onb-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--onb-gap);
+}
+.onb-dots {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.onb-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 0;
+  background: rgba(255,255,255,.25);
+  cursor: pointer;
+}
+.onb-dot.is-active { background: var(--onb-accent); }
+
+.onb-actions { display: flex; gap: 12px; }
+.onb-btn {
+  border: 0;
+  border-radius: 12px;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.onb-btn-primary {
+  background: var(--onb-accent);
+  color: #0a2022;
+}
+.onb-btn-primary:hover { filter: brightness(1.05); }
+.onb-btn-secondary {
+  background: rgba(255,255,255,.08);
+  color: var(--onb-text);
+}
+.onb-btn-secondary[disabled] {
+  opacity: .4;
+  cursor: not-allowed;
+}
+
+/* ===== Responsivo ===== */
+@media (max-width: 720px) {
+  .onb-root { height: 92vh; padding: 16px 14px; }
+  .onb-sub { max-width: 100%; }
+  .onb-illust { width: 100%; }
+}
+
+@media (max-height: 760px) {
+  .onb-illust { max-height: 30vh; }
+}

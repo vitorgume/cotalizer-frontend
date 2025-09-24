@@ -8,8 +8,30 @@
   --text-dim: rgba(255,255,255,0.75);
   --text-soft: rgba(255,255,255,0.6);
 
-  --glass-bg: rgba(255,255,255,0.06);   /* ~white/5 */
-  --glass-brd: rgba(255,255,255,0.12);  /* ~white/10 */
+  --glass-bg: rgba(255,255,255,0.06);  
+  --glass-brd: rgba(255,255,255,0.12);  
+}
+
+.onb-overlay {
+  position: fixed;
+  inset: 0;             
+  background: rgba(9,16,22,.65);
+  backdrop-filter: blur(2px);
+  display: grid;
+  place-items: center;
+  z-index: 9999;          
+}
+
+.onb-center {
+  width: 100%;
+  max-width: 1160px;
+  padding: 16px;           
+}
+
+.onb-root {
+  width: 100%;
+  max-width: 1100px;
+  height: min(90vh, 680px);       
 }
 
 /* ===== Fundo com gradientes como na landing ===== */

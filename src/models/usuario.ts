@@ -11,4 +11,5 @@ export default interface Usuario {
     feedback: boolean;
     quantidade_orcamentos: number;
     tipo_cadastro: string;
+    onboarding: boolean;
 }
