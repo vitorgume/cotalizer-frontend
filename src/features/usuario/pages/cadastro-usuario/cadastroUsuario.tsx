@@ -43,7 +43,8 @@ export default function CadastroUsuario() {
             url_logo: '',
             feedback: false,
             quantidade_orcamentos: 0,
-            tipo_cadastro: 'TRADICIONAL'
+            tipo_cadastro: 'TRADICIONAL',
+            onboarding: false
         };
 
         try {

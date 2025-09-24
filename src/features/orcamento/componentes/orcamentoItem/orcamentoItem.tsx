@@ -42,7 +42,7 @@ export default function OrcamentoItem({ orcamento, misturado }: OrcamentoItemPro
 
   const arquivo = extrairNomeArquivo(orcamento?.urlArquivo || '');
 
-  const linkDownload = `http://localhost:8080/arquivos/download/${arquivo}`;
+  const API_URL = import.meta.env.VITE_API_URL;
 
   return (
     <div className="orcamento-item-container">
@@ -75,7 +75,7 @@ export default function OrcamentoItem({ orcamento, misturado }: OrcamentoItemPro
 
           {arquivo && (
             <a
-              href={linkDownload}
+              href={`${API_URL}/arquivos/download/${extrairNomeArquivo(extrairNomeArquivo(orcamento.urlArquivo))}`}
               download
               target="_blank"
               rel="noopener noreferrer"

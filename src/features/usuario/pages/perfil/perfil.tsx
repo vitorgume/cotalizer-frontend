@@ -150,7 +150,7 @@ export default function Perfil() {
                 nome: form.nome, email: form.email, telefone: form.telefone,
                 senha: usuario.senha, plano: usuario.plano, idCustomer: usuario.idCustomer, idAssinatura: usuario.idAssinatura,
                 url_logo: usuario.url_logo, feedback: usuario.feedback, quantidade_orcamentos: usuario.quantidade_orcamentos,
-                tipo_cadastro: usuario.tipo_cadastro
+                tipo_cadastro: usuario.tipo_cadastro, onboarding: usuario.onboarding
             });
         }
 

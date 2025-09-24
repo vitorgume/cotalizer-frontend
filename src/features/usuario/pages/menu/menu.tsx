@@ -12,7 +12,7 @@ import ModalAvaliar from '../../components/modalAvaliar/modalAvaliar';
 import { User } from 'lucide-react';
 import ModalPlanos from '../../components/planos/modal/modalPlanos';
 import ModalLogo from '../../components/modalLogo/modalLogo';
-import OnboardingCarousel from '../../components/tutorialUsuario/onboarding';
+import OnboardingCarousel from '../../components/onboarding/onboarding';
 import { notificarErro } from '../../../../utils/notificacaoUtils';
 
 
