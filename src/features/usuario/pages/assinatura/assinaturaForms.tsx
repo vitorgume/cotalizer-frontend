@@ -10,6 +10,7 @@ import {
     useStripe,
     useElements
 } from '@stripe/react-stripe-js';
+import type Plano from '../../../../models/plano';
 
 type Props = {
     open: boolean;
@@ -18,7 +19,7 @@ type Props = {
     emailInicial?: string;
     nomeInicial?: string;
     onAssinou?: () => Promise<void> | void;
-    plano: string;
+    plano: Plano;
 };
 
 export default function AssinaturaForms({
@@ -40,8 +41,6 @@ export default function AssinaturaForms({
     const [okNumber, setOkNumber] = useState(false);
     const [okExpiry, setOkExpiry] = useState(false);
     const [okCvc, setOkCvc] = useState(false);
-    
-    const [planoSelecionado, setPlanoSelecionado] = useState<string>('');
 
     const stripeReady = !!stripe && !!elements;
     const podeEnviar = stripeReady && okNumber && okExpiry && okCvc && !loading;
@@ -57,19 +56,6 @@ export default function AssinaturaForms({
                 el.scrollIntoView({ behavior: 'smooth', block: 'start' });
             });
         }
-
-        switch (plano) {
-            case 'Plus':
-                setPlanoSelecionado('PLUS');
-                break;
-            case 'Enterprise':
-                setPlanoSelecionado('ENTERPRISE');
-                break;
-            default:
-                setPlanoSelecionado(plano);
-                break;
-        }
-
     }, [open]);
 
     if (!open) return null;
@@ -102,7 +88,7 @@ export default function AssinaturaForms({
                 paymentMethodId: paymentMethod!.id,
                 customerEmail: email,
                 idUsuario,
-                plano: planoSelecionado
+                plano: plano
             });
 
             notificarSucesso('Assinatura criada com sucesso!');
@@ -124,7 +110,7 @@ export default function AssinaturaForms({
         >
             <header className="assinatura-panel__header">
                 <div>
-                    <h2>Obter {plano}</h2>
+                    <h2>Obter {plano.titulo}</h2>
                     <p className="assinatura-panel__subtitle">
                         Preencha seus dados de pagamento para liberar o plano.
                     </p>

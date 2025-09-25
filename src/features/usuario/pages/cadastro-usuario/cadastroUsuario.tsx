@@ -8,6 +8,7 @@ import Loading from '../../../orcamento/componentes/loading/loading';
 import HeaderForms from '../../components/headerForms/headerForms';
 import { notificarErro, notificarSucesso } from '../../../../utils/notificacaoUtils';
 import GoogleLoginButton from '../../components/botaoGoogleLogin/botaoLoginGoogle';
+import type Plano from '../../../../models/plano';
 
 function digitsOnly(v: string) {
     return v.replace(/\D/g, '');
@@ -37,7 +38,7 @@ export default function CadastroUsuario() {
             email,
             telefone: digitsOnly(telefone),
             senha,
-            plano: 'GRATIS',
+            plano: {} as Plano,
             idCustomer: '',
             idAssinatura: '',
             url_logo: '',

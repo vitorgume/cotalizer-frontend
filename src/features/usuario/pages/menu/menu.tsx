@@ -14,6 +14,8 @@ import ModalPlanos from '../../components/planos/modal/modalPlanos';
 import ModalLogo from '../../components/modalLogo/modalLogo';
 import OnboardingCarousel from '../../components/onboarding/onboarding';
 import { notificarErro } from '../../../../utils/notificacaoUtils';
+import type Plano from '../../../../models/plano';
+import { listarPlanos } from '../../planos.service';
 
 
 export default function Menu() {
@@ -24,6 +26,7 @@ export default function Menu() {
     const [modalPlanos, setModalPlanos] = useState<boolean>(false);
     const [modalLogo, setModalLogo] = useState<boolean>(false);
     const [modalOnboarding, setModalOnboarding] = useState<boolean>(false);
+    const [planos, setPlanos] = useState<Plano[]>([]);
 
 
     const navigate = useNavigate();
@@ -109,24 +112,23 @@ export default function Menu() {
                 }
             }
 
-            function abrirModalPlanos(usuario: Usuario) {
-                if (usuario) {
-                    switch (usuario.plano) {
-                        case 'GRATIS':
-                            if (usuario.quantidade_orcamentos === 5) {
-                                setModalPlanos(true);
-                            }
-                            break;
-                        case 'PLUS':
-                            if (usuario.quantidade_orcamentos === 100) {
-                                setModalPlanos(true);
-                            }
-                            break;
-                        default: {
-                            if (usuario.quantidade_orcamentos === 500) {
-                                setModalPlanos(true);
-                            }
-                        }
+            async function carregarPlanos() {
+                try {
+                    const planosResponse = await listarPlanos();
+                    setPlanos(planosResponse.dado || []);
+                    return planosResponse.dado;
+                } catch (error) {
+                    notificarErro("Erro ao carregar planos");
+                }
+            }
+
+            function abrirModalPlanos(usuario: Usuario, todosPlanos: Plano[]) {
+                console.log('Planos: ', todosPlanos);
+
+                if (usuario && todosPlanos.length > 0) {
+                    
+                    if(usuario.quantidade_orcamentos == todosPlanos.find(p => p.id === usuario.plano.id)?.limite) {
+                        setModalPlanos(true);
                     }
                 }
             }
@@ -188,11 +190,14 @@ export default function Menu() {
                         );
 
                         abrirModalAvaliar(usuarioResponse.dado, todos);
-                        abrirModalPlanos(usuarioResponse.dado);
                         abrirModalLogo(usuarioResponse.dado);
                         setUsuario(usuarioResponse.dado);
                         setOrcamentos(todos);
                         abrirModalOnboarding(usuarioResponse.dado);
+                        const planos = await carregarPlanos();
+                        if (planos) {
+                            abrirModalPlanos(usuarioResponse.dado, planos);
+                        }
                     }
                 } catch (err) {
                     console.error('Erro ao carregar dados:', err);
@@ -258,7 +263,7 @@ export default function Menu() {
                         </div>
 
                         {modalAvaliar && <ModalAvaliar fechar={() => setModalAvaliar(false)} />}
-                        {modalPlanos && usuario && <ModalPlanos plano={usuario.plano} open={modalPlanos} fechar={() => setModalPlanos(false)} />}
+                        {modalPlanos && usuario && <ModalPlanos planos={planos} plano={usuario.plano} open={modalPlanos} fechar={() => setModalPlanos(false)} />}
                         {modalLogo && <ModalLogo open={modalLogo} fechar={() => setModalLogo(false)} />}
                         {modalOnboarding && (
                             <div className="onb-overlay" onClick={finalizarOnboarding}>

@@ -2,19 +2,21 @@
 import './modalPlanos.css';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import type Plano from '../../../../../models/plano';
 
 interface ModalPlanosProps {
-  open: boolean;        
+  open: boolean;
   fechar: () => void;
-  plano: string;
+  plano: Plano;
+  planos: Plano[];
 }
 
-export default function ModalPlanos({ open, fechar, plano }: ModalPlanosProps) {
+export default function ModalPlanos({ open, fechar, plano, planos }: ModalPlanosProps) {
   const navigate = useNavigate();
   const dialogRef = useRef<HTMLDivElement | null>(null);
   const [planoFormatado, setPlanoFormatado] = useState<string>('');
   const [limiteOrcamentos, setLimiteOrcamentos] = useState<number>(0);
-  const [proximoPlano, setProximoPlano] = useState<{titulo: string, valor: string, limite: number}>({titulo: '', valor: '', limite: 0});
+  const [proximoPlano, setProximoPlano] = useState<Plano | null>(null);
 
   function irParaPlanos() {
     fechar();
@@ -23,27 +25,17 @@ export default function ModalPlanos({ open, fechar, plano }: ModalPlanosProps) {
 
   // trava scroll do body + foco + ESC
   useEffect(() => {
-    
+
     function formatarPlano() {
-      switch (plano) {
-        case 'GRATIS':
-          setPlanoFormatado('Gratuito');
-          setLimiteOrcamentos(5);
-          setProximoPlano({titulo: 'Plus', valor: 'R$ 29,90', limite: 100});
-          break;
-        case 'PLUS':
-          setPlanoFormatado('Plus');
-          setProximoPlano({titulo: 'Enterprise', valor: 'R$ 59,90', limite: 500});
-          setLimiteOrcamentos(100);
-          break;
-        default:
-          setPlanoFormatado('Enterprise');
-          setProximoPlano({titulo: 'Personalizado', valor: 'A combinar', limite: 1000});
-          setLimiteOrcamentos(500);
-          break;
+      setPlanoFormatado(plano.titulo);
+      setLimiteOrcamentos(plano.limite);
+      const proximo = planos.find(p => p.sequencia === plano.sequencia + 1);
+
+      if (proximo) {
+        setProximoPlano(proximo);
       }
     }
-    
+
     if (!open) return;
 
     const prev = document.body.style.overflow;
@@ -53,10 +45,11 @@ export default function ModalPlanos({ open, fechar, plano }: ModalPlanosProps) {
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') fechar();
     };
+
     window.addEventListener('keydown', onKeyDown);
 
     formatarPlano();
-    
+
     return () => {
       document.body.style.overflow = prev;
       window.removeEventListener('keydown', onKeyDown);
@@ -92,10 +85,12 @@ export default function ModalPlanos({ open, fechar, plano }: ModalPlanosProps) {
           </div>
           <div style={{ flex: '1 1 auto' }}>
             <h2 className="title" id="dialog-title">Você atingiu o limite do plano {planoFormatado}</h2>
-            <p className="subtitle" id="dialog-desc">
-              Você já enviou <strong>{limiteOrcamentos} orçamentos</strong> neste mês. Migre para o <strong>{proximoPlano.titulo}</strong> e
-              continue enviando sem parar.
-            </p>
+            {proximoPlano && (
+              <p className="subtitle" id="dialog-desc">
+                Você já enviou <strong>{limiteOrcamentos} orçamentos</strong> neste mês. Migre para o <strong>{proximoPlano.titulo}</strong> e
+                continue enviando sem parar.
+              </p>
+            )}
           </div>
         </div>
 
@@ -113,15 +108,21 @@ export default function ModalPlanos({ open, fechar, plano }: ModalPlanosProps) {
             </div>
 
             <ul className="features" style={{ marginTop: 14 }}>
-              <li>Até <strong>{proximoPlano.limite} orçamentos/mês</strong></li>
+              {proximoPlano && (
+                <li>Até <strong>{proximoPlano.limite} orçamentos/mês</strong></li>
+              )}
               <li>Geração de PDF com o seu logo</li>
               <li>Templates básicos de orçamento</li>
             </ul>
           </div>
 
           <div>
-            <div className="subtitle">{proximoPlano.titulo}</div>	
-            <div className="price">{proximoPlano.valor} <span className="per">/ mês</span></div>
+            {proximoPlano && (
+              <>
+                <div className="subtitle">{proximoPlano.titulo}</div>
+                <div className="price">{proximoPlano.valor.toFixed(2).replace('.', ',')} <span className="per">/ mês</span></div>
+              </>
+            )}
 
             <div className="actions">
               <button className="btn btn-primary" autoFocus onClick={irParaPlanos}>

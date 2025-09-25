@@ -15,6 +15,8 @@ import AssinaturaForms from '../assinatura/assinaturaForms'
 import './perfil.css'
 import { BotaoVoltar } from '../../components/botaoVoltar/botaoVoltar'
 import Planos from '../../components/planos/planos'
+import type Plano from '../../../../models/plano'
+import { listarPlanos } from '../../planos.service'
 
 export default function Perfil() {
     const [usuario, setUsuario] = useState<Usuario | null>(null);
@@ -23,11 +25,10 @@ export default function Perfil() {
     const [logoFile, setLogoFile] = useState<File | null>(null);
     const [originalEmail, setOriginalEmail] = useState<string>('');
     const [abrirAssinatura, setAbrirAssinatura] = useState(false);
-    const [planos, setPlanos] = useState<boolean>(false);
+    const [modalPlanos, setModalPlanos] = useState<boolean>(false);
     const [shouldScrollPlanos, setShouldScrollPlanos] = useState<boolean>(false);
-    const [planoSelecionado, setPlanoSelecionado] = useState<string>('');
-    const [limite, setLimite] = useState<number>(0);
-    const [planoFormatado, setPlanoFormatado] = useState<string>('');
+    const [planoSelecionado, setPlanoSelecionado] = useState<Plano | null>(null);
+    const [planos, setPlanos] = useState<Plano[]>([]);
 
     const planosRef = useRef<HTMLDivElement | null>(null);
 
@@ -37,13 +38,13 @@ export default function Perfil() {
 
     useEffect(() => {
         const sp = new URLSearchParams(location.search);
-        if (sp.get('tab') === 'planos') setPlanos(true);
+        if (sp.get('tab') === 'planos') setModalPlanos(true);
         if (sp.get('scroll') === '1') setShouldScrollPlanos(true);
         if (sp.get('tab') === 'logo') setIsEditing(true);
     }, [location.search]);
 
     useEffect(() => {
-        if (!planos || !shouldScrollPlanos) return;
+        if (!modalPlanos || !shouldScrollPlanos) return;
 
         const doScroll = () => {
             planosRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -73,7 +74,7 @@ export default function Perfil() {
             cancelAnimationFrame(raf1);
             clearTimeout(clearFlag);
         };
-    }, [planos, shouldScrollPlanos]);
+    }, [modalPlanos, shouldScrollPlanos]);
 
     useEffect(() => {
         async function obterIdUsuario(): Promise<string | undefined> {
@@ -81,25 +82,10 @@ export default function Perfil() {
             return resp.dado?.usuarioId;
         }
 
-        function carregarLimite(usuario: Usuario) {
-            if (usuario) {
-                switch (usuario.plano) {
-                    case 'GRATIS': {
-                        setPlanoFormatado('Plano Gratuito');
-                        setLimite(5);
-                        break;
-                    }
-                    case 'PLUS': {
-                        setPlanoFormatado('Plano Plus');
-                        setLimite(100);
-                        break;
-                    }
-                    case 'ENTERPRISE': {
-                        setPlanoFormatado('Plano Enterprise');
-                        setLimite(5000);
-                        break;
-                    }
-                }
+        async function carregarPlanos() {
+            const resp = await listarPlanos();
+            if (resp.dado) {
+                setPlanos(resp.dado);
             }
         }
 
@@ -113,7 +99,6 @@ export default function Perfil() {
                 const respUser = await consultarUsuarioPeloId(id || '');
                 if (respUser.dado) {
                     const u = respUser.dado;
-                    carregarLimite(u);
                     setUsuario(u);
                     setOriginalEmail(u.email);
                     setForm({
@@ -123,6 +108,7 @@ export default function Perfil() {
             }
             init();
         })();
+        carregarPlanos();
     }, []);
 
     async function recarregarUsuario() {
@@ -215,8 +201,8 @@ export default function Perfil() {
                             <p className="perfil-subtitulo">{usuario.nome} • {usuario.email}</p>
                         )}
                         {usuario && (
-                            <span className={`badge-plano ${usuario.plano === 'GRATIS' ? 'badge-free' : 'badge-plus'}`}>
-                                {planoFormatado}
+                            <span className={'badge-plano badge-plus'}>
+                                {usuario.plano.titulo}
                             </span>
                         )}
                     </div>
@@ -297,75 +283,53 @@ export default function Perfil() {
                 <section className="sec-assinatura glass-card">
                     <div className="header-sec-assinatura">
                         <h3>Assinatura</h3>
-                        <p className={usuario.plano === 'GRATIS' ? 'plano-free' : 'text-assinatura-plus'}>
-                            {planoFormatado}
+                        <p className={'text-assinatura-plus'}>
+                            {usuario.plano.titulo}
                         </p>
                     </div>
 
                     <div className="metricas-sec-assinatura">
                         <div className="metricas-head">
                             <p>Limite de orçamentos</p>
-                            <span className="pill-usage">{usuario.quantidade_orcamentos}/{limite}</span>
+                            <span className="pill-usage">{usuario.quantidade_orcamentos}/{usuario.plano.limite}</span>
                         </div>
-                        <MetricaQuantidadeOrcamento usado={usuario.quantidade_orcamentos} limite={limite} />
+                        <MetricaQuantidadeOrcamento usado={usuario.quantidade_orcamentos} limite={usuario.plano.limite} />
                     </div>
 
 
-                    {planos ? (
-                        <button onClick={() => setPlanos(false)} className="btn primary-solid">
+                    {modalPlanos ? (
+                        <button onClick={() => setModalPlanos(false)} className="btn primary-solid">
                             Fechar
                         </button>
                     ) : (
-                        (() => {
-                            switch (usuario.plano) {
-                                case "GRATIS":
-                                    return (
-                                        <button onClick={() => setPlanos(true)} className="btn primary-solid">
-                                            Obter Plus
-                                        </button>
-                                    );
-                                case "PLUS":
-                                    return (
-                                        <>
-                                            <button onClick={() => setPlanos(true)} className="btn primary-solid">
-                                                Obter Enterprise
-                                            </button>
-                                            <button onClick={cancelar} className="btn danger-ghost">
-                                                Cancelar assinatura
-                                            </button>
-                                        </>
-                                    );
-                                case "ENTERPRISE":
-                                    return (
-                                        <>
-                                            <button onClick={() => setPlanos(true)} className="btn primary-solid">
-                                                Ver planos
-                                            </button>
-                                            <button onClick={cancelar} className="btn danger-ghost">
-                                                Cancelar assinatura
-                                            </button>
-                                        </>
-                                    );
-                                default:
-                                    return null;
-                            }
-                        })()
+                        <>
+                            <button onClick={() => setModalPlanos(true)} className="btn primary-solid">
+                                Obter {planos.find(p => p.sequencia === usuario.plano.sequencia + 1)?.titulo}
+                            </button>
+
+                            {usuario.plano.sequencia > 1 && (
+                                <button onClick={cancelar} className="btn danger-ghost">
+                                    Cancelar assinatura
+                                </button>
+                            )}
+                        </>
                     )}
                 </section>
             )}
 
-            {planos && usuario &&
+            {modalPlanos && usuario &&
                 <div id="planos" ref={planosRef} className="ancora-planos">
                     <Planos
                         onAssinar={() => setAbrirAssinatura(true)}
-                        open={planos}
+                        open={modalPlanos}
                         onPlanoSelecionado={setPlanoSelecionado}
                         usuario={usuario}
+                        planos={planos}
                     />
                 </div>
             }
 
-            {usuario && (
+            {usuario && planoSelecionado && (
                 <AssinaturaForms
                     open={abrirAssinatura}
                     onClose={() => setAbrirAssinatura(false)}
