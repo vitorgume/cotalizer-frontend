@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import DowloadImage from '../../../../assets/flecha 1.png';
 import InputPadrao from '../../componentes/inputPadrao/inputPadrao';
 import './cadastroOrcamento.css';
 import { atualizarOrcamento, criarOrcamento, interpretarOrcamento } from '../../orcamento.service';
@@ -9,6 +8,9 @@ import FormDinamico from '../../componentes/formDinamico/formDinamico';
 import { notificarErro } from '../../../../utils/notificacaoUtils';
 import { obterMe } from '../../../usuario/usuario.service';
 import { BotaoVoltar } from '../../../usuario/components/botaoVoltar/botaoVoltar';
+import { Download } from 'lucide-react';
+import type Template from '../../../../models/template';
+import Templates from '../../componentes/templates/templates';
 
 export default function CadastroOrcamento() {
     const [titulo, setTitulo] = useState<string>('');
@@ -17,6 +19,8 @@ export default function CadastroOrcamento() {
     const [loading, setLoading] = useState<boolean>(false);
     const [estruturaOrcamento, setEstruturaOrcamento] = useState<any | null>(null);
     const [urlPdf, setUrlPdf] = useState<string>('');
+    const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null);
+    const TEMPLATE_DEFAULT = '68dabece85ba8d3dc679ad5f';
 
     const MAX_CARACTERES = 1600;
 
@@ -31,7 +35,8 @@ export default function CadastroOrcamento() {
             urlArquivo: '',
             usuarioId: idUsuario,
             status: 'PENDENTE',
-            tipoOrcamento: 'IA'
+            tipoOrcamento: 'IA',
+            template: selectedTemplate ?? {} as Template
         };
 
         try {
@@ -93,6 +98,11 @@ export default function CadastroOrcamento() {
                 <h1 className="titulo-principal">Digite seu orçamento</h1>
                 <p className="subtitulo-grad">que a IA faz o resto</p>
             </div>
+
+            <Templates
+                onSelectTemplate={setSelectedTemplate}
+                defaultSelectedId={TEMPLATE_DEFAULT}
+            />
 
             {/* Campo de título */}
 
@@ -179,7 +189,7 @@ export default function CadastroOrcamento() {
                                         aria-label="Baixar PDF"
                                         title="Baixar PDF"
                                     >
-                                        <img src={DowloadImage} alt="Baixar" />
+                                        <Download size={20} className="icon" />
                                     </a>
                                 </div>
                             )}

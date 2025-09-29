@@ -181,7 +181,8 @@ export default function Menu() {
                                 urlArquivo: t.urlArquivo,
                                 usuarioId: t.idUsuario,
                                 status: t.status,
-                                tipoOrcamento: 'TRADICIONAL'
+                                tipoOrcamento: 'TRADICIONAL',
+                                template: t.template
                             }
                         ));
 

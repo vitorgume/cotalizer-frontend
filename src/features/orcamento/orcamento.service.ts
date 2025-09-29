@@ -4,6 +4,7 @@ import type Orcamento from "../../models/orcamento";
 import { api } from "../../utils/axios";
 import type { OrcamentoTradicional } from "../../models/orcamentoTradicional";
 import axios from "axios";
+import type Template from "../../models/template";
 
 type ApiThrownError = Error & { status?: number; payload?: any };
 
@@ -143,6 +144,13 @@ export async function listarTradicionaisPorUsuario(
     `/orcamentos/tradicionais/usuario/${idUsuario}?page=${page}&size=${size}`
   );
   return data;
+}
+
+export async function  listarTemplates(): Promise<Response<Template[]>> {
+    const { data } = await api.get<Response<Template[]>>(
+        `/templates`
+    );
+    return data;
 }
 
 export async function consultarTradicionalPorId(

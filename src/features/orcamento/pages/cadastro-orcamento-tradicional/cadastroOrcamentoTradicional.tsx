@@ -12,6 +12,8 @@ import { useNavigate } from 'react-router-dom';
 import { notificarErro } from '../../../../utils/notificacaoUtils';
 import { obterMe } from '../../../usuario/usuario.service';
 import { BotaoVoltar } from '../../../usuario/components/botaoVoltar/botaoVoltar';
+import Templates from '../../componentes/templates/templates';
+import type Template from '../../../../models/template';
 
 export default function CadastroOrcamentoTradicional() {
     const [cliente, setCliente] = useState('');
@@ -20,6 +22,8 @@ export default function CadastroOrcamentoTradicional() {
     const [customFields, setCustomFields] = useState<CampoPersonalizado[]>([]);
     const [produtos, setProdutos] = useState<Produto[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
+    const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null);
+    const TEMPLATE_DEFAULT = '68dabece85ba8d3dc679ad5f';
 
     const navigate = useNavigate();
 
@@ -45,7 +49,8 @@ export default function CadastroOrcamentoTradicional() {
             dataCriacao: '',
             idUsuario: idUsuario,
             valorTotal: valorTotal,
-            urlArquivo: ''
+            urlArquivo: '',
+            template: selectedTemplate ? selectedTemplate : {} as Template,
         };
 
         try {
@@ -112,6 +117,11 @@ export default function CadastroOrcamentoTradicional() {
                         {/* <span className="badge-variant">Manual</span> */}
                         
                     </header>
+
+                    <Templates
+                        onSelectTemplate={setSelectedTemplate}
+                        defaultSelectedId={TEMPLATE_DEFAULT}
+                    />
 
                     {/* MAIN */}
                     <main className="cadastro-main">

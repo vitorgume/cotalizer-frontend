@@ -1,5 +1,6 @@
 import type { CampoPersonalizado } from "./campoPersonalizado";
 import type { Produto } from "./produto";
+import type Template from "./template";
 
 export interface OrcamentoTradicional {
     id?: string;
@@ -14,4 +15,5 @@ export interface OrcamentoTradicional {
     idUsuario: string;
     valorTotal: number;
     urlArquivo: string;
+    template: Template;
 }

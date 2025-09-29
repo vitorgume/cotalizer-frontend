@@ -1,3 +1,5 @@
+import type Template from "./template";
+
 export default interface Orcamento {
     id?: string | undefined;
     conteudoOriginal: string;
@@ -8,4 +10,5 @@ export default interface Orcamento {
     usuarioId: string;
     status: string;
     tipoOrcamento: string;
+    template: Template;
 }
