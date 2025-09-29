@@ -7,6 +7,8 @@ import axios from "axios";
 
 type ApiThrownError = Error & { status?: number; payload?: any };
 
+const PAGE_SIZE = 10;
+
 function handleAxiosError(e: unknown, fallbackMsg: string): never {
   if (axios.isAxiosError(e)) {
     const status = e.response?.status;
@@ -49,16 +51,14 @@ export async function deletar(idOrcamento: string): Promise<void> {
 }
 
 export async function listarPorUsuario(
-  idRep: string
+  idUsuario: string,
+  page = 0,
+  size = PAGE_SIZE
 ): Promise<Response<Page<Orcamento>>> {
-  try {
-    const { data } = await api.get<Response<Page<Orcamento>>>(
-      `/orcamentos/usuario/${idRep}?page=0&size=10`
-    );
-    return data;
-  } catch (e) {
-    handleAxiosError(e, "Falha ao carregar orçamentos.");
-  }
+  const { data } = await api.get<Response<Page<Orcamento>>>(
+    `/orcamentos/usuario/${idUsuario}?page=${page}&size=${size}`
+  );
+  return data;
 }
 
 export async function criarOrcamento(
@@ -135,16 +135,14 @@ export async function cadastrarOrcamento(
 }
 
 export async function listarTradicionaisPorUsuario(
-  idUsuario: string
+  idUsuario: string,
+  page = 0,
+  size = PAGE_SIZE
 ): Promise<Response<Page<OrcamentoTradicional>>> {
-  try {
-    const { data } = await api.get<Response<Page<OrcamentoTradicional>>>(
-      `/orcamentos/tradicionais/usuario/${idUsuario}?page=0&size=10`
-    );
-    return data;
-  } catch (e) {
-    handleAxiosError(e, "Falha ao carregar orçamentos tradicionais.");
-  }
+  const { data } = await api.get<Response<Page<OrcamentoTradicional>>>(
+    `/orcamentos/tradicionais/usuario/${idUsuario}?page=${page}&size=${size}`
+  );
+  return data;
 }
 
 export async function consultarTradicionalPorId(

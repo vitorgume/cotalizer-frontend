@@ -4,9 +4,6 @@ import { notificarErro } from '../utils/notificacaoUtils';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-/** ==============================
- * Cliente padrão para a API
- * ============================== */
 export const api: AxiosInstance = axios.create({
   baseURL: API_URL,
   withCredentials: true,
@@ -15,16 +12,13 @@ export const api: AxiosInstance = axios.create({
   headers: { 'X-Requested-With': 'XMLHttpRequest' },
 });
 
-/** Cliente “limpo” para o refresh, evitando interceptors em loop */
 const refreshApi = axios.create({
   baseURL: API_URL,
   withCredentials: true,
   headers: { 'X-Requested-With': 'XMLHttpRequest' },
 });
 
-/** ==============================
- * Access Token
- * ============================== */
+
 let accessToken: string | null = null;
 
 export function setAccessToken(token?: string) {
@@ -36,9 +30,6 @@ export function setAccessToken(token?: string) {
   }
 }
 
-/** ==============================
- * CSRF Token (em memória)
- * ============================== */
 let csrfToken: string | null = null;
 let csrfPromise: Promise<string | null> | null = null;
 
@@ -62,17 +53,11 @@ async function fetchCsrfToken(): Promise<string | null> {
   return csrfPromise;
 }
 
-/** ==============================
- * Helpers
- * ============================== */
 function isMutating(method?: string) {
   const m = (method || '').toLowerCase();
   return m === 'post' || m === 'put' || m === 'patch' || m === 'delete';
 }
 
-/** ==============================
- * Refresh de Access Token (única promise)
- * ============================== */
 let refreshPromise: Promise<string | undefined> | null = null;
 
 async function refreshAccessToken(): Promise<string | undefined> {
@@ -89,9 +74,6 @@ async function refreshAccessToken(): Promise<string | undefined> {
   return refreshPromise;
 }
 
-/** ==============================
- * Normalização de erros + notificação
- * ============================== */
 export type ApiError = {
   status?: number;
   code?: string;
@@ -130,11 +112,6 @@ function notifyOnce(error: ApiError) {
   setTimeout(() => (notifyLock = false), 800);
 }
 
-/** ==============================
- * Interceptor de Request
- * - Injeta Authorization
- * - Garante X-XSRF-TOKEN em mutações
- * ============================== */
 api.interceptors.request.use(async (config) => {
   if (accessToken && !config.headers?.Authorization) {
     config.headers = config.headers ?? {};
@@ -152,12 +129,6 @@ api.interceptors.request.use(async (config) => {
   return config;
 });
 
-/** ==============================
- * Interceptor de Response
- *  - 401: tenta refresh (exceto /auth/refresh|/auth/login|/csrf) e repete 1x
- *  - 403 mutações: refaz /csrf e repete 1x
- *  - Demais: normaliza e notifica
- * ============================== */
 api.interceptors.response.use(
   (res) => res,
   async (error: AxiosError) => {
@@ -207,9 +178,6 @@ api.interceptors.response.use(
   }
 );
 
-/** ==============================
- * Helpers públicos
- * ============================== */
 
 export async function hydrateAccessToken() {
   try {
