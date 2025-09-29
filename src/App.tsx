@@ -20,38 +20,41 @@ import AvaliacaoForms from './features/usuario/pages/avaliacao/avaliacao';
 import { useEffect } from 'react';
 import { hydrateAccessToken, primeCsrfCookie } from './utils/axios';
 import DisableScrollRestoration from './utils/disableScrollRstoration';
+import ErrorBoundary from './utils/erroBoundary/erroBoundary';
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
 function App() {
   useEffect(() => {
-    hydrateAccessToken();   
-    primeCsrfCookie();     
+    hydrateAccessToken();
+    primeCsrfCookie();
   }, []);
 
   return (
     <Elements stripe={stripePromise} options={{ locale: 'pt-BR' }}>
       <DisableScrollRestoration />
-      <Router>
-        <ToastContainer position="top-right" autoClose={3000} />
-        <Routes>
-          <Route path='/orcamento/:id' element={<DetalhesOrcamento />} />
-          <Route path='/orcamentos' element={<ListagemOrcamentos />} />
-          <Route path='/orcamento/cadastro' element={<CadastroOrcamento />} />
-          <Route path='/orcamento/tradicional/cadastro' element={<CadastroOrcamentoTradicional />} />
-          <Route path='/menu' element={<Menu />} />
-          <Route path='/usuario/cadastro' element={<CadastroUsuario />} />
-          <Route path='/usuario/login' element={<LoginUsuario />} />
-          <Route path='/login/sucesso' element={<LoginSucesso />} />
-          <Route path='/validacao/email/:email' element={<CodigoValidacaoEmail />} />
-          <Route path='/usuario/alterar/senha/:token' element={<AlterarSenha />} />
-          <Route path='/usuario/esqueceu-senha' element={<EsqueceuSenha />} />
-          <Route path='/usuario/perfil' element={<Perfil />} />
-          <Route path='/orcamento/tradicional/:id' element={<DetalhesOrcamentoTradicional />} />
-          <Route path='/avaliacao/:id' element={<AvaliacaoForms />} />
+      <ErrorBoundary>
+        <Router>
+          <ToastContainer position="top-right" autoClose={3000} />
+          <Routes>
+            <Route path='/orcamento/:id' element={<DetalhesOrcamento />} />
+            <Route path='/orcamentos' element={<ListagemOrcamentos />} />
+            <Route path='/orcamento/cadastro' element={<CadastroOrcamento />} />
+            <Route path='/orcamento/tradicional/cadastro' element={<CadastroOrcamentoTradicional />} />
+            <Route path='/menu' element={<Menu />} />
+            <Route path='/usuario/cadastro' element={<CadastroUsuario />} />
+            <Route path='/usuario/login' element={<LoginUsuario />} />
+            <Route path='/login/sucesso' element={<LoginSucesso />} />
+            <Route path='/validacao/email/:email' element={<CodigoValidacaoEmail />} />
+            <Route path='/usuario/alterar/senha/:token' element={<AlterarSenha />} />
+            <Route path='/usuario/esqueceu-senha' element={<EsqueceuSenha />} />
+            <Route path='/usuario/perfil' element={<Perfil />} />
+            <Route path='/orcamento/tradicional/:id' element={<DetalhesOrcamentoTradicional />} />
+            <Route path='/avaliacao/:id' element={<AvaliacaoForms />} />
 
-        </Routes>
-      </Router>
+          </Routes>
+        </Router>
+      </ErrorBoundary>
     </Elements>
   )
 }

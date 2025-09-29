@@ -1,26 +1,30 @@
-// api.ts
-import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios';
+// utils/api.ts
+import axios, { AxiosError, type AxiosInstance, type InternalAxiosRequestConfig } from 'axios';
+import { notificarErro } from '../utils/notificacaoUtils';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-// Cliente padrão para a API
-export const api = axios.create({
+/** ==============================
+ * Cliente padrão para a API
+ * ============================== */
+export const api: AxiosInstance = axios.create({
   baseURL: API_URL,
   withCredentials: true,
-  // Estes dois não atrapalham, mas *não* serão suficientes em cross-site
   xsrfCookieName: 'XSRF-TOKEN',
   xsrfHeaderName: 'X-XSRF-TOKEN',
   headers: { 'X-Requested-With': 'XMLHttpRequest' },
 });
 
-// Cliente “limpo” para o refresh, evitando interceptors em loop
+/** Cliente “limpo” para o refresh, evitando interceptors em loop */
 const refreshApi = axios.create({
   baseURL: API_URL,
   withCredentials: true,
   headers: { 'X-Requested-With': 'XMLHttpRequest' },
 });
 
-/** ===== Access Token ===== */
+/** ==============================
+ * Access Token
+ * ============================== */
 let accessToken: string | null = null;
 
 export function setAccessToken(token?: string) {
@@ -32,14 +36,16 @@ export function setAccessToken(token?: string) {
   }
 }
 
-/** ===== CSRF Token (em memória) ===== */
+/** ==============================
+ * CSRF Token (em memória)
+ * ============================== */
 let csrfToken: string | null = null;
 let csrfPromise: Promise<string | null> | null = null;
 
 async function fetchCsrfToken(): Promise<string | null> {
   if (!csrfPromise) {
     csrfPromise = api
-      .get('/csrf') // backend deve retornar { token, headerName, parameterName }
+      .get('/csrf') 
       .then((r) => {
         const t = (r.data as any)?.token ?? null;
         csrfToken = t;
@@ -56,21 +62,24 @@ async function fetchCsrfToken(): Promise<string | null> {
   return csrfPromise;
 }
 
-/** ===== Helpers ===== */
+/** ==============================
+ * Helpers
+ * ============================== */
 function isMutating(method?: string) {
   const m = (method || '').toLowerCase();
   return m === 'post' || m === 'put' || m === 'patch' || m === 'delete';
 }
 
-/** ===== Refresh de Access Token (única promise) ===== */
+/** ==============================
+ * Refresh de Access Token (única promise)
+ * ============================== */
 let refreshPromise: Promise<string | undefined> | null = null;
 
 async function refreshAccessToken(): Promise<string | undefined> {
   if (!refreshPromise) {
     refreshPromise = (async () => {
       const r = await refreshApi.post('/auth/refresh'); // CSRF ignorado no backend
-      const access =
-        (r.data as any)?.dado?.accessToken ?? (r.data as any)?.accessToken;
+      const access = (r.data as any)?.dado?.accessToken ?? (r.data as any)?.accessToken;
       if (access) setAccessToken(access);
       return access;
     })().finally(() => {
@@ -80,10 +89,52 @@ async function refreshAccessToken(): Promise<string | undefined> {
   return refreshPromise;
 }
 
-/** ===== Interceptor de Request =====
+/** ==============================
+ * Normalização de erros + notificação
+ * ============================== */
+export type ApiError = {
+  status?: number;
+  code?: string;
+  message: string;
+  details?: unknown;
+  url?: string;
+  method?: string;
+};
+
+function normalizeAxiosError(err: AxiosError): ApiError {
+  const status = err.response?.status;
+  const data: any = err.response?.data;
+  const messageFromServer =
+    (typeof data === 'object' && (data?.mensagem || data?.message || data?.erro)) ||
+    (typeof data === 'string' ? data : undefined);
+
+  const msg =
+    messageFromServer ||
+    (status ? `Erro ${status}: ${err.message}` : `Falha de conexão: ${err.message || 'verifique sua internet'}`);
+
+  return {
+    status,
+    code: (err.code as string) || undefined,
+    message: msg,
+    details: data,
+    url: err.config?.url,
+    method: err.config?.method,
+  };
+}
+
+let notifyLock = false; // evita spam de toasts em rajada
+function notifyOnce(error: ApiError) {
+  if (notifyLock) return;
+  notifyLock = true;
+  notificarErro(error.message);
+  setTimeout(() => (notifyLock = false), 800);
+}
+
+/** ==============================
+ * Interceptor de Request
  * - Injeta Authorization
- * - Garante header X-XSRF-TOKEN em mutações (buscando /csrf se necessário)
- */
+ * - Garante X-XSRF-TOKEN em mutações
+ * ============================== */
 api.interceptors.request.use(async (config) => {
   if (accessToken && !config.headers?.Authorization) {
     config.headers = config.headers ?? {};
@@ -101,10 +152,12 @@ api.interceptors.request.use(async (config) => {
   return config;
 });
 
-/** ===== Interceptor de Response =====
- * 401: tenta refresh (exceto em /auth/refresh|/auth/login|/csrf)
- * 403 em mutação: refaz /csrf e repete 1 vez
- */
+/** ==============================
+ * Interceptor de Response
+ *  - 401: tenta refresh (exceto /auth/refresh|/auth/login|/csrf) e repete 1x
+ *  - 403 mutações: refaz /csrf e repete 1x
+ *  - Demais: normaliza e notifica
+ * ============================== */
 api.interceptors.response.use(
   (res) => res,
   async (error: AxiosError) => {
@@ -114,26 +167,29 @@ api.interceptors.response.use(
       _csrfRetry?: boolean;
     });
     const url = (original?.url || '') as string;
-    const isAuthRoute =
-      url.includes('/auth/refresh') ||
-      url.includes('/auth/login') ||
-      url.includes('/csrf');
+    const isAuthRoute = url.includes('/auth/refresh') || url.includes('/auth/login') || url.includes('/csrf');
 
+    // 401 -> tentar refresh (uma vez)
     if (status === 401 && !original?._retry && !isAuthRoute) {
       original._retry = true;
       try {
         const access = await refreshAccessToken();
         if (!access) {
           setAccessToken(undefined);
-          return Promise.reject(error);
+          const parsed = normalizeAxiosError(error);
+          notifyOnce(parsed);
+          return Promise.reject(parsed);
         }
         return api.request(original);
       } catch {
         setAccessToken(undefined);
-        return Promise.reject(error);
+        const parsed = normalizeAxiosError(error);
+        notifyOnce(parsed);
+        return Promise.reject(parsed);
       }
     }
 
+    // 403 em mutação -> tentar renovar CSRF e repetir uma vez
     if (status === 403 && isMutating(original?.method) && !original?._csrfRetry) {
       original._csrfRetry = true;
       await fetchCsrfToken();
@@ -144,14 +200,17 @@ api.interceptors.response.use(
       return api.request(original);
     }
 
-    return Promise.reject(error);
+    // Qualquer outro erro -> normaliza e notifica
+    const parsed = normalizeAxiosError(error);
+    notifyOnce(parsed);
+    return Promise.reject(parsed);
   }
 );
 
-/** ===== Boot helpers =====
- * Chame isso no início da app (ex.: useEffect no App) para tentar já hidratar o AT.
- * Se quiser, pode chamar também fetchCsrfToken() uma vez para “aquecer” o CSRF.
- */
+/** ==============================
+ * Helpers públicos
+ * ============================== */
+
 export async function hydrateAccessToken() {
   try {
     const access = await refreshAccessToken();
@@ -161,11 +220,9 @@ export async function hydrateAccessToken() {
   }
 }
 
-// Opcional: aquecer o CSRF logo no boot
 export async function primeCsrfCookie() {
   await fetchCsrfToken();
 }
-
 
 const RT_KEY = 'rt';
 
@@ -177,10 +234,7 @@ export function setRefreshToken(t?: string) {
   else localStorage.removeItem(RT_KEY);
 }
 
-// api.ts
-// ...código existente acima...
-
-export async function serverLogout() { 
+export async function serverLogout() {
   setAccessToken(undefined);
   setRefreshToken(undefined);
 }
