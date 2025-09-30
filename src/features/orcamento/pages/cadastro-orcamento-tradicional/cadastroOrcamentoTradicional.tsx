@@ -38,38 +38,45 @@ export default function CadastroOrcamentoTradicional() {
             return;
         }
 
-        const orcamento: OrcamentoTradicional = {
-            cliente,
-            cnpjCpf,
-            observacoes,
-            camposPersonalizados: customFields,
-            produtos,
-            tipoOrcamento: 'TRADICIONAL',
-            status: 'PENDENTE',
-            dataCriacao: '',
-            idUsuario: idUsuario,
-            valorTotal: valorTotal,
-            urlArquivo: '',
-            template: selectedTemplate ? selectedTemplate : {} as Template,
-        };
+        if (!selectedTemplate) {
+            setSelectedTemplate({ id: TEMPLATE_DEFAULT, nomeArquivo: 'classic_neutral' });
+        }
 
-        try {
-            setLoading(true);
-            const resp = await cadastrarOrcamento(orcamento);
+        if (selectedTemplate) {
+            const orcamento: OrcamentoTradicional = {
+                cliente,
+                cnpjCpf,
+                observacoes,
+                camposPersonalizados: customFields,
+                produtos,
+                tipoOrcamento: 'TRADICIONAL',
+                status: 'PENDENTE',
+                dataCriacao: '',
+                idUsuario: idUsuario,
+                valorTotal: valorTotal,
+                urlArquivo: '',
+                template: selectedTemplate,
+            };
 
-            if (resp?.dado && resp.dado.id) {
-                await gerarPdfOrcamentoTradicional(resp.dado);
+
+            try {
+                setLoading(true);
+                const resp = await cadastrarOrcamento(orcamento);
+
+                if (resp?.dado && resp.dado.id) {
+                    await gerarPdfOrcamentoTradicional(resp.dado);
+                }
+
+                navigate('/menu');
+            } catch (err: any) {
+                if (err.status === 400) {
+                    notificarErro(err.message);
+                } else {
+                    notificarErro(err?.message ?? 'Erro ao cadastrar orçamento.');
+                }
+            } finally {
+                setLoading(false);
             }
-
-            navigate('/menu');
-        } catch (err: any) {
-            if (err.status === 400) {
-                notificarErro(err.message);
-            } else {
-                notificarErro(err?.message ?? 'Erro ao cadastrar orçamento.');
-            }
-        } finally {
-            setLoading(false);
         }
     };
 
@@ -115,7 +122,7 @@ export default function CadastroOrcamentoTradicional() {
                             <p className="header-sub">Monte itens, adicione observações e gere o PDF.</p>
                         </div>
                         {/* <span className="badge-variant">Manual</span> */}
-                        
+
                     </header>
 
                     <Templates
@@ -162,7 +169,7 @@ export default function CadastroOrcamentoTradicional() {
                         {/* PRODUTOS */}
                         <section className="secao-produtos glass-card">
                             <div className="secao-head">
-                                <h2>Produtos</h2>   
+                                <h2>Produtos</h2>
                                 <div className="kpi-total">
                                     Total atual:{' '}
                                     <strong>
