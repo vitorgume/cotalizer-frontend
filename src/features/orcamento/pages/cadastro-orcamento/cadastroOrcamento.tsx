@@ -99,10 +99,12 @@ export default function CadastroOrcamento() {
                 <p className="subtitulo-grad">que a IA faz o resto</p>
             </div>
 
-            <Templates
-                onSelectTemplate={setSelectedTemplate}
-                defaultSelectedId={TEMPLATE_DEFAULT}
-            />
+            {!urlPdf &&
+                <Templates
+                    onSelectTemplate={setSelectedTemplate}
+                    defaultSelectedId={TEMPLATE_DEFAULT}
+                />
+            }
 
             {/* Campo de título */}
 
