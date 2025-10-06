@@ -21,8 +21,6 @@ export default function FormDinamico({
   const [subtotalFinal, setSubtotalFinal] = useState(0);
   const [descontoVlr, setDescontoVlr] = useState(0);
 
-  // --- helpers ----------------------------------------------------
-
   // extrai número de "5%", "5,5", "5.5%", "  10  %" etc.
   const parsePercentNumber = (v: unknown): number => {
     if (typeof v === "number") return v;
@@ -48,14 +46,16 @@ export default function FormDinamico({
 
   const calcularTotal = (itens: any[], desconto: unknown = 0) => {
     const subtotal = itens.reduce((acc, item) => {
-      const quantidade = Number(item?.quantidade) || 0;
-      const valorUnitario = Number(item?.valor_unit) || 0;
-      return acc + quantidade * valorUnitario;
+      const q = parseDecimalFlexible(item?.quantidade);
+      const vu = parseDecimalFlexible(item?.valor_unit);
+      return acc + q * vu;
     }, 0);
+
     const pct = parsePercentNumber(desconto);
     const valorDesconto = (subtotal * pct) / 100;
     return { subtotal, valorDesconto, total: subtotal - valorDesconto };
   };
+
 
   const atualizarOrcamentoComTotal = (novoOrcamento: any) => {
     const { total } = calcularTotal(novoOrcamento.itens, novoOrcamento.desconto);
@@ -103,18 +103,49 @@ export default function FormDinamico({
     atualizarOrcamentoComTotal({ ...orcamentoEstrutura, itens: novosItens });
   }
 
+
+  const parseDecimalFlexible = (v: any): number => {
+    if (v == null) return 0;
+    let s = String(v).trim();
+
+    if (s === '') return 0;
+
+    // Caso tenha vírgula (BR): remove milhares "." e troca vírgula por ponto
+    if (s.includes(',')) {
+      // permite "1," (vira "1")
+      if (/,\s*$/.test(s)) s = s.replace(/,\s*$/, '');
+      s = s.replace(/\./g, '').replace(',', '.');
+    } else {
+      // Caso só pontos: considera o ÚLTIMO ponto como decimal e remove os demais (milhares)
+      const lastDot = s.lastIndexOf('.');
+      if (lastDot > -1) {
+        s = s.slice(0, lastDot).replace(/\./g, '') + '.' + s.slice(lastDot + 1);
+      }
+    }
+
+    const n = Number(s);
+    return Number.isFinite(n) ? n : 0;
+  };
+
   const atualizarItem = (index: number, campo: string, valor: any) => {
     const raw =
       valor && typeof valor === "object" && "target" in valor
         ? (valor.target as HTMLInputElement).value
         : valor;
 
-    const coerced =
-      campo === "produto"
-        ? String(raw ?? "")
-        : raw === "" || raw == null
-        ? 0
-        : Number(String(raw).replace(/\./g, "").replace(",", "."));
+    let coerced: any;
+
+    if (campo === "produto") {
+      coerced = String(raw ?? "");
+    } else if (campo === "valor_unit") {
+      // 👇 mantém como string (ex.: "1.234,5") para não “comer” a vírgula
+      coerced = String(raw ?? "");
+    } else if (campo === "quantidade") {
+      // Inteiro (ou troque por parseDecimalFlexible se quiser decimal)
+      coerced = Math.max(0, Number(String(raw).replace(/[^\d]/g, "")) || 0);
+    } else {
+      coerced = String(raw ?? "");
+    }
 
     const itens = orcamentoEstrutura.itens ?? [];
     const novosItens = [...itens];
@@ -122,6 +153,8 @@ export default function FormDinamico({
 
     atualizarOrcamentoComTotal({ ...orcamentoEstrutura, itens: novosItens });
   };
+
+
 
   // --- render -----------------------------------------------------
 
@@ -192,21 +225,24 @@ export default function FormDinamico({
                   <InputPadrao
                     placeholder="Valor Unitário"
                     value={String(item.valor_unit ?? "")}
-                    onChange={(v: any) => atualizarItem(index, "valor_unit", v)}
+                    onChange={(v: string) => atualizarItem(index, "valor_unit", v)}
                     inativo={!editado}
                     senha={false}
                     limiteCaracteres={1000}
                     mascara="numeroDecimal"
-                    upperCase={true}
+                    upperCase={false}
                   />
                 </div>
               </div>
 
               <div className="subtotal-item">
                 <span>
-                  Subtotal: R$ {toMoney((item.quantidade || 0) * (item.valor_unit || 0))}
+                  Subtotal: R$ {toMoney(
+                    parseDecimalFlexible(item.quantidade) * parseDecimalFlexible(item.valor_unit)
+                  )}
                 </span>
               </div>
+
               <hr />
             </div>
           ))}
@@ -288,7 +324,7 @@ export default function FormDinamico({
           senha={false}
           limiteCaracteres={100}
           mascara=""
-           upperCase={true}
+          upperCase={true}
         />
       </div>
     );

@@ -28,6 +28,7 @@ export default function InputPadrao({
   const [inner, setInner] = useState<string>('');
   const val = isControlled ? (value as string) : inner;
 
+
   useEffect(() => {
     if (!isControlled) setInner('');
   }, []);
@@ -51,31 +52,47 @@ export default function InputPadrao({
       case 'numeroDecimal':
         return {
           mask: Number,
-          scale: 2, 
+          scale: 2,
           thousandsSeparator: '.',
-          radix: ',', 
-          mapToRadix: ['.'], 
+          radix: ',',              
+          mapToRadix: ['.'],       
+          normalizeZeros: true,
+          padFractionalZeros: false
         };
       default:
         return '';
     }
-  }, [mascara, val]);
-
-  const autoCapitalize = upperCase ? undefined : 'none';
+  }, [mascara]);
 
   const autoComplete =
     mascara === 'telefone' ? 'tel' : senha ? 'current-password' : 'off';
-  const inputMode =
-    mascara === 'telefone' ? 'tel' :
-      mascara === 'cpf' || mascara === 'cnpj' ? 'numeric' :
-        undefined;
 
-  const handleAccept = (masked: string) => {
-    if (isControlled) {
-      onChange?.(masked);
+  const inputMode =
+    mascara === 'telefone' ? 'tel'
+      : mascara === 'cpf' || mascara === 'cnpj' ? 'numeric'
+        : mascara === 'numeroDecimal' ? 'decimal' 
+          : undefined;
+
+  const handleAccept = (masked: string, maskRef?: any) => {
+    let out: string;
+
+    if (mascara === 'numeroDecimal') {
+      const typed = maskRef?.typedValue;
+      if (typeof typed === 'number' && !isNaN(typed)) {
+        out = String(typed);          
+      } else {
+  
+        out = masked.replace(/\./g, '').replace(',', '.'); 
+      }
     } else {
-      setInner(masked);
-      onChange?.(masked);
+      out = masked;
+    }
+
+    if (isControlled) {
+      onChange?.(out);
+    } else {
+      setInner(masked); 
+      onChange?.(out);
     }
   };
 
@@ -91,14 +108,22 @@ export default function InputPadrao({
 
   const isMasked = !!computedMask && !senha;
 
+  const displayValue = useMemo(() => {
+    if (senha) return val ?? ''; 
+    if (mascara === 'numeroDecimal') {
+      return (val ?? '').toString().replace(/\./g, ',');
+    }
+    return val ?? '';
+  }, [val, mascara, senha]);
+
   return (
     <div className={`inputp-wrap ${inativo ? 'is-disabled' : ''}`} aria-disabled={inativo}>
       {isMasked ? (
         <IMaskInput
-          key={null}
+          key={`mask-${mascara}`}
           mask={computedMask as any}
-          value={val}
-          onAccept={handleAccept}
+          value={displayValue}
+          onAccept={(val: string, maskRef: any) => handleAccept(val, maskRef)}
           disabled={inativo}
           className="inputp-field"
           placeholder={placeholder}
@@ -107,16 +132,17 @@ export default function InputPadrao({
         />
       ) : (
         <input
+          id={placeholder}
           type={senha && !mostrarSenha ? 'password' : 'text'}
           className="inputp-field"
           placeholder={placeholder}
-          value={val}
+          value={displayValue}
           onChange={handleChangePlain}
           disabled={inativo}
           autoComplete={autoComplete}
           inputMode={inputMode}
           maxLength={limiteCaracteres}
-          autoCapitalize={autoCapitalize}
+          autoCapitalize={upperCase ? undefined : 'none'}
         />
       )}
 
@@ -127,6 +153,8 @@ export default function InputPadrao({
           className="inputp-toggle"
           title={mostrarSenha ? 'Ocultar senha' : 'Mostrar senha'}
           aria-label={mostrarSenha ? 'Ocultar senha' : 'Mostrar senha'}
+          aria-pressed={mostrarSenha}
+          aria-controls={placeholder}
         >
           {mostrarSenha ? 'Ocultar' : 'Ver'}
         </button>
