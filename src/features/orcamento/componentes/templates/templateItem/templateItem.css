@@ -1,6 +1,8 @@
+/* CARD – ocupar 100% da coluna do grid */
 .template-item {
-  width: 15%;
-  height: 100%;
+  width: 100%;
+  max-width: 240px;            
+  margin-inline: auto;            
   display: flex;
   flex-direction: column;
   gap: .5rem;
@@ -12,10 +14,14 @@
   position: relative;
 }
 
-.template-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 22px 44px rgba(0,0,0,0.2);
-  border-color: rgba(255,255,255,0.25);
+
+/* Hover só em dispositivos com hover real */
+@media (hover: hover) and (pointer: fine) {
+  .template-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 22px 44px rgba(0,0,0,0.2);
+    border-color: rgba(255,255,255,0.25);
+  }
 }
 
 /* radio invisível porém acessível */
@@ -31,26 +37,34 @@
   outline-offset: 2px;
 }
 
-/* conteúdo */
+/* THUMB – usa aspecto fixo pra manter grade estável */
 .template-thumb {
   position: relative;
   border-radius: 10px;
   overflow: hidden;
   border: 1px solid rgba(255,255,255,0.12);
   background: rgba(255,255,255,0.04);
+  aspect-ratio: 4 / 5;         /* << chave da responsividade */
+}
+
+/* Fallback se o navegador não suportar aspect-ratio */
+@supports not (aspect-ratio: 4 / 5) {
+  .template-thumb { height: 0; padding-top: calc(100% * 5 / 4); }
+  .template-thumb .imagem-template { position: absolute; inset: 0; }
 }
 
 .imagem-template {
   width: 100%;
-  min-height: 21.8rem;
   height: 100%;
   object-fit: cover;
   display: block;
+  /* Removemos o min-height fixo para responder ao grid */
+  /* min-height: 21.8rem;  <-- REMOVIDO */
 }
 
 .template-title {
   margin: 0;
-  font-size: .98rem;
+  font-size: clamp(.9rem, 1.2vw + .6rem, 1rem);
   font-weight: 700;
   color: rgba(255,255,255,0.95);
 }
@@ -88,4 +102,9 @@
     outline: 2px solid #18AF91;
     outline-offset: 2px;
   }
+}
+
+/* Telas muito pequenas: títulos um pouco menores e grid com 2 colunas garantidas */
+@media (max-width: 420px) {
+  .template-title { font-size: .9rem; }
 }

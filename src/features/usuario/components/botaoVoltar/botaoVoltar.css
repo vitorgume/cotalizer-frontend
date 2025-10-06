@@ -5,6 +5,7 @@
   z-index:2;
   padding:.5rem .85rem;
   font-weight:800;
+  max-width: 20%;
 }
 
 .btn{

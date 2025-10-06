@@ -1,7 +1,14 @@
 .listagem-templates {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
   gap: 1rem;
-  align-items: center;
-  justify-content: center;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  justify-items: center;          
 }
+
+@media (max-width: 480px) {
+  .listagem-templates { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (min-width: 640px)  { .listagem-templates { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); } }
+@media (min-width: 1024px) { .listagem-templates { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); } }
+
