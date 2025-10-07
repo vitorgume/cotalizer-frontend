@@ -59,6 +59,7 @@
 
   outline: none;
   transition: background-color .15s ease, border-color .15s ease;
+  width: 100%;
 }
 
 .inputp-field::placeholder {

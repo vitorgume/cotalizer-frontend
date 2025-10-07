@@ -47,7 +47,6 @@
   display: flex;
   flex-wrap: wrap;
   gap: 5rem;
-  align-items: center;
   justify-content: center;
   border-bottom: 1px solid var(--glass-brd);
   padding-bottom: .8rem;

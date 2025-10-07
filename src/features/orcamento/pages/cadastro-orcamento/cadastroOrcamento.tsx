@@ -20,7 +20,7 @@ export default function CadastroOrcamento() {
     const [estruturaOrcamento, setEstruturaOrcamento] = useState<any | null>(null);
     const [urlPdf, setUrlPdf] = useState<string>('');
     const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null);
-    const TEMPLATE_DEFAULT = '68dabece85ba8d3dc679ad5f';
+    const TEMPLATE_DEFAULT = { id:'68dabece85ba8d3dc679ad5f', nomeArquivo: 'classic_neutral' };
 
     const MAX_CARACTERES = 1600;
 
@@ -36,7 +36,7 @@ export default function CadastroOrcamento() {
             usuarioId: idUsuario,
             status: 'PENDENTE',
             tipoOrcamento: 'IA',
-            template: selectedTemplate ?? {} as Template
+            template: selectedTemplate ?? TEMPLATE_DEFAULT
         };
 
         try {
@@ -102,7 +102,7 @@ export default function CadastroOrcamento() {
             {!urlPdf &&
                 <Templates
                     onSelectTemplate={setSelectedTemplate}
-                    defaultSelectedId={TEMPLATE_DEFAULT}
+                    defaultSelectedId={TEMPLATE_DEFAULT.id}
                 />
             }
 

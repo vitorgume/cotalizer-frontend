@@ -149,7 +149,7 @@ export default function ListagemOrcamentos() {
         <div className="listagem-page">
             <div className="listagem-card card-shell">
                 <header className="listagem-header">
-                    <BotaoVoltar absolute={true} />
+                    <BotaoVoltar absolute={true}  />
                     <div className="titulo-wrap">
                         <h1>Seus orçamentos</h1>
                         <p>Gerencie seus orçamentos por tipo e pesquise rapidamente.</p>

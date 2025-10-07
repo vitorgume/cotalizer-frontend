@@ -23,7 +23,7 @@ export default function CadastroOrcamentoTradicional() {
     const [produtos, setProdutos] = useState<Produto[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null);
-    const TEMPLATE_DEFAULT = '68dabece85ba8d3dc679ad5f';
+    const TEMPLATE_DEFAULT = { id:'68dabece85ba8d3dc679ad5f', nomeArquivo: 'classic_neutral' };
 
     const navigate = useNavigate();
 
@@ -39,7 +39,7 @@ export default function CadastroOrcamentoTradicional() {
         }
 
         if (!selectedTemplate) {
-            setSelectedTemplate({ id: TEMPLATE_DEFAULT, nomeArquivo: 'classic_neutral' });
+            setSelectedTemplate(TEMPLATE_DEFAULT);
         }
 
         if (selectedTemplate) {
@@ -127,7 +127,7 @@ export default function CadastroOrcamentoTradicional() {
 
                     <Templates
                         onSelectTemplate={setSelectedTemplate}
-                        defaultSelectedId={TEMPLATE_DEFAULT}
+                        defaultSelectedId={TEMPLATE_DEFAULT.id}
                     />
 
                     {/* MAIN */}
