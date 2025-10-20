@@ -1,3 +1,5 @@
+type TipoPlano = "GRATIS" | "PADRAO" | "PAGO";
+
 export default interface Plano {
     id: string;
     titulo: string;
@@ -5,7 +7,7 @@ export default interface Plano {
     valor: number;
     limite: number;
     idPlanoStripe: string;
-    padrao: boolean;
+    tipoPlano: TipoPlano;
     sequencia: number;
     servicos: string[];
 }

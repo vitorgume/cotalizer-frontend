@@ -171,7 +171,6 @@ export default function Perfil() {
         }
     }
 
-    // ⬇️ Handler de logout
     async function onLogout() {
         try {
             await serverLogout();
@@ -293,7 +292,15 @@ export default function Perfil() {
                             <p>Limite de orçamentos</p>
                             <span className="pill-usage">{usuario.quantidade_orcamentos}/{usuario.plano.limite}</span>
                         </div>
-                        <MetricaQuantidadeOrcamento usado={usuario.quantidade_orcamentos} limite={usuario.plano.limite} />
+                        {
+                            (usuario.plano.tipoPlano === 'PAGO' || usuario.plano.tipoPlano === 'PADRAO') ? (
+                                <MetricaQuantidadeOrcamento usado={usuario.quantidade_orcamentos} limite={usuario.plano.limite} />
+                            ) 
+                            :
+                            (
+                                <p>Orçamentos ilimitados por 30 dias</p>
+                            )
+                        }
                     </div>
 
 
@@ -307,7 +314,7 @@ export default function Perfil() {
                                 Obter {planos.find(p => p.sequencia === usuario.plano.sequencia + 1)?.titulo}
                             </button>
 
-                            {usuario.plano.sequencia > 1 && (
+                            {usuario.plano.sequencia > 2 && (
                                 <button onClick={cancelar} className="btn danger-ghost">
                                     Cancelar assinatura
                                 </button>
@@ -325,6 +332,7 @@ export default function Perfil() {
                         onPlanoSelecionado={setPlanoSelecionado}
                         usuario={usuario}
                         planos={planos}
+                        cancelarPlano={cancelar}
                     />
                 </div>
             }

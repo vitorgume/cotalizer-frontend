@@ -123,11 +123,9 @@ export default function Menu() {
             }
 
             function abrirModalPlanos(usuario: Usuario, todosPlanos: Plano[]) {
-                console.log('Planos: ', todosPlanos);
-
                 if (usuario && todosPlanos.length > 0) {
                     
-                    if(usuario.quantidade_orcamentos == todosPlanos.find(p => p.id === usuario.plano.id)?.limite) {
+                    if(usuario.plano.tipoPlano != 'GRATIS' && usuario.quantidade_orcamentos == todosPlanos.find(p => p.id === usuario.plano.id)?.limite) {
                         setModalPlanos(true);
                     }
                 }
