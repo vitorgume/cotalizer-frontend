@@ -54,7 +54,8 @@ export default function CadastroUsuario() {
             await cadastrarUsuario(novoUsuario);
             
             notificarSucesso('Cadastro realizado!');
-            navigate(`/validacao/email/${email}`);
+            // navigate(`/validacao/email/${email}`);
+            navigate('/usuario/login');
         } catch (error) {
             console.error('Erro ao cadastrar usuário.', error);
             notificarErro('Não foi possível cadastrar. Tente novamente.');
